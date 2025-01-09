@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
-import LinearGradient from "react-native-linear-gradient";
+import {View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, ImageBackground} from 'react-native';
+
 
 export default function Homepage()  {
   const [searchQuery, setSearchQuery] = useState("");
   const handleSearch = (text) => setSearchQuery(text);
     return (
-      <LinearGradient
-         colors ={["#ff6600", "#ff9966"]}
-         style = {styles.background}
-      >   
+      <ImageBackground source={require('./assets/background.png')} style={styles.background}>
+       <View>
+        
        
       <View style={styles.header}>
              <Image source={require("./assets/Logo.png")}
@@ -31,47 +30,55 @@ export default function Homepage()  {
                 <Image source = {require('./assets/District.png')}
                     style={styles.gridImage}
                 />
-                <Text style={styles.gridText}District Secretariat></Text>
+                <Text style={styles.gridText}>District Secretariat</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/Municipal.png')}
                     style={styles.gridImage}
                 />
-                <Text style={styles.gridText}Municipal Council></Text>
+                <Text style={styles.gridText}>Municipal Council</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.gridItem}>
+                <Image source = {require('./assets/Grama_niladhari.png')}
+                    style={styles.gridImage}
+                />
+                <Text style={styles.gridText}>Grama Niladhari</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/Samurdhi.png')}
                     style={styles.gridImage}
                 />
-                <Text style={styles.gridText}Samurdhi Niladhari></Text>
+                <Text style={styles.gridText}>Samurdhi Niladhari</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/electricity.png')}
                     style={styles.gridImage}
                 />
-                <Text style={styles.gridText}Electricity Board></Text>
+                <Text style={styles.gridText}>Electricity Board</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/water_board.png')}
                     style={styles.gridImage}
                 />
-                <Text style={styles.gridText}Water Board></Text>
+                <Text style={styles.gridText}>Water Board</Text>
               </TouchableOpacity>
 
             </View> 
-
-
- </LinearGradient>      
+    </View>
+    </ImageBackground>        
+   
     );
   } 
 
   const styles = StyleSheet.create({
     background: {
       flex: 1,
+      
     },
     header: {
       padding: 20,
@@ -79,9 +86,10 @@ export default function Homepage()  {
       alignItems: "center",
     },
     logo: {
-      width: 100,
+      width: 150,
       height: 100,
       marginBottom: 20,
+      resizeMode:'contain',
     },
     searchBar: {
       height: 40,
@@ -92,15 +100,18 @@ export default function Homepage()  {
       marginBottom: 20,
       width: "80%",
     },
+    
     title: {
       fontSize: 24,
       fontWeight: "bold",
-      color: "#333",
+      color: "#333",  
+      textAlign:'center',
     },
     subtitle: {
       fontSize: 16,
       color: "#666",
       marginBottom: 20,
+      textAlign: 'center',
     },
     grid: {
       flexDirection: "row",
