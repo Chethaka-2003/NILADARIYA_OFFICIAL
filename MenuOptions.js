@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import {View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, ImageBackground} from 'react-native';
+import { WebView } from 'react-native-webview';
 
 
-export default function Homepage()  {
+export default function MenuOptions()  {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showChatbot, setShowChatbot] = useState(false);
   const handleSearch = (text) => setSearchQuery(text);
+  const openChatbot = () => {
+    setShowChatbot(true);
+  }
     return (
       <ImageBackground source={require('./assets/background.png')} style={styles.background}>
        <View>
@@ -20,10 +25,12 @@ export default function Homepage()  {
                           onChangeText={handleSearch}
              />   
       </View>  
-      <View>     
+      <View style={styles.content}>     
+        <Image source={require('./assets/glogo-.png')} style={styles.image}/>
+        <View style={styles.textContainer}>
              <Text style={styles.title}> NILADHARIYA SRI LANKA </Text>
              <Text style={styles.subtitle}>One Click. Save your Time </Text>
-           
+        </View>   
       </View>
            <View style={styles.grid}>
               <TouchableOpacity style={styles.gridItem}>
@@ -67,8 +74,21 @@ export default function Homepage()  {
                 />
                 <Text style={styles.gridText}>Water Board</Text>
               </TouchableOpacity>
-
             </View> 
+            <TouchableOpacity style={styles.chatbotIcon} onPress={openChatbot}>
+              <Image source={require('./assets/chatbotIcon.png')} style={styles.chatbotImage}/>
+            </TouchableOpacity>  
+            {showChatbot && (
+              <View style = {styles.chatbotContainer}>
+                <TouchableOpacity onPress={()=> setShowChatbot(false)} style={styles.closeButton}>
+                  <Text style = {styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+                <WebView
+                   source={{uri:'https:-chatbot-url.com'}}
+                   style={styles.webview}
+                />       
+            </View>
+            )}
     </View>
     </ImageBackground>        
    
@@ -82,7 +102,7 @@ export default function Homepage()  {
     },
     header: {
       padding: 20,
-      backgroundColor: "#fff",
+     
       alignItems: "center",
     },
     logo: {
@@ -100,28 +120,53 @@ export default function Homepage()  {
       marginBottom: 20,
       width: "80%",
     },
-    
+    content:{
+      flexDirection : 'row',
+      alignItems:'center',
+      paddingHorizontal:'20',
+      paddingBottom:'20',
+      paddingTop:'20',
+      backgroundColor:'white',
+      borderBlockColor:'black',
+      borderRadius:10,
+      overflow: 'hidden',
+    },
+    textContainer:{
+
+    },
+    image:{
+      width:80,
+      height:80,
+      marginRight:20,
+      resizeMode:'contain',
+    },
     title: {
       fontSize: 24,
       fontWeight: "bold",
-      color: "#333",  
+      color: "red",  
       textAlign:'center',
     },
     subtitle: {
       fontSize: 16,
-      color: "#666",
+      color: "grey",
       marginBottom: 20,
       textAlign: 'center',
+      fontWeight: "bold",
     },
     grid: {
       flexDirection: "row",
       flexWrap: "wrap",
       justifyContent: "center",
+    
     },
     gridItem: {
       width: "40%",
-      margin: 10,
+      margin: 20,
       alignItems: "center",
+      backgroundColor:'#FFFFED',
+      borderRadius:10,
+      overflow: 'hidden',
+      
     },
     gridImage: {
       width: 80,
@@ -130,7 +175,47 @@ export default function Homepage()  {
     },
     gridText: {
       textAlign: "center",
-      fontSize: 14,
-      color: "#333",
+      fontSize: 18,
+      color: "black",
+      fontWeight: "bold",
     },
+    chatbotIcon: {
+      position : 'absolute',
+      bottom : 20,
+      right : 20,
+      width :50,
+      height : 50, 
+    },
+    chatbotImage: {
+      width : '100%',
+      height : '100%',
+      resizeMode : 'contain',
+    },
+    chatbotContainer : {
+      position : 'absolute',
+      bottom : 80,
+      left : 0,
+      right : 0,
+      top : 0,
+      backgroundColor : 'rgba(0, 0, 0, 0.5)',
+      justifyContent : 'center',
+      alignItems : 'center',
+    },
+    closeButton: {
+      position: 'absolute',
+      top: 40,
+      right : 20,
+      backgroundColor : '#fff',
+      padding : 10,
+      borderRadius : 5,
+    },
+    closeButtonText : {
+      color : '#000',
+    },
+    webview : {
+      width : '90%',
+      height : '80%',
+      backgroundColor: '#fff',
+    },
+
   });
