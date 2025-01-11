@@ -7,7 +7,7 @@ import Draggable from 'react-native-draggable';
 export default function MenuOptions()  {
   const [searchQuery, setSearchQuery] = useState("");
   const [showChatbot, setShowChatbot] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); //Track the current theme
+  // const [isDarkMode, setIsDarkMode] = useState(false); //Track the current theme
 
   const handleSearch = (text) => setSearchQuery(text);
 
@@ -17,12 +17,12 @@ export default function MenuOptions()  {
   const closeChatbot = () => {
     setShowChatbot(false);
   };
-  const toggleTheme = () => {
-    setIsDarkMode ((preMode) => !preMode);
-  };
+  // const toggleTheme = () => {
+  //   setIsDarkMode ((preMode) => !preMode);
+  
     return (
       <ImageBackground source={require('./assets/background.png')} style={styles.background}>
-       <View style={isDarkMode ? styles.darkContainer : styles.LightContainer}>
+       <View style={styles.textContainer}>
         
       <View style={styles.header}>
              <Image source={require("./assets/Logo.png")}
@@ -32,19 +32,23 @@ export default function MenuOptions()  {
             <View style={styles.grid}>
               <TextInput style= {styles.searchBar}
                           placeholder="Search..." 
-                          placeholderTextColor={isDarkMode? '#aaa' : '#555'}
+                          placeholderTextColor= '#555'
                           value={searchQuery} 
                           onChangeText={handleSearch}
              />  
-             { <TouchableOpacity onPress={toggleTheme} style={styles.themeIcon}>
+              {/* <TouchableOpacity onPress={toggleTheme} style={styles.themeIcon}>
                <Image source={isDarkMode ? require('./assets/sun.png') : require('./assets/moon.png')} styles={styles.themeImage}/>
-             </TouchableOpacity>        }
+              </TouchableOpacity> 
+              <Text style={styles.modeText}>
+                {isDarkMode ? 'Dark Mode' : 'Light Mode'}
+              </Text> */}
+
       </View>  
       <View style={styles.content}>     
         <Image source={require('./assets/glogo-.png')} style={styles.image}/>
         <View style={styles.textContainer}>
-             <Text style={isDarkMode? styles.darkTitle:styles.lightTitle}> NILADHARIYA SRI LANKA </Text>
-             <Text style={isDarkMode? styles.darkSubTitle:styles.lightSubTitle}>One Click. Save your Time </Text>
+             <Text style={styles.title}> NILADHARIYA SRI LANKA </Text>
+             <Text style={styles.subTitle}>One Click. Save your Time </Text>
         </View>   
       </View>
            <View style={styles.grid}>
@@ -52,42 +56,42 @@ export default function MenuOptions()  {
                 <Image source = {require('./assets/District.png')}
                     style={styles.gridImage}
                 />
-                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>District Secretariat</Text>
+                <Text style={styles.gridText}>District Secretariat</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/Municipal.png')}
                     style={styles.gridImage}
                 />
-                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>Municipal Council</Text>
+                <Text style={styles.gridText}>Municipal Council</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/Grama_niladhari.png')}
                     style={styles.gridImage}
                 />
-                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>Grama Niladhari</Text>
+                <Text style={styles.gridText}>Grama Niladhari</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/Samurdhi.png')}
                     style={styles.gridImage}
                 />
-                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>Samurdhi Niladhari</Text>
+                <Text style={styles.gridText}>Samurdhi Niladhari</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/electricity.png')}
                     style={styles.gridImage}
                 />
-                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>Electricity Board</Text>
+                <Text style={styles.gridText}>Electricity Board</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/water_board.png')}
                     style={styles.gridImage}
                 />
-                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>Water Board</Text>
+                <Text style={styles.gridText}>Water Board</Text>
               </TouchableOpacity>
             </View> 
             <Draggable x={300} y={500} renderSize={50} renderColor="transparent" renderText="" isCircle={false}>
@@ -127,27 +131,28 @@ export default function MenuOptions()  {
       marginBottom: 20,
       resizeMode:'contain',
     },
-    themeIcon:{
-      width :0.000000005,
-      height :0.0000000005,
-      marginRight: -10,
-      marginLeft:-500,
+    // themeIcon:{
+    //   width :5,
+    //   height :5,
+    //   // marginRight: 10,
+    //   // marginLeft: 0,
+
       
-    },
-    themeImage:{
-      width : '100%',
-      height : '100%',
-      resizeMode: 'contain',
+    // },
+    // themeImage:{
+    //   width : 5,
+    //   height : 5,
+    //   resizeMode: 'contain',
       
-    },
+    // },
     searchBar: {
       height: 40,
-      borderColor: "#ccc",
+      borderColor: "black",
       borderWidth: 1,
       borderRadius: 5,
       paddingHorizontal: 10,
-      marginBottom: 20,
-      width: "80%",
+      marginBottom: 60,
+      width: "60%",
       marginLeft: 10,
     },
     content:{
@@ -167,32 +172,21 @@ export default function MenuOptions()  {
       marginRight:20,
       resizeMode:'contain',
     },
-    lightTitle: {
+   title: {
       fontSize: 24,
       fontWeight: "bold",
       color: "red",  
       textAlign:'center',
     },
-    darktTitle: {
-      fontSize: 24,
-      fontWeight: "bold",
-      color: "white",  
-      textAlign:'center',
-    },
-    lightSubTitle: {
+    
+   subTitle: {
       fontSize: 16,
       color: "grey",
       marginBottom: 20,
       textAlign: 'center',
       fontWeight: "bold",
     },
-    darkSubTitle: {
-      fontSize: 16,
-      color: "lightgrey",
-      marginBottom: 20,
-      textAlign: 'center',
-      fontWeight: "bold",
-    },
+    
     grid: {
       flexDirection: "row",
       flexWrap: "wrap",
@@ -213,18 +207,13 @@ export default function MenuOptions()  {
       height: 80,
       marginBottom: 10,
     },
-    lightGridText: {
+    gridText: {
       textAlign: "center",
       fontSize: 18,
       color: "black",
       fontWeight: "bold",
     },
-    darkGridText: {
-      textAlign: "center",
-      fontSize: 18,
-      color: "black",
-      fontWeight: "bold",
-    },
+    
     chatbotIcon: {
       position : 'absolute',
       bottom : 20,
@@ -263,10 +252,8 @@ export default function MenuOptions()  {
       height : '80%',
       backgroundColor: '#fff',
     },
-    LightContainer: {
+    container: {
       backgroundColor : '#FFD580',
     },
-    darkContainer: {
-      backgroundColor: 'balck',
-    },
+   
   });
