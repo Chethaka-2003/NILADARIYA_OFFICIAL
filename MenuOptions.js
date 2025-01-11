@@ -36,9 +36,9 @@ export default function MenuOptions()  {
                           value={searchQuery} 
                           onChangeText={handleSearch}
              />  
-             {/* <TouchableOpacity onPress={toggleTheme} style={styles.themeIcon}>
+             { <TouchableOpacity onPress={toggleTheme} style={styles.themeIcon}>
                <Image source={isDarkMode ? require('./assets/sun.png') : require('./assets/moon.png')} styles={styles.themeImage}/>
-             </TouchableOpacity>        */}
+             </TouchableOpacity>        }
       </View>  
       <View style={styles.content}>     
         <Image source={require('./assets/glogo-.png')} style={styles.image}/>
