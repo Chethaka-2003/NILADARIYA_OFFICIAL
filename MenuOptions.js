@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, ImageBackground} from 'react-native';
 import { WebView } from 'react-native-webview';
+import Draggable from 'react-native-draggable';
 
 
 export default function MenuOptions()  {
@@ -9,7 +10,11 @@ export default function MenuOptions()  {
   const handleSearch = (text) => setSearchQuery(text);
   const openChatbot = () => {
     setShowChatbot(true);
+  };
+  const closeChatbot = () => {
+    setShowChatbot(false);
   }
+  
     return (
       <ImageBackground source={require('./assets/background.png')} style={styles.background}>
        <View>
@@ -75,9 +80,11 @@ export default function MenuOptions()  {
                 <Text style={styles.gridText}>Water Board</Text>
               </TouchableOpacity>
             </View> 
+            <Draggable x={300} y={500} renderSize={50} renderColor="transparent" renderText="" isCircle={false}>
             <TouchableOpacity style={styles.chatbotIcon} onPress={openChatbot}>
               <Image source={require('./assets/chatbotIcon.png')} style={styles.chatbotImage}/>
             </TouchableOpacity>  
+            </Draggable>
             {showChatbot && (
               <View style = {styles.chatbotContainer}>
                 <TouchableOpacity onPress={()=> setShowChatbot(false)} style={styles.closeButton}>
@@ -130,9 +137,6 @@ export default function MenuOptions()  {
       borderBlockColor:'black',
       borderRadius:10,
       overflow: 'hidden',
-    },
-    textContainer:{
-
     },
     image:{
       width:80,
@@ -217,5 +221,4 @@ export default function MenuOptions()  {
       height : '80%',
       backgroundColor: '#fff',
     },
-
   });
