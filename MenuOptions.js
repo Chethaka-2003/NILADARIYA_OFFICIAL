@@ -7,77 +7,87 @@ import Draggable from 'react-native-draggable';
 export default function MenuOptions()  {
   const [searchQuery, setSearchQuery] = useState("");
   const [showChatbot, setShowChatbot] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false); //Track the current theme
+
   const handleSearch = (text) => setSearchQuery(text);
+
   const openChatbot = () => {
     setShowChatbot(true);
   };
   const closeChatbot = () => {
     setShowChatbot(false);
-  }
-  
+  };
+  const toggleTheme = () => {
+    setIsDarkMode ((preMode) => !preMode);
+  };
     return (
       <ImageBackground source={require('./assets/background.png')} style={styles.background}>
-       <View>
+       <View style={isDarkMode ? styles.darkContainer : styles.LightContainer}>
         
-       
       <View style={styles.header}>
              <Image source={require("./assets/Logo.png")}
                      style={styles.logo}/>
+
+              <TouchableOpacity onPress={toggleTheme} style={styles.themeIcon}>
+               <Image source={isDarkMode ? require('./assets/sun.png') : require('./assets/moon.png')} styles={styles.themeImage}/>
+             </TouchableOpacity>         
              
               <TextInput style= {styles.searchBar}
                           placeholder="Search..." 
+                          placeholderTextColor={isDarkMode? '#aaa' : '#555'}
                           value={searchQuery} 
                           onChangeText={handleSearch}
-             />   
+             />  
+             
       </View>  
       <View style={styles.content}>     
         <Image source={require('./assets/glogo-.png')} style={styles.image}/>
         <View style={styles.textContainer}>
-             <Text style={styles.title}> NILADHARIYA SRI LANKA </Text>
-             <Text style={styles.subtitle}>One Click. Save your Time </Text>
+             <Text style={isDarkMode? styles.darkTitle:styles.lightTitle}> NILADHARIYA SRI LANKA </Text>
+             <Text style={isDarkMode? styles.darkSubTitle:styles.lightSubTitle}>One Click. Save your Time </Text>
         </View>   
       </View>
            <View style={styles.grid}>
-              <TouchableOpacity style={styles.gridItem}>
+              <TouchableOpacity style={styles.gridItem} >
                 <Image source = {require('./assets/District.png')}
                     style={styles.gridImage}
                 />
-                <Text style={styles.gridText}>District Secretariat</Text>
+                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>District Secretariat</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/Municipal.png')}
                     style={styles.gridImage}
                 />
-                <Text style={styles.gridText}>Municipal Council</Text>
+                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>Municipal Council</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/Grama_niladhari.png')}
                     style={styles.gridImage}
                 />
-                <Text style={styles.gridText}>Grama Niladhari</Text>
+                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>Grama Niladhari</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/Samurdhi.png')}
                     style={styles.gridImage}
                 />
-                <Text style={styles.gridText}>Samurdhi Niladhari</Text>
+                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>Samurdhi Niladhari</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/electricity.png')}
                     style={styles.gridImage}
                 />
-                <Text style={styles.gridText}>Electricity Board</Text>
+                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>Electricity Board</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.gridItem}>
                 <Image source = {require('./assets/water_board.png')}
                     style={styles.gridImage}
                 />
-                <Text style={styles.gridText}>Water Board</Text>
+                <Text style={isDarkMode ? styles.darkGridText : styles.lightGridText}>Water Board</Text>
               </TouchableOpacity>
             </View> 
             <Draggable x={300} y={500} renderSize={50} renderColor="transparent" renderText="" isCircle={false}>
@@ -109,7 +119,6 @@ export default function MenuOptions()  {
     },
     header: {
       padding: 20,
-     
       alignItems: "center",
     },
     logo: {
@@ -117,6 +126,18 @@ export default function MenuOptions()  {
       height: 100,
       marginBottom: 20,
       resizeMode:'contain',
+    },
+    themeIcon:{
+      width : 0.00000000000000020,
+      height :0.00000000000000020,
+      marginLeft:10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    themeImage:{
+      width : '0.000000005%',
+      height : '0.00000005%',
+      
     },
     searchBar: {
       height: 40,
@@ -144,15 +165,28 @@ export default function MenuOptions()  {
       marginRight:20,
       resizeMode:'contain',
     },
-    title: {
+    lightTitle: {
       fontSize: 24,
       fontWeight: "bold",
       color: "red",  
       textAlign:'center',
     },
-    subtitle: {
+    darktTitle: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: "white",  
+      textAlign:'center',
+    },
+    lightSubTitle: {
       fontSize: 16,
       color: "grey",
+      marginBottom: 20,
+      textAlign: 'center',
+      fontWeight: "bold",
+    },
+    darkSubTitle: {
+      fontSize: 16,
+      color: "lightgrey",
       marginBottom: 20,
       textAlign: 'center',
       fontWeight: "bold",
@@ -177,7 +211,13 @@ export default function MenuOptions()  {
       height: 80,
       marginBottom: 10,
     },
-    gridText: {
+    lightGridText: {
+      textAlign: "center",
+      fontSize: 18,
+      color: "black",
+      fontWeight: "bold",
+    },
+    darkGridText: {
       textAlign: "center",
       fontSize: 18,
       color: "black",
@@ -220,5 +260,11 @@ export default function MenuOptions()  {
       width : '90%',
       height : '80%',
       backgroundColor: '#fff',
+    },
+    LightContainer: {
+      backgroundColor : '#FFD580',
+    },
+    darkContainer: {
+      backgroundColor: 'balck',
     },
   });
