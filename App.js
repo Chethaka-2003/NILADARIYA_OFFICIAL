@@ -1,32 +1,76 @@
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, SafeAreaView, Image } from 'react-native';
 
 export default function App() {
+  // State to handle the current language
+  const [language, setLanguage] = useState('en'); // Default language: English
+
+  // Language dictionary
+  const translations = {
+    en: {
+      greeting: 'ආයුබෝවන්                வணக்கம்                    WELCOME',
+      publicButton: 'PUBLIC',
+      governmentButton: 'GOVERNMENT',
+    },
+    si: {
+      greeting: 'ආයුබෝවන්                வணக்கம்                    WELCOME',
+      publicButton: 'මහජනයා',
+      governmentButton: 'රාජ්‍ය සේවය',
+    },
+  };
+
+  // Get the current translations
+  const { greeting, publicButton, governmentButton } = translations[language];
+
   return (
     <ImageBackground
-      source={require('./assets/chipscodeback.png')}
+      source={require('./assets/ABC.jpg')}
       style={styles.background}
     >
-    <View style={styles.container}>
-      <Text style={styles.text}></Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => console.log("Public Button pressed")}
-      >
-        <Text style={styles.buttonText}>PUBLIC</Text>
-      </TouchableOpacity>
+      <SafeAreaView style={styles.container}>
+        {/* Logo Section */}
+        <View style={styles.logoContainer}>
+          <Image 
+            source={require('./assets/ABE.png')} 
+            style={styles.logo}
+          />
 
+        </View>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => console.log("Government Button pressed")}
-      >
-        <Text style={styles.buttonText}>GOVERNMENT</Text>
-      </TouchableOpacity>
+        {/* Greeting Text */}
+        <Text style={styles.headingText}>{greeting}</Text>
 
-      <StatusBar style="auto" />
-    </View>
-  </ImageBackground>
+        {/* Buttons Section */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.publicButton]} // Apply specific style
+            onPress={() => console.log("Public Button pressed")}
+          >
+            <Text style={[styles.buttonText, styles.publicButtonText]}>{publicButton}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.button, styles.governmentButton]} // Apply specific style
+            onPress={() => console.log("Government Button pressed")}
+          >
+            <Text style={[styles.buttonText, styles.governmentButtonText]}>{governmentButton}</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Language Toggle Button */}
+        <TouchableOpacity
+          style={styles.languageButton}
+          onPress={() => setLanguage(language === 'en' ? 'si' : 'en')} // Toggle language
+        >
+          <Text style={styles.languageButtonText}>
+            {language === 'en' ? 'සිංහල' : 'English'}
+          </Text>
+        </TouchableOpacity>
+
+        <StatusBar style="light" />
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
@@ -37,26 +81,75 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, -0.1)',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
   },
-  text: {
-    colour: 'Black',
-    fontSize: 18,
-    marginBottom: 20,
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 20, // Adjusted for better spacing
+  },
+  logo: {
+    width: 200, // Set specific width
+    height: 200, // Set specific height
+    marginBottom: 90,
+    resizeMode: 'contain',
+  },
+  headingText: {
+    color: '#333333',
+    fontSize: 50,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 50, // Adjust spacing below heading
+    lineHeight: 50, // Better alignment with font size
+  },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   button: {
-    backgroundColor: '#fff',
-    padding: 10,
-    marginBottom: 15,
-    borderRadius: 5,
-    width: 200,
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    marginBottom: 15, // Reduced margin between buttons
+    borderRadius: 8,
+    width: '80%',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2, // Reduced shadow opacity for natural look
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  publicButton: {
+    backgroundColor: '#4CAF50', // Green for Public Button
+  },
+  governmentButton: {
+    backgroundColor: '#F44336', // Red for Government Button
   },
   buttonText: {
-    color: 'Black',
-    fontSize: 16,
+    fontSize: 20,
+    fontWeight: '600',
     textAlign: 'center',
+  },
+  publicButtonText: {
+    color: '#FFFFFF',
+  },
+  governmentButtonText: {
+    color: '#FFFFFF',
+  },
+  languageButton: {
+    position: 'absolute', // Position near the bottom
+    bottom: 30,
+    alignSelf: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#2196F3',
+    borderRadius: 8,
+  },
+  languageButtonText: {
+    fontSize: 16,
+    color: '#ffffff',
+    fontWeight: 'bold',
   },
 });
