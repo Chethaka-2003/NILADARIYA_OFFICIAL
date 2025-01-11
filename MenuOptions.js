@@ -27,18 +27,18 @@ export default function MenuOptions()  {
       <View style={styles.header}>
              <Image source={require("./assets/Logo.png")}
                      style={styles.logo}/>
-
-              <TouchableOpacity onPress={toggleTheme} style={styles.themeIcon}>
-               <Image source={isDarkMode ? require('./assets/sun.png') : require('./assets/moon.png')} styles={styles.themeImage}/>
-             </TouchableOpacity>         
-             
+      </View>
+                    
+            <View style={styles.grid}>
               <TextInput style= {styles.searchBar}
                           placeholder="Search..." 
                           placeholderTextColor={isDarkMode? '#aaa' : '#555'}
                           value={searchQuery} 
                           onChangeText={handleSearch}
              />  
-             
+             {/* <TouchableOpacity onPress={toggleTheme} style={styles.themeIcon}>
+               <Image source={isDarkMode ? require('./assets/sun.png') : require('./assets/moon.png')} styles={styles.themeImage}/>
+             </TouchableOpacity>        */}
       </View>  
       <View style={styles.content}>     
         <Image source={require('./assets/glogo-.png')} style={styles.image}/>
@@ -128,15 +128,16 @@ export default function MenuOptions()  {
       resizeMode:'contain',
     },
     themeIcon:{
-      width : 0.00000000000000020,
-      height :0.00000000000000020,
-      marginLeft:10,
-      marginTop: 10,
-      marginBottom: 10,
+      width :0.000000005,
+      height :0.0000000005,
+      marginRight: -10,
+      marginLeft:-500,
+      
     },
     themeImage:{
-      width : '0.000000005%',
-      height : '0.00000005%',
+      width : '100%',
+      height : '100%',
+      resizeMode: 'contain',
       
     },
     searchBar: {
@@ -147,6 +148,7 @@ export default function MenuOptions()  {
       paddingHorizontal: 10,
       marginBottom: 20,
       width: "80%",
+      marginLeft: 10,
     },
     content:{
       flexDirection : 'row',
