@@ -8,21 +8,21 @@ export default function App() {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   return (
-    <ImageBackground
-      source={{ uri: 'https://example.com/background-image.jpg' }} // Replace with your background image URL
-      style={styles.backgroundImage}
-    >
+    <ImageBackground source={require('./assets/background.jpg')} style={styles.background} resizeMode="cover">
       <View style={styles.container}>
+        
         {/* Government Logo */}
         <Image
-          style={styles.logo}
-          source={{ uri: 'https://example.com/government-logo.png' }} // Replace with the logo URL
+        style={styles.logo}
+        source={{ uri: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' }} // Profile icon from Flaticon
+        onError={(error) => console.error('Failed to load image:', error.nativeEvent.error)}
         />
+      
 
         {/* Profile Picture */}
         <Image
           style={styles.profilePic}
-          source={{ uri: 'https://example.com/profile-picture.png' }} // Replace with the profile picture URL
+          source={{ uri: 'https://www.flaticon.com/free-icon/profile_3135715' }} // Replace with the profile picture URL
         />
 
         {/* Name */}
@@ -57,13 +57,13 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'cover', // Ensures the image covers the screen
+  background: {
+    flex: 1, // Makes the background fill the screen
+        justifyContent: 'center', // Centers content vertically
+        alignItems: 'center',
   },
   container: {
     flex: 1,
-    backgroundColor: 'rgba(242, 242, 242, 0.8)', // Semi-transparent overlay
     alignItems: 'center',
     padding: 20,
   },
