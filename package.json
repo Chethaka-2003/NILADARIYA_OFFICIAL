@@ -18,5 +18,8 @@
   "devDependencies": {
     "@babel/core": "^7.20.0"
   },
-  "private": true
+  "private": true,
+  "description": "Smart Government Officer consulting System (NILADHARIYA)",
+  "keywords": [],
+  "author": ""
 }
