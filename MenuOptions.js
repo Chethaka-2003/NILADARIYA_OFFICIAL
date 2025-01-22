@@ -8,6 +8,7 @@ export default function MenuOptions()  {
   const [searchQuery, setSearchQuery] = useState("");
   const [showChatbot, setShowChatbot] = useState(false);
   // const [isDarkMode, setIsDarkMode] = useState(false); //Track the current theme
+  const [showNavBar, setShowNavBar] = useState(false); // State for navigation bar visibility
 
   const handleSearch = (text) => setSearchQuery(text);
 
@@ -16,6 +17,9 @@ export default function MenuOptions()  {
   };
   const closeChatbot = () => {
     setShowChatbot(false);
+  };
+  const toggleNavBar = () => {
+    setShowNavBar (!showNavBar);
   };
   // const toggleTheme = () => {
   //   setIsDarkMode ((preMode) => !preMode);
@@ -27,6 +31,9 @@ export default function MenuOptions()  {
       <View style={styles.header}>
              <Image source={require("./assets/Logo.png")}
                      style={styles.logo}/>
+              {/* <TouchableOpacity style={styles.menuIcon} onPress={toggleNavBar}>
+                  <Image source={require('./assets/MenuIcon.png')} style={styles.menuImage}/>
+              </TouchableOpacity>         */}
       </View>
                     
             <View style={styles.grid}>
@@ -110,6 +117,24 @@ export default function MenuOptions()  {
                 />       
             </View>
             )}
+            {showNavBar && (
+              <View style={styles.navBar}>
+                <TouchableOpacity style = {styles.navItem}>
+                  <Text style={styles.navText}>Home</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style = {styles.navItem}>
+                  <Text style={styles.navText}>Home</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style = {styles.navItem}>
+                  <Text style={styles.navText}>Home</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style = {styles.navItem}>
+                  <Text style={styles.navText}>Home</Text>
+                </TouchableOpacity>
+              </View>  
+            )
+
+            }
     </View>
     </ImageBackground>        
    
@@ -255,5 +280,46 @@ export default function MenuOptions()  {
     container: {
       backgroundColor : '#FFD580',
     },
-   
-  });
+    // //Menu Icon 
+    // menuIcon:{
+    //   position : 'absolute',
+    //   bottom : 20,
+    //   right :0,
+    //   width:50,
+    //   height:50,
+    //   marginRight: 20,
+    //   marginBottom:20,
+    // },
+    // menuImage:{
+    //   width:'100%',
+    //   height: '100%',
+    //   resizeMode:'contain',
+    // },
+    // //Navigation bar
+    // navBar: {
+    //   position :'absolute',
+    //   bottom : 80,
+    //   right:20,
+    //   width:200,
+    //   backgroundColor:'#FFF',
+    //   borderRadius:5,
+    //   padding:10,
+    //   // ADD SHADOW..
+    //   shadowColor:'#000',
+    //   shadowOffset:{width:0, height:2},
+    //   shadowOpacity:0.8,
+    //   shadowRadius:2,
+    //   elevation: 5,
+    // },
+    // navItem: {
+    //   padding: 10,
+    // },
+    // navText: {
+    //   fontSize: 18,
+    //   color: '#000',
+    //   textAlign: 'center',
+    // },
+  }
+)
+
+  
