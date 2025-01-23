@@ -23,13 +23,17 @@ const PublicProfile = () => {
             source={require('./assets/background.jpg')}
             style={styles.background}>
            
-            <View style={styles.container}> 
+            <View style={styles.container}>  
 
-            <View style={styles.background}>
-                {/* Your existing UI code here */}
-            </View>
-
-                <Text style={styles.header}>Edit Profile</Text>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconLeft}>
+                        <Icon name="arrow-back" size={24} color="black"/>
+                    </TouchableOpacity>
+                    <Text style={styles.headerTitle}>Edit Profile</Text>
+                    <TouchableOpacity onPress={() => alert('Settings clicked')} style={styles.iconRight}>
+                        <Icon name="settings" size={24} color="black"/>
+                    </TouchableOpacity>
+                </View>          
 
                 <View style={styles.profileImageContainer}>
                     <Image
@@ -94,7 +98,6 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: 'cover',
     },
-
     container: {
         flex:1,
         paddingInline:110,
@@ -103,16 +106,37 @@ const styles = StyleSheet.create({
         justifyContent:'center',
     },
     header: {
+        position: 'relative',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+        paddingVertical: 10,
+    },
+    iconLeft: {
+        position: 'absolute',
+        right: 220,
+        transform: [{ translateY: -120 }], 
+    },
+    iconRight: {
+        position: 'absolute',
+        left: 220,
+        transform: [{ translateY: -120 }], 
+    },
+    headerTitle: {
         fontSize: 26,
         fontWeight: 'bold',
         marginBottom: 200,
         alignContent:'center',
-
     },
     profileImageContainer: {
+        width: 220, 
+        height: 220, 
+        borderRadius: 110, 
+        backgroundColor: 'white', 
         justifyContent: 'center',
-        flex: 1,
-        marginBottom:200,
+        alignItems: 'center',
+        marginBottom:70,
+        marginTop:-100,
     },
     profileImage: {
         width:200,
@@ -122,10 +146,10 @@ const styles = StyleSheet.create({
     },
     editIcon: {
         position: 'absolute',
-        bottom:-75,
-        right:10,
-        backgroundColor:'green',
-        padding:5,
+        bottom:18,
+        right:15,
+        backgroundColor:'#06402B',
+        padding:8,
         borderRadius:50,
     },
     inputContainer: {
