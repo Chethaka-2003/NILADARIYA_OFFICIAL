@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Homepage from './MenuOptions';
+
+import Homepage from './UpdatedMenuOptions';
 
 
 export default function App() {

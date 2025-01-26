@@ -117,24 +117,7 @@ export default function MenuOptions()  {
                 />       
             </View>
             )}
-            {showNavBar && (
-              <View style={styles.navBar}>
-                <TouchableOpacity style = {styles.navItem}>
-                  <Text style={styles.navText}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style = {styles.navItem}>
-                  <Text style={styles.navText}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style = {styles.navItem}>
-                  <Text style={styles.navText}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style = {styles.navItem}>
-                  <Text style={styles.navText}>Home</Text>
-                </TouchableOpacity>
-              </View>  
-            )
-
-            }
+            
     </View>
     </ImageBackground>        
    
