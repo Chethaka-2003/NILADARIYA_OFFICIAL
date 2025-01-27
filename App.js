@@ -7,13 +7,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import Loading from './screens/Loading';
+import SelectionPage from './screens/SelectionScreen1';
+import AboutUs from './screens/AboutUs';
 
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <SignupScreen/>
+    <AboutUs/>
   );
 }
 
