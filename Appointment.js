@@ -38,23 +38,57 @@ export default function App({ navigation }) {
     },
   ]);
 
+  const [requisites, setRequisites] = useState([]); // New state to store the created requests
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((prev) => !prev);
 
-  const [modalVisible, setModalVisible] = useState(false);  // State for modal visibility
-  const [requestTitle, setRequestTitle] = useState('');  // State to capture request title
-  const [requestDescription, setRequestDescription] = useState('');  // State to capture request description
+  const [modalVisible, setModalVisible] = useState(false);
+  const [requestTitle, setRequestTitle] = useState('');
+  const [requestDescription, setRequestDescription] = useState('');
+  const [requestDate, setRequestDate] = useState('');
+  const [requestTime, setRequestTime] = useState('');
+  const [requestPersonBooking, setRequestPersonBooking] = useState('');
+  const [requestPersonBooked, setRequestPersonBooked] = useState('');
 
-  const handleCancel = (id) => {
+  const handleCancelAppointment = (id) => {
     const updatedAppointments = appointments.filter((item) => item.id !== id);
     setAppointments(updatedAppointments);
   };
 
+  const handleCancelRequest = (id) => {
+    const updatedRequisites = requisites.filter((item) => item.id !== id);
+    setRequisites(updatedRequisites); // Remove request from requisites
+  };
+
   const handleCreateRequest = () => {
-    if (requestTitle && requestDescription) {
-      // Handle the creation of the request (e.g., saving it to state, sending to server)
-      alert('Request Created: ' + requestTitle);
-      setModalVisible(false); // Close the modal after creating the request
+    if (
+      requestTitle &&
+      requestDescription &&
+      requestDate &&
+      requestTime &&
+      requestPersonBooking &&
+      requestPersonBooked
+    ) {
+      const newRequest = {
+        id: Math.random().toString(), // Unique ID for the request
+        title: requestTitle,
+        description: requestDescription,
+        date: requestDate,
+        time: requestTime,
+        personBooking: requestPersonBooking,
+        personBooked: requestPersonBooked,
+      };
+
+      setRequisites((prevRequisites) => [...prevRequisites, newRequest]); // Add request to requisites
+
+      alert('Request Created: ' + requestTitle); // Optional alert
+      setModalVisible(false); // Close the modal
+      setRequestTitle(''); // Clear input fields
+      setRequestDescription('');
+      setRequestDate('');
+      setRequestTime('');
+      setRequestPersonBooking('');
+      setRequestPersonBooked('');
     } else {
       alert('Please fill in all fields');
     }
@@ -64,7 +98,7 @@ export default function App({ navigation }) {
     <SafeAreaView style={styles.container}>
       {/* Background Image */}
       <ImageBackground
-        source={{ uri: 'https://your-image-url.com/background.jpg' }} // Replace with your image URL or local image
+        source={require('./assets/ABF.png')} // Replace with your image URL or local image
         style={styles.backgroundImage}
       >
         {/* Header with Back Button */}
@@ -116,7 +150,7 @@ export default function App({ navigation }) {
                 <Text style={styles.cardWho}>Who: {item.who}</Text>
                 <TouchableOpacity
                   style={styles.cancelButton}
-                  onPress={() => handleCancel(item.id)}
+                  onPress={() => handleCancelAppointment(item.id)}
                 >
                   <Text style={styles.cancelText}>CANCEL</Text>
                 </TouchableOpacity>
@@ -129,9 +163,32 @@ export default function App({ navigation }) {
             }
           />
         ) : (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No requisites available.</Text>
-          </View>
+          <FlatList
+            data={requisites}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContainer}
+            renderItem={({ item }) => (
+              <View style={styles.card}>
+                <Text style={styles.cardTitle}>{item.title}</Text>
+                <Text style={styles.cardDescription}>{item.description}</Text>
+                <Text style={styles.cardTime}>Date: {item.date}</Text>
+                <Text style={styles.cardTime}>Time: {item.time}</Text>
+                <Text style={styles.cardWho}>Booking by: {item.personBooking}</Text>
+                <Text style={styles.cardWho}>Who: {item.personBooked}</Text>
+                <TouchableOpacity
+                  style={styles.cancelButton}
+                  onPress={() => handleCancelRequest(item.id)}
+                >
+                  <Text style={styles.cancelText}>CANCEL</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>No requisites available.</Text>
+              </View>
+            }
+          />
         )}
 
         {/* Request Button */}
@@ -163,12 +220,35 @@ export default function App({ navigation }) {
               onChangeText={setRequestDescription}
               multiline
             />
-            <TouchableOpacity
-              style={styles.createButton}
-              onPress={handleCreateRequest}
-            >
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Request Date (e.g., Jan 29, 2025)"
+              value={requestDate}
+              onChangeText={setRequestDate}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Request Time (e.g., 11:10am - 11:30am)"
+              value={requestTime}
+              onChangeText={setRequestTime}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Person Booking"
+              value={requestPersonBooking}
+              onChangeText={setRequestPersonBooking}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Person Being Booked"
+              value={requestPersonBooked}
+              onChangeText={setRequestPersonBooked}
+            />
+
+            <TouchableOpacity style={styles.createButton} onPress={handleCreateRequest}>
               <Text style={styles.createButtonText}>Create Request</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => setModalVisible(false)}
@@ -185,21 +265,29 @@ export default function App({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 30,
   },
   backgroundImage: {
     flex: 1,
     resizeMode: 'cover',
   },
   header: {
+    paddingTop: height * 0.02,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: width * 0.05,
-    paddingVertical: height * 0.02,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderColor: '#e0e0e0',
-    opacity: 0.9,
+    marginHorizontal: width * 0.05,
+  },
+  backButton: {
+    position: 'absolute',
+    left: width * 0.03,
+    top: height * 0.03,
+  },
+  backButtonText: {
+    fontSize: width * 0.045,
+    color: '#333',
   },
   userName: {
     fontSize: width * 0.05,
@@ -211,76 +299,64 @@ const styles = StyleSheet.create({
     transform: [{ scale: width * 0.0035 }],
     marginTop: height * 0.05,
   },
-  backButton: {
-    position: 'absolute',
-    left: width * 0.03,
-    top: height * 0.03,
-  },
-  backButtonText: {
-    fontSize: width * 0.04,
-    color: '#4caf50',
-  },
   tabContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#fff',
-    paddingVertical: height * 0.015,
-    borderBottomWidth: 1,
-    borderColor: '#e0e0e0',
+    justifyContent: 'center',
+    marginTop: height * 0.02,
   },
   tab: {
-    paddingHorizontal: width * 0.05,
     paddingVertical: height * 0.01,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
+    paddingHorizontal: width * 0.05,
   },
   activeTab: {
-    backgroundColor: '#333',
+    backgroundColor: '#4caf50',
   },
   tabText: {
-    fontSize: width * 0.04,
-    color: '#555',
-    fontWeight: '600',
+    fontSize: width * 0.045,
+    color: '#333',
   },
   activeTabText: {
     color: '#fff',
   },
   listContainer: {
+    marginTop: height * 0.02,
     paddingHorizontal: width * 0.05,
-    paddingBottom: height * 0.02,
   },
   card: {
     backgroundColor: '#fff',
     borderRadius: 10,
-    padding: width * 0.04,
-    marginVertical: height * 0.01,
-    elevation: 2,
+    padding: width * 0.05,
+    marginBottom: height * 0.02,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.1,
     shadowRadius: 3,
+    elevation: 3,
   },
   cardTitle: {
     fontSize: width * 0.045,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: height * 0.005,
   },
   cardTime: {
     fontSize: width * 0.04,
     color: '#666',
-    marginBottom: height * 0.005,
   },
   cardWho: {
     fontSize: width * 0.04,
     color: '#999',
   },
-  cancelButton: {
+  cardDescription: {
+    fontSize: width * 0.04,
+    color: '#666',
     marginTop: height * 0.01,
+  },
+  cancelButton: {
     backgroundColor: '#ff3b30',
     borderRadius: 5,
     paddingVertical: height * 0.015,
     alignItems: 'center',
+    marginTop: height * 0.01,
   },
   cancelText: {
     color: '#fff',
@@ -295,7 +371,6 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: width * 0.045,
     color: '#666',
-    textAlign: 'center',
   },
   requestButton: {
     backgroundColor: '#4caf50',
