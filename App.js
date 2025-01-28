@@ -9,13 +9,15 @@ import SignupScreen from './screens/SignupScreen';
 import Loading from './screens/Loading';
 import SelectionPage from './screens/SelectionScreen1';
 import AboutUs from './screens/AboutUs';
-
+import ProfilePage from './screens/profile_1';
+import ProfilePage2 from './screens/profile_2';
+import ProfilePage3 from './screens/profile_3';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <AboutUs/>
+    <ProfilePage3/>
   );
 }
 
