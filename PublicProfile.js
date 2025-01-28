@@ -8,6 +8,7 @@ import {
     ImageBackground,
     Modal,
     Switch,
+    Image,
 } from 'react-native';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 
@@ -27,6 +28,10 @@ const PublicProfile = () => {
                 <View style={styles.header}>
                     <Text style={styles.username}>Savini Perera</Text>
                     <Switch value={isSwitchOn} onValueChange={toggleSwitch} />
+                </View>
+
+                <View style={styles.profilePictureSection}>
+                    <Image source={require('./assets/ProfileImage.jpg')} style={styles.profilePicture}/>
                 </View>
 
                 <View style={styles.permissionSection}>
@@ -125,6 +130,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         color: '#333',
+    },
+    profilePictureSection: {
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    profilePicture: {
+        width: 200,
+        height: 200,
+        borderRadius: 100,
+        borderWidth: 3,
+        borderColor: '#fff',
     },
     permissionSection: {
         paddingHorizontal: 20,
