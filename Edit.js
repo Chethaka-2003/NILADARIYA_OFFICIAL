@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Switch, StyleSheet, Image } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function ProfileScreen() {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -28,11 +26,11 @@ export default function ProfileScreen() {
       {/* Profile Picture and Close Button */}
       <View style={styles.avatarContainer}>
         <Image
-          source={{ uri: 'https://via.placeholder.com/100' }}
+          source={require('./assets/ABC.jpg')}
           style={styles.avatar}
         />
         <TouchableOpacity style={styles.closeButton}>
-          <Ionicons name="close" size={24} color="black" />
+          <Text style={styles.closeButtonText}>X</Text>
         </TouchableOpacity>
       </View>
 
@@ -62,17 +60,11 @@ export default function ProfileScreen() {
         />
 
         <Text style={styles.label}>District</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={district}
-            onValueChange={(itemValue) => setDistrict(itemValue)}
-          >
-            <Picker.Item label="Colombo" value="Colombo" />
-            <Picker.Item label="Gampaha" value="Gampaha" />
-            <Picker.Item label="Kandy" value="Kandy" />
-            {/* Add more districts as needed */}
-          </Picker>
-        </View>
+        <TextInput
+          style={styles.input}
+          value={district}
+          onChangeText={setDistrict}
+        />
 
         <TouchableOpacity style={styles.saveButton}>
           <Text style={styles.saveButtonText}>Save Changes</Text>
@@ -81,9 +73,9 @@ export default function ProfileScreen() {
 
       {/* Bottom Navigation */}
       <View style={styles.navBar}>
-        <Ionicons name="home" size={28} color="gray" />
-        <Ionicons name="person" size={28} color="black" />
-        <Ionicons name="settings" size={28} color="gray" />
+        <Text style={styles.navItem}>Home</Text>
+        <Text style={styles.navItem}>Profile</Text>
+        <Text style={styles.navItem}>Settings</Text>
       </View>
     </View>
   );
@@ -122,7 +114,12 @@ const styles = StyleSheet.create({
     right: 10,
     backgroundColor: '#fff',
     borderRadius: 12,
-    padding: 2,
+    padding: 5,
+  },
+  closeButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
   },
   form: {
     backgroundColor: '#fff',
@@ -142,12 +139,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 15,
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
     marginBottom: 15,
   },
   saveButton: {
@@ -175,5 +166,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
+  },
+  navItem: {
+    fontSize: 16,
+    color: 'gray',
   },
 });
