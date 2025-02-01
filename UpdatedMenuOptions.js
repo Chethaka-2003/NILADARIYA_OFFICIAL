@@ -33,6 +33,33 @@ return (
       </Picker>  
 
       </View>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.button}>
+          <Image source={require('./assets/PradeshiyaSaba.jpg')} style={styles.buttonImage}/>
+          <Text style={styles.buttonText}> Divisional Council</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button}>
+          <Image source={require('./assets/PradeshiyaSaba.jpg')} style={styles.buttonImage}/>
+          <Text style={styles.buttonText}> MUNICIPAL COUNCIL</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.iconsContainer}>
+        <TouchableOpacity style={styles.icon}>
+          <Image source={require('./assets/water_board.png')} style={styles.iconImage}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.icon}>
+          <Image source={require('./assets/electricity.png')} style={styles.iconImage}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.icon}>
+          <Image source={require('./assets/police.jpg')} style={styles.iconImage}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.icon}>
+          <Image source={require('./assets/court.png')} style={styles.iconImage}/>
+        </TouchableOpacity>
+      </View>
+
     </ImageBackground>        
    
           );
@@ -45,13 +72,14 @@ return (
           
         },
         header: {
-            padding: 40,
+            padding: 20,
             alignItems: "center",
           },
         Logo: {
             width: 150,
             height: 100,
-            marginBottom: 20,
+            marginBottom: 5,
+            marginTop:2,
             resizeMode:'contain',
           },
           textContainer: {
@@ -67,6 +95,45 @@ return (
             borderWidth: 1,
             borderRadius: 5,
           },
+          buttonsContainer: {
+            flexDirection:'row',
+            justifyContent:'space-between',
+            marginBottom: 40,
+            marginTop:10,
+          },
+          button: {
+            backgroundColor: '#FFFFFF',
+            borderRadius:5,
+            padding:10,
+            alignItems:'center',
+            flex:1,
+            marginHorizontal:5,
+          },
+          buttonImage:{
+            width:50,
+            height:50,
+            marginBottom:10,
+          },
+          buttonText:{
+            fontSize:14,
+          },
+          iconsContainer:{
+            flexDirection:'row',
+            justifyContent:'space-between',
+            marginBottom:20,
+          },
+          icon:{
+            backgroundColor:'#FFFFFF',
+            borderRadius:5,
+            padding:10,
+            alignItems:'center',
+            flex:1,
+            marginHorizontal:5, 
+          },  
+          iconImage:{
+            width:50,
+            height:50,
+          }
         }
     )          
    
