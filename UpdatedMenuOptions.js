@@ -15,13 +15,14 @@ export default function MenuOptions()  {
 
 return (
     <ImageBackground source={require('./assets/background.png')} style={styles.background}>
-       <View style={styles.textContainer}>
+        <ScrollView contentContainerStyle={styles.scrollView}>
         
-      <View style={styles.header}>
+      <View style={styles.logoAndTextContainer}>
              <Image source={require("./assets/Logo.png")}
-                     style={styles.Logo}/>
+                     style={styles.logo}/>
       </View>
-
+      
+      <View style={styles.pickerContainer}> 
       <Picker
         selectedValue = {selectedDistrict}
         style  =  {styles.picker} 
@@ -35,17 +36,19 @@ return (
       </View>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.button}>
-          <Image source={require('./assets/PradeshiyaSaba.jpg')} style={styles.buttonImage}/>
-          <Text style={styles.buttonText}> Divisional Council</Text>
+          <ImageBackground source={require('./assets/flag.png')} style={styles.buttonBackground}>
+          <Text style={styles.buttonText}> DIVISIONAL COUNCIL</Text>
+          </ImageBackground>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button}>
-          <Image source={require('./assets/PradeshiyaSaba.jpg')} style={styles.buttonImage}/>
+          <ImageBackground source={require('./assets/MunicipalCoun.jpg')} style={styles.buttonBackground}>
           <Text style={styles.buttonText}> MUNICIPAL COUNCIL</Text>
+          </ImageBackground>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.iconsContainer}>
+      <View style={styles.iconsGrid}>
         <TouchableOpacity style={styles.icon}>
           <Image source={require('./assets/water_board.png')} style={styles.iconImage}/>
         </TouchableOpacity>
@@ -59,7 +62,7 @@ return (
           <Image source={require('./assets/court.png')} style={styles.iconImage}/>
         </TouchableOpacity>
       </View>
-
+      </ScrollView>
     </ImageBackground>        
    
           );
@@ -71,22 +74,29 @@ return (
           flex: 1,
           
         },
-        header: {
-            padding: 20,
-            alignItems: "center",
-          },
-        Logo: {
-            width: 150,
-            height: 100,
-            marginBottom: 5,
-            marginTop:2,
-            resizeMode:'contain',
-          },
-          textContainer: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
+        scrollView: {
+          flexGrow: 1,
+          justifyContent: 'space-between',
+        },
+        logoAndTextContainer: {
+          alignItems: 'center',
+         // marginVertical: 20,
+        },
+        logo: {
+          width: 200,
+          height: 150,
+          resizeMode: 'contain',
+          marginTop:23,
+          marginBottom:0,
+          
+        },
+          // textContainer: {
+          //   flex: 1,
+          //   justifyContent: 'center',
+          //   marginTop: 1,
+          //   marginBottom:1,
+          //   alignItems: 'center',
+          // },
           picker: {
             height: 50,
             width: 250,
@@ -94,45 +104,63 @@ return (
             borderColor: '#000000',
             borderWidth: 1,
             borderRadius: 5,
+            marginTop:0,
+          },
+          pickerContainer: {
+            alignItems: 'center',
+            marginTop:2,
+            //marginVertical:1,
           },
           buttonsContainer: {
-            flexDirection:'row',
+            flexDirection:'colomn',
             justifyContent:'space-between',
-            marginBottom: 40,
-            marginTop:10,
+            marginBottom: 10,
+            marginTop:5,
+            borderRadius:50,
           },
           button: {
-            backgroundColor: '#FFFFFF',
-            borderRadius:5,
+            height:190,
+            //width:400,
+            margin:10,
+            borderRadius:10,
             padding:10,
             alignItems:'center',
             flex:1,
             marginHorizontal:5,
+            marginBottom:20,
+            marginTop:10,
           },
-          buttonImage:{
-            width:50,
-            height:50,
-            marginBottom:10,
+          buttonBackground:{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            //padding: 10,
+            width:300,
           },
           buttonText:{
-            fontSize:14,
+            fontSize:20,
+            color: 'black',
+            fontWeight: 'bold',
+            textAlign: 'center',
           },
-          iconsContainer:{
-            flexDirection:'row',
-            justifyContent:'space-between',
-            marginBottom:20,
+          iconsGrid: {
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            marginBottom: 20,
           },
           icon:{
             backgroundColor:'#FFFFFF',
             borderRadius:5,
             padding:10,
             alignItems:'center',
-            flex:1,
-            marginHorizontal:5, 
+            width: '48%',
+            marginVertical: 10, 
           },  
           iconImage:{
             width:50,
             height:50,
+            marginBottom: 10,
           }
         }
     )          
