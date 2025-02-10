@@ -12,83 +12,45 @@ import {
   Modal,
   TextInput,
 } from 'react-native';
+//import DateTimePicker from '@react-native-community/datetimepicker';
 
 const { width, height } = Dimensions.get('window');
 
 export default function App({ navigation }) {
   const [activeTab, setActiveTab] = useState('Appointments');
-  const [appointments, setAppointments] = useState([
-    {
-      id: '1',
-      title: 'Consultant Session (Chethaka Fernando)',
-      time: 'Mon Jan 29, 2025 | 11:10am - 11:30am (GMT+5:30)',
-      who: 'Banu Ahuraliya',
-    },
-    {
-      id: '2',
-      title: 'Consultant Session (Chethaka Fernando)',
-      time: 'Mon Jan 29, 2025 | 11:10am - 11:30am (GMT+5:30)',
-      who: 'Banu Ahuraliya',
-    },
-    {
-      id: '3',
-      title: 'Consultant Session (Chethaka Fernando)',
-      time: 'Mon Jan 29, 2025 | 11:10am - 11:30am (GMT+5:30)',
-      who: 'Banu Ahuraliya',
-    },
-  ]);
-
-  const [requisites, setRequisites] = useState([]); // New state to store the created requests
+  const [appointments, setAppointments] = useState([]);
+  const [requisites, setRequisites] = useState([]);
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((prev) => !prev);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [requestTitle, setRequestTitle] = useState('');
   const [requestDescription, setRequestDescription] = useState('');
-  const [requestDate, setRequestDate] = useState('');
-  const [requestTime, setRequestTime] = useState('');
-  const [requestPersonBooking, setRequestPersonBooking] = useState('');
-  const [requestPersonBooked, setRequestPersonBooked] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [personBooking, setPersonBooking] = useState('');
+  const [personBooked, setPersonBooked] = useState('');
 
-  const handleCancelAppointment = (id) => {
-    const updatedAppointments = appointments.filter((item) => item.id !== id);
-    setAppointments(updatedAppointments);
-  };
-
-  const handleCancelRequest = (id) => {
-    const updatedRequisites = requisites.filter((item) => item.id !== id);
-    setRequisites(updatedRequisites); // Remove request from requisites
-  };
-
-  const handleCreateRequest = () => {
-    if (
-      requestTitle &&
-      requestDescription &&
-      requestDate &&
-      requestTime &&
-      requestPersonBooking &&
-      requestPersonBooked
-    ) {
-      const newRequest = {
-        id: Math.random().toString(), // Unique ID for the request
+  const handleCreate = () => {
+    if (requestTitle && requestDescription && personBooking && personBooked) {
+      const newEntry = {
+        id: Math.random().toString(),
         title: requestTitle,
         description: requestDescription,
-        date: requestDate,
-        time: requestTime,
-        personBooking: requestPersonBooking,
-        personBooked: requestPersonBooked,
+        date: date.toDateString(),
+        time: date.toLocaleTimeString(),
+        personBooking,
+        personBooked,
       };
-
-      setRequisites((prevRequisites) => [...prevRequisites, newRequest]); // Add request to requisites
-
-      alert('Request Created: ' + requestTitle); // Optional alert
-      setModalVisible(false); // Close the modal
-      setRequestTitle(''); // Clear input fields
+      activeTab === 'Appointments'
+        ? setAppointments((prev) => [...prev, newEntry])
+        : setRequisites((prev) => [...prev, newEntry]);
+      setModalVisible(false);
+      setRequestTitle('');
       setRequestDescription('');
-      setRequestDate('');
-      setRequestTime('');
-      setRequestPersonBooking('');
-      setRequestPersonBooked('');
+      setPersonBooking('');
+      setPersonBooked('');
     } else {
       alert('Please fill in all fields');
     }
@@ -96,163 +58,68 @@ export default function App({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Background Image */}
-      <ImageBackground
-        source={require('./assets/ABF.png')} // Replace with your image URL or local image
-        style={styles.backgroundImage}
-      >
-        {/* Header with Back Button */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <Text style={styles.backButtonText}>{'< Back'}</Text>
-          </TouchableOpacity>
-          <Text style={styles.userName}>Chethaka Fernando</Text>
-          <Switch
-            trackColor={{ false: '#c4c4c4', true: '#4caf50' }}
-            thumbColor={isEnabled ? '#fff' : '#fff'}
-            ios_backgroundColor="#e0e0e0"
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-            style={styles.switch}
-          />
-        </View>
-
-        {/* Tabs */}
+      <ImageBackground source={require('./assets/ABF.png')} style={styles.backgroundImage}>
         <View style={styles.tabContainer}>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'Appointments' && styles.activeTab]}
             onPress={() => setActiveTab('Appointments')}
           >
-            <Text style={[styles.tabText, activeTab === 'Appointments' && styles.activeTabText]}>
-              Appointments
-            </Text>
+            <Text style={styles.tabText}>Appointments</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'Requisites' && styles.activeTab]}
             onPress={() => setActiveTab('Requisites')}
           >
-            <Text style={[styles.tabText, activeTab === 'Requisites' && styles.activeTabText]}>
-              Requisites
-            </Text>
+            <Text style={styles.tabText}>Requisites</Text>
           </TouchableOpacity>
         </View>
-
-        {/* Content */}
-        {activeTab === 'Appointments' ? (
-          <FlatList
-            data={appointments}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.listContainer}
-            renderItem={({ item }) => (
-              <View style={styles.card}>
-                <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardTime}>{item.time}</Text>
-                <Text style={styles.cardWho}>Who: {item.who}</Text>
-                <TouchableOpacity
-                  style={styles.cancelButton}
-                  onPress={() => handleCancelAppointment(item.id)}
-                >
-                  <Text style={styles.cancelText}>CANCEL</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-            ListEmptyComponent={
-              <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>No appointments available.</Text>
-              </View>
-            }
-          />
-        ) : (
-          <FlatList
-            data={requisites}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.listContainer}
-            renderItem={({ item }) => (
-              <View style={styles.card}>
-                <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardDescription}>{item.description}</Text>
-                <Text style={styles.cardTime}>Date: {item.date}</Text>
-                <Text style={styles.cardTime}>Time: {item.time}</Text>
-                <Text style={styles.cardWho}>Booking by: {item.personBooking}</Text>
-                <Text style={styles.cardWho}>Who: {item.personBooked}</Text>
-                <TouchableOpacity
-                  style={styles.cancelButton}
-                  onPress={() => handleCancelRequest(item.id)}
-                >
-                  <Text style={styles.cancelText}>CANCEL</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-            ListEmptyComponent={
-              <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>No requisites available.</Text>
-              </View>
-            }
-          />
-        )}
-
-        {/* Request Button */}
+        <FlatList
+          data={activeTab === 'Appointments' ? appointments : requisites}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>{item.title}</Text>
+              <Text style={styles.cardDescription}>{item.description}</Text>
+              <Text style={styles.cardTime}>Date: {item.date}</Text>
+              <Text style={styles.cardTime}>Time: {item.time}</Text>
+              <Text style={styles.cardWho}>Booking by: {item.personBooking}</Text>
+              <Text style={styles.cardWho}>Who: {item.personBooked}</Text>
+            </View>
+          )}
+        />
         <TouchableOpacity style={styles.requestButton} onPress={() => setModalVisible(true)}>
-          <Text style={styles.requestButtonText}>+ Request</Text>
+          <Text style={styles.requestButtonText}>{activeTab === 'Appointments' ? 'Make Appointment' : 'Request'}</Text>
         </TouchableOpacity>
       </ImageBackground>
 
-      {/* Modal for Create Request */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
+      <Modal visible={modalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Create Request</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Request Title"
-              value={requestTitle}
-              onChangeText={setRequestTitle}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Request Description"
-              value={requestDescription}
-              onChangeText={setRequestDescription}
-              multiline
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Request Date (e.g., Jan 29, 2025)"
-              value={requestDate}
-              onChangeText={setRequestDate}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Request Time (e.g., 11:10am - 11:30am)"
-              value={requestTime}
-              onChangeText={setRequestTime}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Person Booking"
-              value={requestPersonBooking}
-              onChangeText={setRequestPersonBooking}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Person Being Booked"
-              value={requestPersonBooked}
-              onChangeText={setRequestPersonBooked}
-            />
-
-            <TouchableOpacity style={styles.createButton} onPress={handleCreateRequest}>
-              <Text style={styles.createButtonText}>Create Request</Text>
+            <Text style={styles.modalTitle}>{activeTab === 'Appointments' ? 'Make Appointment' : 'Create Request'}</Text>
+            <View style={styles.textBox}>
+              <TextInput style={styles.creativeInput} placeholder="Title" value={requestTitle} onChangeText={setRequestTitle} />
+            </View>
+            <View style={styles.textBox}>
+              <TextInput style={styles.creativeInput} placeholder="Description" value={requestDescription} onChangeText={setRequestDescription} multiline />
+            </View>
+            <View style={styles.textBox}>
+              <TextInput style={styles.creativeInput} placeholder="Booking By" value={personBooking} onChangeText={setPersonBooking} />
+            </View>
+            <View style={styles.textBox}>
+              <TextInput style={styles.creativeInput} placeholder="Who" value={personBooked} onChangeText={setPersonBooked} />
+            </View>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
+              <Text style={styles.dateText}>Select Date: {date.toDateString()}</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
-            >
+            {showDatePicker && <DateTimePicker value={date} mode="date" display="default" onChange={(e, selectedDate) => {setShowDatePicker(false); setDate(selectedDate || date);}} />}
+            <TouchableOpacity onPress={() => setShowTimePicker(true)} style={styles.dateButton}>
+              <Text style={styles.dateText}>Select Time: {date.toLocaleTimeString()}</Text>
+            </TouchableOpacity>
+            {showTimePicker && <DateTimePicker value={date} mode="time" display="default" onChange={(e, selectedTime) => {setShowTimePicker(false); setDate(selectedTime || date);}} />}
+            <TouchableOpacity style={styles.createButton} onPress={handleCreate}>
+              <Text style={styles.createButtonText}>{activeTab === 'Appointments' ? 'Book Appointment' : 'Submit Request'}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
@@ -263,171 +130,14 @@ export default function App({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 30,
-  },
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
-  header: {
-    paddingTop: height * 0.02,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: width * 0.05,
-  },
-  backButton: {
-    position: 'absolute',
-    left: width * 0.03,
-    top: height * 0.03,
-  },
-  backButtonText: {
-    fontSize: width * 0.045,
-    color: '#333',
-  },
-  userName: {
-    fontSize: width * 0.05,
-    fontWeight: 'bold',
-    color: '#333',
-    marginTop: height * 0.05,
-  },
-  switch: {
-    transform: [{ scale: width * 0.0035 }],
-    marginTop: height * 0.05,
-  },
-  tabContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: height * 0.02,
-  },
-  tab: {
-    paddingVertical: height * 0.01,
-    paddingHorizontal: width * 0.05,
-  },
-  activeTab: {
-    backgroundColor: '#4caf50',
-  },
-  tabText: {
-    fontSize: width * 0.045,
-    color: '#333',
-  },
-  activeTabText: {
-    color: '#fff',
-  },
-  listContainer: {
-    marginTop: height * 0.02,
-    paddingHorizontal: width * 0.05,
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: width * 0.05,
-    marginBottom: height * 0.02,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  cardTitle: {
-    fontSize: width * 0.045,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  cardTime: {
-    fontSize: width * 0.04,
-    color: '#666',
-  },
-  cardWho: {
-    fontSize: width * 0.04,
-    color: '#999',
-  },
-  cardDescription: {
-    fontSize: width * 0.04,
-    color: '#666',
-    marginTop: height * 0.01,
-  },
-  cancelButton: {
-    backgroundColor: '#ff3b30',
-    borderRadius: 5,
-    paddingVertical: height * 0.015,
-    alignItems: 'center',
-    marginTop: height * 0.01,
-  },
-  cancelText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: width * 0.04,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyText: {
-    fontSize: width * 0.045,
-    color: '#666',
-  },
-  requestButton: {
-    backgroundColor: '#4caf50',
-    borderRadius: 30,
-    paddingVertical: height * 0.015,
-    paddingHorizontal: width * 0.1,
-    alignSelf: 'center',
-    position: 'absolute',
-    bottom: height * 0.03,
-  },
-  requestButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: width * 0.045,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: width * 0.05,
-    width: width * 0.8,
-  },
-  modalTitle: {
-    fontSize: width * 0.05,
-    fontWeight: 'bold',
-    marginBottom: height * 0.02,
-  },
-  input: {
-    height: height * 0.07,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingLeft: width * 0.04,
-    marginBottom: height * 0.02,
-  },
-  createButton: {
-    backgroundColor: '#4caf50',
-    borderRadius: 5,
-    paddingVertical: height * 0.015,
-    alignItems: 'center',
-  },
-  createButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: width * 0.04,
-  },
-  closeButton: {
-    marginTop: height * 0.02,
-    alignItems: 'center',
-  },
-  closeButtonText: {
-    fontSize: width * 0.04,
-    color: '#888',
-  },
+  container: { flex: 1 },
+  backgroundImage: { flex: 1, resizeMode: 'cover', justifyContent: 'center' },
+  tabContainer: { flexDirection: 'row', justifyContent: 'center', marginTop: 20 },
+  tab: { padding: 15 },
+  activeTab: { backgroundColor: '#4caf50' },
+  tabText: { fontSize: 16 },
+  requestButton: { position: 'absolute', bottom: 20, alignSelf: 'center', backgroundColor: '#4caf50', padding: 15, borderRadius: 10 },
+  requestButtonText: { color: '#fff', fontSize: 16 },
+  textBox: { backgroundColor: '#e8f5e9', padding: 10, borderRadius: 8, marginBottom: 10 },
+  creativeInput: { borderBottomWidth: 2, borderColor: '#4caf50', padding: 10, borderRadius: 8, backgroundColor: '#fff' },
 });
