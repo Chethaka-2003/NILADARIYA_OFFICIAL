@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, ImageBackground,Modal} from 'react-native';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, ImageBackground,Modal,Dimensions } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 // import { WebView } from 'react-native-webview';
  import Draggable from 'react-native-draggable';
@@ -9,6 +9,8 @@ const districts = [
   'Jaffna', 'Kalutara', 'Kandy', 'Kegalle', 'Kilinochchi', 'Kurunegala', 'Mannar', 'Matale',
   'Matara', 'Monaragala', 'Mullaitivu', 'Nuwara Eliya', 'Polonnaruwa', 'Puttalam', 'Ratnapura', 'Trincomalee', 'Vavuniya'
 ];
+
+const { width, height } = Dimensions.get('window');
 
 export default function MenuOptions()  {
   const [selectedDistrict,setSelectedDistrict] = useState(districts[0]);
@@ -85,6 +87,22 @@ return (
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Image source={require('./assets/chatbotIcon.png')} style={styles.modalImage} />
+            <View style={styles.textContainer}>
+              <Text style={styles.title}> HIII THERE!!!! </Text>
+              <Text style={styles.subTitle}>Connect with me.. Save your time.. </Text>
+            </View> 
+            <View style={styles.Questions}>
+              <Text style={styles.QEnglish}>Choose the language you want. </Text>
+              <Text style={styles.QSinhala}>ඔබට අවශ්‍ය භාෂාව තෝරාගන්න.</Text>
+            </View>
+            <View style={styles.languageButtonsContainer}>
+                <TouchableOpacity style={styles.languageButton}>
+                  <Text style={styles.languageButtonText}>English</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.languageButton}>
+                  <Text style={styles.languageButtonText}>සිංහල</Text>
+                </TouchableOpacity>
+              </View>
             <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
@@ -112,11 +130,11 @@ return (
          // marginVertical: 20,
         },
         logo: {
-          width: 200,
-          height: 150,
+          width: width * 0.5,
+          height: height * 0.2,
           resizeMode: 'contain',
-          marginTop:23,
-          marginBottom:0,
+          marginTop:height*0.03,
+          marginBottom: height*0.01,
           
         },
           // textContainer: {
@@ -128,7 +146,7 @@ return (
           // },
           picker: {
             height: 50,
-            width: 250,
+            width: width * 0.7,
             backgroundColor: '#ffffff',
             borderColor: '#000000',
             borderWidth: 1,
@@ -137,14 +155,14 @@ return (
           },
           pickerContainer: {
             alignItems: 'center',
-            marginTop:2,
+            marginTop: height * 0.02,
             //marginVertical:1,
           },
           buttonsContainer: {
             flexDirection:'colomn',
             justifyContent:'space-between',
-            marginBottom: 10,
-            marginTop:5,
+            marginBottom: height * 0.01,
+            marginTop: height * 0.01,
             borderRadius:50,
           },
           button: {
@@ -255,6 +273,47 @@ return (
           height: 60,
           width: 200,
           resizeMode: 'contain',
+        },
+        textContainer:{
+
+        },
+        title:{
+         fontSize:23,
+         textAlign:'center',
+         fontStyle:'normal',
+         color:'orange',
+         fontWeight:"bold",
+        },
+        subTitle:{
+          fontSize:14,
+          color:'grey',
+          fontStyle:'italic',
+          fontWeight:"bold",
+        },
+        Questions:{
+          alignItems:'center',
+          marginTop:100,
+          fontSize:19,
+          fontWeight:"bold",
+        },
+        languageButtonsContainer: {
+          flexDirection: 'colomn',
+          justifyContent: 'center',
+          marginTop: 20,
+        },
+        languageButton: {
+          backgroundColor: 'black',
+          borderRadius: 5,
+          paddingVertical: 10,
+          paddingHorizontal: 60,
+          marginHorizontal: 100,
+          width:200,
+        },
+        languageButtonText: {
+          color: 'white',
+          fontSize: 16,
+          fontWeight: 'bold',
+          textAlign: 'center',
         },
       },
     )          
