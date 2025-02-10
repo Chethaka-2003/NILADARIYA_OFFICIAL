@@ -127,7 +127,7 @@ return (
             alignItems:'center',
             flex:1,
             marginHorizontal:5,
-            marginBottom:20,
+            marginBottom:10,
             marginTop:10,
           },
           buttonBackground:{
@@ -136,6 +136,7 @@ return (
             alignItems: 'center',
             //padding: 10,
             width:300,
+            borderRadius:10,
           },
           buttonText:{
             fontSize:20,
@@ -147,20 +148,25 @@ return (
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'space-between',
-            marginBottom: 20,
+            marginBottom: 10,
+            padding:2,
+            marginTop:2,
+            width:250,
+            alignItems:'center',
+            marginLeft: 90,
           },
           icon:{
-            backgroundColor:'#FFFFFF',
-            borderRadius:5,
+            backgroundColor:'gray',
+            borderRadius:50,
             padding:10,
             alignItems:'center',
-            width: '48%',
+            width: '50%',
             marginVertical: 10, 
           },  
           iconImage:{
-            width:50,
-            height:50,
-            marginBottom: 10,
+            width:70,
+            height:55,
+            marginBottom: 1,
           }
         }
     )          
