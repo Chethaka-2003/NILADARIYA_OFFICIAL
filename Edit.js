@@ -12,6 +12,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
+    
       {/* Header Section */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Daniel Callego</Text>
