@@ -6,9 +6,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     ImageBackground,
-    Modal,
-    Switch,
-    Image,
+    Modal
 } from 'react-native';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 
@@ -26,20 +24,8 @@ const PublicProfile = () => {
         >
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.username}>Savini Perera</Text>
-                    <Switch value={isSwitchOn} onValueChange={toggleSwitch} />
-                </View>
-
-                <View style={styles.profilePictureSection}>
-                    <Image source={require('./assets/ProfileImage.jpg')} style={styles.profilePicture}/>
-                </View>
-
-                <View style={styles.permissionSection}>
-                    <Text style={styles.sectionTitle}>Permission</Text>
-                    <TouchableOpacity style={styles.button} onPress={toggleModal}>
-                        <Icon name="person" size={20} color="black" />
-                        <Text style={styles.buttonText}>Profile Details</Text>
-                        <Icon name="chevron-right" size={20} color="black" />
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconLeft}>
+                        <Icon name="arrow-back" size={24} color="black"/>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button}>
                         <Icon name="list" size={20} color="black" />
@@ -117,109 +103,33 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     header: {
-        backgroundColor: '#fff',
-        paddingVertical: 20,
-        paddingHorizontal: 20,
-        flexDirection: 'row',
+        position: 'relative',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        borderBottomLeftRadius: 50,
-        borderBottomRightRadius: 50,
-    },
-    username: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#333',
-    },
-    profilePictureSection: {
-        alignItems: 'center',
+        justifyContent: 'center',
         marginTop: 20,
+        paddingVertical: 10,
     },
-    profilePicture: {
-        width: 200,
-        height: 200,
-        borderRadius: 100,
-        borderWidth: 3,
-        borderColor: '#fff',
-    },
-    permissionSection: {
-        paddingHorizontal: 20,
-        marginTop: 20,
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 10,
-    },
-    button: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: '#fff',
-        padding: 15,
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
-        marginBottom: 10,
-    },
-    buttonText: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: '#333',
-        marginLeft: 10,
-        flex: 1,
-    },
-    accessSection: {
-        paddingHorizontal: 20,
-        marginTop: 20,
-    },
-    managePrivacyButton: {
-        backgroundColor: '#c4c4c4',
-        padding: 15,
-        borderRadius: 10,
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    managePrivacyText: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: '#333',
-    },
-    logoutButton: {
-        backgroundColor: '#ff4d4d',
-        padding: 15,
-        borderRadius: 10,
-        alignItems: 'center',
-    },
-    logoutText: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: '#fff',
-    },
-    bottomNavigation: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        padding: 15,
-        borderRadius: 10,
+    iconLeft: {
         position: 'absolute',
-        bottom: 20,
-        width: '100%',
-        alignSelf: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
+        right: 220,
+        transform: [{ translateY: -120 }], 
     },
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
+    iconRight: {
+        position: 'absolute',
+        left: 220,
+        transform: [{ translateY: -120 }], 
+    },
+    headerTitle: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        marginBottom: 200,
+        alignContent:'center',
+    },
+    profileImageContainer: {
+        width: 220, 
+        height: 220, 
+        borderRadius: 110, 
+        backgroundColor: 'white', 
         justifyContent: 'center',
         alignItems: 'center',
     },
