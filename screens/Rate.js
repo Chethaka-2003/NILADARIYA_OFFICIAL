@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function RateApp() {
+export default function RateApp({ onClose }) { // Accept onClose for closing
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
 
@@ -26,10 +26,11 @@ export default function RateApp() {
         blurRadius={10}
       >
         <View style={styles.container}>
-            {/* Close Button */}
-          <TouchableOpacity style={styles.closeButton}>
-          <Text style={styles.closeButtonText}>X</Text>
+          {/* Close Button */}
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
+
           <Text style={styles.title}>Rate This App</Text>
 
           {/* Star Rating System */}
@@ -70,10 +71,20 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
+    justifyContent: 'center', // Center content vertically
+    alignItems: 'center', // Center content horizontally
   },
   container: {
+    backgroundColor: 'white', // White box
+    padding: 20,
+    borderRadius: 10, // Rounded corners
     alignItems: 'center',
-    marginTop: 157,
+    width: '80%', // Responsive width
+    elevation: 5, // Shadow effect (for Android)
+    shadowColor: '#000', // Shadow effect (for iOS)
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
   title: {
     fontSize: 24,
@@ -87,7 +98,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   feedbackInput: {
-    width: '80%',
+    width: '100%',
     backgroundColor: 'white',
     padding: 10,
     borderRadius: 5,
@@ -102,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#28a745',
     padding: 12,
     borderRadius: 5,
-    width: '50%',
+    width: '100%',
     alignItems: 'center',
   },
   submitText: {
@@ -112,8 +123,8 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: -60,
-    right: 40,
+    top: 10,
+    right: 10,
     backgroundColor: 'black', // Black background
     width: 30,
     height: 30,
