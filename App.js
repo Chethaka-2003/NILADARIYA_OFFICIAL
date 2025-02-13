@@ -14,12 +14,13 @@ import ProfilePage2 from './screens/profile_2';
 import ProfilePage3 from './screens/profile_3';
 import Language from './screens/Language';
 import RateApp from './screens/Rate';
+import ChangePassword from './screens/Security';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <Language/>
+    <ChangePassword/>
   );
 }
 
