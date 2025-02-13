@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "CHIPS_CODE",
+			"path": "."
+		},
+		{
+			"name": "assets",
+			"path": "../../TESTS/testing/assets"
+		}
+	],
+	"settings": {}
+}
