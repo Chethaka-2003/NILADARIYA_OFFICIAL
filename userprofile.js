@@ -1,157 +1,161 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { 
+  View, Text, TextInput, Button, ScrollView, Alert, StyleSheet, Image, TouchableOpacity, useColorScheme, Switch, Dimensions 
+} from 'react-native';
+//import * as ImagePicker from 'react-native-image-picker';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+//import AsyncStorage from '@react-native-async-storage/async-storage';
+//import firestore from '@react-native-firebase/firestore';
+
+const { width } = Dimensions.get('window');
+
+const THEMES = {
+  light: { background: '#F5F5F5', card: '#FFF', text: '#333', input: '#FFF', border: '#CCC' },
+  dark: { background: '#121212', card: '#1E1E1E', text: '#FFF', input: '#333', border: '#444' },
+  blue: { background: '#1E3A8A', card: '#3B82F6', text: '#FFF', input: '#93C5FD', border: '#60A5FA' }
+};
 
 const UserProfile = () => {
-  const initialUserState = {
+  const deviceTheme = useColorScheme();
+  const [theme, setTheme] = useState(THEMES.light);
+  const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
     phone: '',
-    password: '',
-  };
-
-  const [user, setUser] = useState(initialUserState);
+    preferences: { notifications: false, darkMode: false },
+    profileImage: null,
+  });
 
   useEffect(() => {
-    // Fetch user data from API or local storage
-    const fetchUserData = async () => {
-      const userData = {
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        phone: '+1234567890',
-      };
-      setUser(userData);
-    };
-
-    fetchUserData();
+    loadUserProfile();
   }, []);
 
-  const handleInputChange = (field, value) => {
-    setUser({ ...user, [field]: value });
+  const loadUserProfile = async () => {
+    try {
+      const storedTheme = await AsyncStorage.getItem('theme');
+      if (storedTheme) setTheme(THEMES[storedTheme]);
+
+      const userDoc = await firestore().collection('users').doc('user123').get();
+      if (userDoc.exists) {
+        setUserInfo(userDoc.data());
+      }
+    } catch (error) {
+      console.error("Error loading profile:", error);
+    }
   };
 
-  const validateInputs = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9+()-\s]*$/;
-    const passwordRegex = /^(?=.*[0-9]).{6,}$/; // At least 6 characters & 1 number
+  const handleInputChange = useCallback((name, value) => {
+    setUserInfo((prev) => ({ ...prev, [name]: value }));
+  }, []);
 
-    if (!user.name.trim()) {
-      Alert.alert('Validation Error', 'Name cannot be empty.');
-      return false;
+  const handleUpdateProfile = async () => {
+    try {
+      await firestore().collection('users').doc('user123').set(userInfo);
+      Alert.alert('Success', 'Profile updated successfully!');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update profile.');
     }
-    if (!emailRegex.test(user.email)) {
-      Alert.alert('Validation Error', 'Please enter a valid email address.');
-      return false;
-    }
-    if (!phoneRegex.test(user.phone)) {
-      Alert.alert('Validation Error', 'Phone number contains invalid characters.');
-      return false;
-    }
-    if (!passwordRegex.test(user.password)) {
-      Alert.alert('Validation Error', 'Password must be at least 6 characters long and include at least one number.');
-      return false;
-    }
-    return true;
   };
 
-  const handleSave = () => {
-    if (validateInputs()) {
-      console.log('User data saved:', user);
-      Alert.alert('Success', 'User profile updated successfully!');
-      
-      // ✅ Reset form to initial state
-      setUser(initialUserState);
-    }
+  const handleImagePick = () => {
+    ImagePicker.launchImageLibrary(
+      { mediaType: 'photo', includeBase64: false },
+      (response) => {
+        if (!response.didCancel && response.assets?.length > 0 && response.assets[0]?.uri) {
+          setUserInfo((prev) => ({ ...prev, profileImage: response.assets[0].uri }));
+        }
+      }
+    );
+  };
+
+  const togglePreference = (key) => {
+    setUserInfo((prev) => ({
+      ...prev,
+      preferences: { ...prev.preferences, [key]: !prev.preferences[key] }
+    }));
+  };
+
+  const changeTheme = async (selectedTheme) => {
+    setTheme(THEMES[selectedTheme]);
+    await AsyncStorage.setItem('theme', selectedTheme);
   };
 
   return (
-    <ImageBackground 
-      source={require('./assets/ABF.png')}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <View style={styles.overlay}>
-        <Text style={styles.header}>User Profile</Text>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+      <Animated.View style={[styles.card, { backgroundColor: theme.card }]} entering={FadeInUp}>
+        <Text style={[styles.title, { color: theme.text }]}>User Profile</Text>
+
+        {/* Profile Picture */}
+        <TouchableOpacity onPress={handleImagePick} style={styles.imagePicker}>
+          {userInfo.profileImage ? (
+            <Image 
+              source={{ uri: userInfo.profileImage }} 
+              style={styles.profileImage} 
+            />
+          ) : (
+            <Text style={styles.imageText}>Upload Profile Picture</Text>
+          )}
+        </TouchableOpacity>
+
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: theme.input, borderColor: theme.border, color: theme.text }]}
           placeholder="Name"
-          placeholderTextColor="#ddd"
-          value={user.name}
+          placeholderTextColor="#999"
+          value={userInfo.name}
           onChangeText={(value) => handleInputChange('name', value)}
         />
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: theme.input, borderColor: theme.border, color: theme.text }]}
           placeholder="Email"
-          placeholderTextColor="#ddd"
           keyboardType="email-address"
-          value={user.email}
+          placeholderTextColor="#999"
+          value={userInfo.email}
           onChangeText={(value) => handleInputChange('email', value)}
         />
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: theme.input, borderColor: theme.border, color: theme.text }]}
           placeholder="Phone"
-          placeholderTextColor="#ddd"
           keyboardType="phone-pad"
-          value={user.phone}
+          placeholderTextColor="#999"
+          value={userInfo.phone}
           onChangeText={(value) => handleInputChange('phone', value)}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Password"
-          placeholderTextColor="#ddd"
-          secureTextEntry={true}
-          value={user.password}
-          onChangeText={(value) => handleInputChange('password', value)}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleSave}>
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
-      </View>
-    </ImageBackground>
+        <Button title="Update Profile" onPress={handleUpdateProfile} color="#4CAF50" />
+      </Animated.View>
+
+      <Animated.View style={[styles.card, { backgroundColor: theme.card }]} entering={FadeInUp.delay(200)}>
+        <Text style={[styles.title, { color: theme.text }]}>Preferences</Text>
+        <View style={styles.row}>
+          <Text style={{ color: theme.text }}>Enable Notifications</Text>
+          <Switch value={userInfo.preferences.notifications} onValueChange={() => togglePreference('notifications')} />
+        </View>
+        <View style={styles.row}>
+          <Text style={{ color: theme.text }}>Dark Mode</Text>
+          <Switch value={userInfo.preferences.darkMode} onValueChange={() => togglePreference('darkMode')} />
+        </View>
+      </Animated.View>
+
+      <Animated.View style={[styles.card, { backgroundColor: theme.card }]} entering={FadeInUp.delay(400)}>
+        <Text style={[styles.title, { color: theme.text }]}>Change Theme</Text>
+        <View style={styles.row}>
+          <Button title="Light" onPress={() => changeTheme('light')} />
+          <Button title="Dark" onPress={() => changeTheme('dark')} />
+          <Button title="Blue" onPress={() => changeTheme('blue')} />
+        </View>
+      </Animated.View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    padding: 20,
-    borderRadius: 10,
-    width: '90%',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 15,
-    paddingLeft: 10,
-    color: '#fff',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-  },
-  button: {
-    backgroundColor: '#007bff',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  container: { flex: 1, padding: 16 },
+  card: { borderRadius: 12, padding: 16, marginBottom: 16, elevation: 5 },
+  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 12 },
+  input: { borderWidth: 1, borderRadius: 8, padding: 10, marginBottom: 12, width: width * 0.9 },
+  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 10 },
+  imagePicker: { alignItems: 'center', marginBottom: 16 },
+  profileImage: { width: 100, height: 100, borderRadius: 50, borderWidth: 2, borderColor: '#4CAF50' },
+  imageText: { marginTop: 8, fontSize: 14, color: '#4CAF50' },
 });
 
 export default UserProfile;

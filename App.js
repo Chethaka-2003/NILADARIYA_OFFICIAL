@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import Screen from './Appointment'; // Make sure the path to Screen.js is correct
+import Screen from './Screen'; // Make sure the path to Screen.js is correct
 
 export default function App() {
   return (

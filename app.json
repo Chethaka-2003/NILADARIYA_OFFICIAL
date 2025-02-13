@@ -3,6 +3,7 @@
     "name": "CHIPS_CODE",
     "slug": "CHIPS_CODE",
     "version": "1.0.0",
+    "Platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

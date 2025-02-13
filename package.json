@@ -10,15 +10,25 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-native": "^0.72.8",
     "cross-env": "^7.0.3",
     "expo": "~52.0.23",
     "expo-linear-gradient": "~14.0.1",
     "expo-status-bar": "~2.0.0",
+    "metro": "^0.81.1",
     "react": "18.3.1",
-    "react-native": "0.76.5"
+    "react-native": "0.76.5",
+    "react-native-reanimated": "^3.16.7",
+    "typescript": "^5.7.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@react-native-community/cli": "latest",
+    "metro-react-native-babel-preset": "^0.77.0"
   },
-  "private": true
+  "private": true,
+  "description": "Smart Government Officer consulting System (NILADHARIYA)",
+  "keywords": [],
+  "author": ""
 }
