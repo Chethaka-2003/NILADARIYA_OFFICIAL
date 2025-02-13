@@ -12,12 +12,14 @@ import AboutUs from './screens/AboutUs';
 import ProfilePage from './screens/profile_1';
 import ProfilePage2 from './screens/profile_2';
 import ProfilePage3 from './screens/profile_3';
+import Language from './screens/Language';
+import RateApp from './screens/Rate';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <ProfilePage3/>
+    <Language/>
   );
 }
 

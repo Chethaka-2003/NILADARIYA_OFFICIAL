@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function LoginScreen() {
