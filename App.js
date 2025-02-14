@@ -8,7 +8,7 @@ import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/LoginScreen';
 import SettingsPg from './SettingsPg';
 import NavigationBar from './NavigationBar';
-
+import { StatusBar } from 'expo-status-bar';
 
 
 const Stack = createStackNavigator();
@@ -18,6 +18,8 @@ export default function App() {
 
   // return (< Loading/>);
   return (
+    <>
+    <StatusBar style='auto'/>
   <NavigationContainer>
     <Stack.Navigator initialRouteName="SplashScreen"
     screenOptions={{ headerShown: false }}>
@@ -29,7 +31,8 @@ export default function App() {
       <Stack.Screen name="SettingsPg" component={SettingsPg}/>
       <Stack.Screen name='NavigationBar' component={NavigationBar}/>
     </Stack.Navigator>
-  </NavigationContainer>);
+  </NavigationContainer>;
+  </>
   
   // const [isSplashVisible, setIsSplashVisible] = useState(true);
 
@@ -46,6 +49,7 @@ export default function App() {
   //     {isSplashVisible ? <SplashScreen /> : <Screen />}
   //   </View>
   // );
+);
   }
   
    

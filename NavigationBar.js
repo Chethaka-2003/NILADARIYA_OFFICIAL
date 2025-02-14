@@ -2,11 +2,8 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import SettingsPg from "./SettingsPg";
-import SplashScreen from "./SplashScreen";
 import { Feather } from "@expo/vector-icons";
-import WelcomePg from "./WelcomePg";
-import welcome from './Welcom';
+import SettingsPg from "./SettingsPg";
 import Profile from './screens/profile_1';
 import HomePg from './UpdatedMenuOptions';
 

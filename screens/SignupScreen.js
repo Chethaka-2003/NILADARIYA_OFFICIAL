@@ -85,6 +85,11 @@ export default function SignupScreen() {
                 keyboardType="email-address"
                 onChange={e => handleEmail(e)}
               />
+              {email.length < 1 ? null : emailVerify ? (
+                <Feather name="check-circle" color="green" size={20} style = {styles.icon} />
+                ) : (
+                <Feather name="x-circle" color="red" size={20} style = {styles.icon} />
+                )}
             </View>
           </View>
 
