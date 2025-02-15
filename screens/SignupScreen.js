@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, ScrollView,  } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation} from '@react-navigation/native';
+import Background from '../Background';
 
 
 
@@ -17,9 +18,13 @@ export default function SignupScreen() {
 
   const [mobile, setMobile] = useState('');
   const [mobileVerify, setMobileVerify] = useState(false);
+  const [mobileError, setMobileError] = useState('');
 
   const [password, setPassword] = useState('');
   const [passwordVerify, setPasswordVerify] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+
+  const [showPassword, setShowPassword] = useState(false)
 
   const navigation = useNavigation();
 
@@ -46,19 +51,56 @@ export default function SignupScreen() {
     setEmailError('');
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (emailRegex.test(emailVar)){
-      setEmailVerify(true);
-    }else {
+    if (emailVar.length > 0 && !emailRegex.test(emailVar)) {
       setEmailError('Invalid Email Address');
+    } else if (emailRegex.test(emailVar)) {
+      setEmailVerify(true);
+    }
+  }
+
+  function handleMobile(e){
+    const mobileVar = e.nativeEvent.text;
+    setMobile(mobileVar);
+    setMobileVerify(false);
+    setMobileError('');
+
+    const mobileRegex = /[6-9]{1}[0-9]{8}/
+    if (mobileVar.length > 0 && !mobileRegex.test(mobileVar)){
+      setMobileError('Invalid Phone Number');
+  }else if(mobileRegex.test(mobileVar)){
+      setMobileVerify(true);
+    }
+  }
+
+  function handlePassword(e){
+    const passwordVar = e.nativeEvent.text;
+    setPassword(passwordVar);
+    setPasswordVerify(false);
+    setPasswordError('');
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/
+    if (passwordVar.length > 0 && !passwordRegex.test(passwordVar)){
+      setPasswordError('Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&#)')
+    }else if (passwordRegex.test(passwordVar)){
+      setPasswordVerify(true);
+    }
+  }
+
+  function handleSignUp(){
+    if(nameVerify && emailVerify && mobileVerify && passwordVerify){
+      navigation.navigate('LoginScreen');
+    }else{
+      Alert.alert('Please fill all the fields correctly before proceeding.')
     }
   }
 
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
-    <ImageBackground source={require('../assets/login 2.jpg')} style={styles.backgroundImage}>
+    <ScrollView contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={true}>
+    <Background type = "type1"/>
 
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+        <Text style = {styles.title}>Create Account</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style = {styles.loginTextContainer}>
           <Text style={styles.loginText}>Already Registered? Log In here</Text>
         </TouchableOpacity>
 
@@ -99,7 +141,7 @@ export default function SignupScreen() {
             </View>
           </View>
 
-          {email.length < 1 ? null : emailVerify ? null : (<Text style = {styles.errorText}>{emailError}</Text>)}
+          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
           <View style={styles.contBox}>
             <Text style={styles.label}>MOBILE NUMBER</Text>
@@ -109,10 +151,17 @@ export default function SignupScreen() {
                 placeholder="Mobile number" 
                 placeholderTextColor="black"
                 keyboardType="phone-pad" // Allows phone number input
+                onChange={e => handleMobile(e)}
               />
+              {mobile.length < 1 ? null : mobileVerify ? (
+                <Feather name="check-circle" color="green" size={20} style = {styles.icon} />
+                ) : (
+                <Feather name="x-circle" color="red" size={20} style = {styles.icon} />
+                )}
             </View>
           </View>
-
+          {mobileError ? <Text style={styles.errorText}>{mobileError}</Text> : null}
+          
           <View style={styles.contBox}>
             <View style={styles.passwordContainer}>
             <Text style={styles.label}>PASSWORD</Text>
@@ -120,46 +169,64 @@ export default function SignupScreen() {
                 <TextInput 
                   style={styles.input} 
                   placeholder='Password'
-                  placeholderTextColor="black" 
-                  secureTextEntry={!passwordVerify} 
-                  value={password} 
-                  onChangeText={setPassword}
+                  placeholderTextColor="black"  
+                  value={password}
+                  onChange={e => handlePassword(e)}
+                  secureTextEntry={!showPassword}
                 />
-                <TouchableOpacity 
-                  onPress={() => setPasswordVerify(!passwordVerify)} 
-                  style = {styles.icon}
-                  >
-                  <MaterialIcons 
-                    name={passwordVerify ? 'visibility' : 'visibility-off'} 
-                    size={24} 
-                    color="black" 
-                  />
+              
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style = {styles.icon}>
+                  {password.length < 1 ? null : showPassword ? (
+                    <Feather name="eye-off" color="black" size={20}  />
+                  ):(
+                    <Feather name="eye" color="black" size={20}  />
+                  ) }
+                  
                 </TouchableOpacity>
               </View>
             </View>
           </View>
+          {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
-          <TouchableOpacity style={styles.SignupButton} onPress={() => navigation.navigate('LoginScreen')}>
+          <TouchableOpacity 
+            style={[styles.SignupButton, {opacity: nameVerify && emailVerify && mobileVerify && passwordVerify ? 1:0.5}]}
+            onPress={handleSignUp}
+            disabled = {!nameVerify || !emailVerify || !mobileVerify || !passwordVerify}     
+          >
             <Text style={styles.SignupButtonText}>Sign up</Text>
           </TouchableOpacity>
         </View>
       </View>
-    </ImageBackground>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
   container: {
+    marginTop: 130,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 120,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
+
+  title:{
+    fontSize:40,
+    fontWeight:'bold',
+  },
+
+  loginTextContainer:{
+    alignSelf:'center',
+  },
+
+  loginText: {
+    fontSize: 11,
+    color: 'black',
+    textDecorationLine: 'underline',
+  },
+
   inputContainer: {
     width: '80%',
     marginTop: 20,
@@ -197,19 +264,14 @@ const styles = StyleSheet.create({
     color: 'black',
     marginBottom: 20,
   },
-  loginText: {
-    marginTop: 170,
-    marginBottom: 20,
-    fontSize: 11,
-    color: 'black',
-    textDecorationLine: 'underline',
-  },
+
   SignupButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
   },
+
   SignupButton: {
     marginTop: 70,
     backgroundColor: 'black',
@@ -219,6 +281,7 @@ const styles = StyleSheet.create({
     width: '65%',
     alignSelf: 'center',
   },
+
   label: {
     fontSize: 14,
     fontWeight: 'bold',
@@ -226,4 +289,5 @@ const styles = StyleSheet.create({
     marginBottom: 8, // Adjusted gap between label and input field
     marginLeft: 5,
   },
+
 });
