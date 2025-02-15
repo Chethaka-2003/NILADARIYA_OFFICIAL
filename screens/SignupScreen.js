@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation} from '@react-navigation/native';
 
@@ -13,6 +13,7 @@ export default function SignupScreen() {
 
   const [email, setEmail] = useState('');
   const [emailVerify, setEmailVerify] = useState(false);
+  const [emailError, setEmailError] = useState('');
 
   const [mobile, setMobile] = useState('');
   const [mobileVerify, setMobileVerify] = useState(false);
@@ -39,16 +40,21 @@ export default function SignupScreen() {
   }
 
   function handleEmail(e){
-    const emailVar = e.nativeEvent.event;
-    setEmail(email);
+    const emailVar = e.nativeEvent.text;
+    setEmail(emailVar);
     setEmailVerify(false);
-    if (/^[\w.%+-]@[\w.-]+\.[a-zA-Z]{1,}$/.test(emailVar)){
-      setEmail(emailVar);
+    setEmailError('');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (emailRegex.test(emailVar)){
       setEmailVerify(true);
+    }else {
+      setEmailError('Invalid Email Address');
     }
   }
 
   return (
+    <ScrollView contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
     <ImageBackground source={require('../assets/login 2.jpg')} style={styles.backgroundImage}>
 
       <View style={styles.container}>
@@ -93,6 +99,8 @@ export default function SignupScreen() {
             </View>
           </View>
 
+          {email.length < 1 ? null : emailVerify ? null : (<Text style = {styles.errorText}>{emailError}</Text>)}
+
           <View style={styles.contBox}>
             <Text style={styles.label}>MOBILE NUMBER</Text>
             <View style={styles.action}>
@@ -111,6 +119,7 @@ export default function SignupScreen() {
               <View style={styles.action}>
                 <TextInput 
                   style={styles.input} 
+                  placeholder='Password'
                   placeholderTextColor="black" 
                   secureTextEntry={!passwordVerify} 
                   value={password} 
@@ -136,6 +145,7 @@ export default function SignupScreen() {
         </View>
       </View>
     </ImageBackground>
+    </ScrollView>
   );
 }
 

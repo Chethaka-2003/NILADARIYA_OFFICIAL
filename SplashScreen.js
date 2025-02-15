@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Image,StyleSheet,View,ImageBackground, SafeAreaView } from "react-native";
+import { Image,StyleSheet,View, SafeAreaView } from "react-native";
 import Icon from "./assets/icon.png";
 import LottieView from "lottie-react-native"
 import Background from "./Background";
@@ -20,8 +20,8 @@ export default function SplashScreen(){
             <Background type = "type1"/>
                 <View style = {styles.container}>
                     <View>
-                    <Image source={Icon} style={styles.image}/>
-                    <LottieView source={require('./assets/Animation - 1735760151144.json')} autoPlay loop style = {styles.animation}/>
+                        <Image source={Icon} style={styles.image}/>
+                        <LottieView source={require('./assets/Animation - 1735760151144.json')} autoPlay loop style = {styles.animation}/>
                     </View>
                 </View>
         </SafeAreaView>
