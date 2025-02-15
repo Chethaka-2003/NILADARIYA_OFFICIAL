@@ -4,7 +4,7 @@ import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, S
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation} from '@react-navigation/native';
 import Background from '../Background';
-
+import axios from 'axios';
 
 
 export default function SignupScreen() {
@@ -27,6 +27,19 @@ export default function SignupScreen() {
   const [showPassword, setShowPassword] = useState(false)
 
   const navigation = useNavigation();
+
+  // function handleSubmit(){
+  //   const userDate = {
+  //     name: name,
+  //     email,
+  //     mobile,
+  //     password,
+  //   };
+  //   axios
+  //     .post('http://192.168.8.100:4000/register', userData)
+  //     .then(res => console.log(res.data))
+  //     .catch(e => console.log(e));
+  // }
 
   function handleName(e){
     const nameVar = e.nativeEvent.text;
@@ -92,6 +105,17 @@ export default function SignupScreen() {
     }else{
       Alert.alert('Please fill all the fields correctly before proceeding.')
     }
+
+    const userData = {
+      name: name,
+      email,
+      mobile,
+      password,
+    };
+    axios
+      .post('http://192.168.8.100:4000/register', userData)
+      .then(res => console.log(res.data))
+      .catch(e => console.log(e));
   }
 
   return (
