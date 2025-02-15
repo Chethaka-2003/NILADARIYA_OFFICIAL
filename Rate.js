@@ -6,13 +6,23 @@ import {
   StyleSheet,
   TextInput,
   ImageBackground,
-  SafeAreaView
+  SafeAreaView,
+  Dimensions,
+  ScrollView,
+  Switch,
+
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import Background from './Background';
+import { BlurView } from 'expo-blur';
+
+const { width, height } = Dimensions.get('window');
 
 export default function RateApp({ onClose }) { // Accept onClose for closing
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
+  const [form, setForm] = useState({ notifications: true }); // Initialize form state
 
   const handleRating = (selectedRating) => {
     setRating(selectedRating);
@@ -20,84 +30,86 @@ export default function RateApp({ onClose }) { // Accept onClose for closing
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <ImageBackground source={require('./background.png')} style={styles.background} blurRadius={10}>
       <Background type="type2" />
-      <View style = {styles.container}> 
-          <Text style = {styles.headerText}>APP Settings</Text>
-          <FeatherIcon name="settings" style = {styles.mainIcon} />
-        </View>
 
-        <ScrollView>
-          <View style = {styles.section}>
+      <View style={styles.container}>
+        <Text style={styles.headerText}>APP Settings</Text>
+        <FeatherIcon name="settings" style={styles.mainIcon} />
+      </View>
 
-            {/* Language changer */}
-            <TouchableOpacity onPress={() => alert('You have selected the first option') } style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="globe" style = {styles.icon}/>
-              </View>
-              <Text style = {styles.rowLabel}>Language</Text>
-              <View style = {styles.rowSpacer}/>
+      <ScrollView>
+        <View style={styles.section}>
 
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
-            </TouchableOpacity>
-
-            {/* Security button */}
-            <TouchableOpacity onPress={() => alert('You have selected the first option')} style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="shield" style = {styles.icon}/>
-              </View>
-
-              <Text style = {styles.rowLabel}>Security</Text>
-              <View style = {styles.rowSpacer}/>
-
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>              
-            </TouchableOpacity>
-
-            {/* Notification changer */}
-            
-            <View style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="bell" style = {styles.icon}/>
-              </View>
-              
-
-              <Text style = {styles.rowLabel}>Notifications</Text>
-              <View style = {styles.rowSpacer}/>
-
-              <Switch onValueChange={notifications => setForm ({...form, notifications})} value = {form.notifications}/>
+          {/* Language changer */}
+          <TouchableOpacity onPress={() => alert('You have selected the first option')} style={styles.row}>
+            <View style={styles.box}>
+              <FeatherIcon name="globe" style={styles.icon} />
             </View>
-            
+            <Text style={styles.rowLabel}>Language</Text>
+            <View style={styles.rowSpacer} />
 
-            {/* About App */}
-            <TouchableOpacity onPress={() => alert('You have selected the first option')} style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="info" style = {styles.icon}/>
-              </View>
-            
-              <Text style = {styles.rowLabel}>About App</Text>
-              <View style = {styles.rowSpacer}/>
+            <FeatherIcon color='black' name='chevron-right' size={30} />
+          </TouchableOpacity>
 
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
-            </TouchableOpacity>
+          {/* Security button */}
+          <TouchableOpacity onPress={() => alert('You have selected the first option')} style={styles.row}>
+            <View style={styles.box}>
+              <FeatherIcon name="shield" style={styles.icon} />
+            </View>
 
-            {/* RateUs */}
-            <TouchableOpacity onPress={() => alert('You have selected the first option')} style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="thumbs-up" style = {styles.icon}/>
-              </View>
-            
-              <Text style = {styles.rowLabel}>Rate Us</Text>
-              <View style = {styles.rowSpacer}/>
+            <Text style={styles.rowLabel}>Security</Text>
+            <View style={styles.rowSpacer} />
 
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
-            </TouchableOpacity>
+            <FeatherIcon color='black' name='chevron-right' size={30} />
+          </TouchableOpacity>
+
+          {/* Notification changer */}
+
+          <View style={styles.row}>
+            <View style={styles.box}>
+              <FeatherIcon name="bell" style={styles.icon} />
+            </View>
+
+
+            <Text style={styles.rowLabel}>Notifications</Text>
+            <View style={styles.rowSpacer} />
+
+            <Switch onValueChange={notifications => setForm({ ...form, notifications })} value={form.notifications} />
           </View>
-        </ScrollView>
+
+
+          {/* About App */}
+          <TouchableOpacity onPress={() => alert('You have selected the first option')} style={styles.row}>
+            <View style={styles.box}>
+              <FeatherIcon name="info" style={styles.icon} />
+            </View>
+
+            <Text style={styles.rowLabel}>About App</Text>
+            <View style={styles.rowSpacer} />
+
+            <FeatherIcon color='black' name='chevron-right' size={30} />
+          </TouchableOpacity>
+
+          {/* RateUs */}
+          <TouchableOpacity onPress={() => alert('You have selected the first option')} style={styles.row}>
+            <View style={styles.box}>
+              <FeatherIcon name="thumbs-up" style={styles.icon} />
+            </View>
+
+            <Text style={styles.rowLabel}>Rate Us</Text>
+            <View style={styles.rowSpacer} />
+
+            <FeatherIcon color='black' name='chevron-right' size={30} />
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+      <BlurView intensity={190} style={StyleSheet.absoluteFill}>
         <View style={styles.container2}>
           {/* Close Button */}
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>X</Text>
+            <FeatherIcon name="x-circle" size={35} color="white" />
           </TouchableOpacity>
+
 
           <Text style={styles.title}>Rate This App</Text>
 
@@ -129,8 +141,10 @@ export default function RateApp({ onClose }) { // Accept onClose for closing
             <Text style={styles.submitText}>Submit</Text>
           </TouchableOpacity>
         </View>
-      </ImageBackground>
+      </BlurView>
+
     </SafeAreaView>
+
   );
 }
 
@@ -143,9 +157,12 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Center content horizontally
   },
   container2: {
+    borderWidth: 3,
+    borderColor: "black",
     backgroundColor: 'white', // White box
     padding: 20,
     borderRadius: 10, // Rounded corners
+    justifyContent: 'center',
     alignItems: 'center',
     width: '80%', // Responsive width
     elevation: 5, // Shadow effect (for Android)
@@ -153,6 +170,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
+    position: 'absolute', // Absolute positioning
+    top: '60%', // Center vertically
+    left: '50%', // Center horizontally
+    transform: [{ translateX: -width * 0.4 }, { translateY: -height * 0.25 }], // Adjust for width and height
   },
   title: {
     fontSize: 24,
@@ -191,44 +212,37 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 10,
-    right: 10,
-    backgroundColor: 'black', // Black background
-    width: 30,
-    height: 30,
-    borderRadius: 15, // Circular button
-    justifyContent: 'center', // Center the text inside the circle
+    top: -20,
+    right: -20,
+    backgroundColor: 'black',
+    borderRadius: 100,
+
+  },
+
+  container: {
     alignItems: 'center',
+    marginTop: height * 0.05,
   },
-  closeButtonText: {
-    color: 'white', // White text
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  container:{ 
-    alignItems: 'center', 
-    marginTop: height * 0.05, 
-  },
-  
-  headerText:{
+
+  headerText: {
     fontSize: width * 0.08,
     fontWeight: 'bold',
     fontFamily: 'Cochin',
   },
 
-  mainIcon:{
+  mainIcon: {
     fontSize: 60,
     color: 'black',
     marginTop: height * 0.02,
   },
 
-  section:{
+  section: {
     paddingHorizontal: width * 0.1,
     paddingTop: height * 0.1,
   },
 
-  icon:{
-    fontSize:30,
+  icon: {
+    fontSize: 30,
     borderRadius: 9999,
     marginRight: 12,
     flexDirection: 'row',
@@ -236,7 +250,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  row:{
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -247,14 +261,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
 
-  rowLabel:{
+  rowLabel: {
     fontSize: width * 0.05,
     paddingLeft: width * 0.02,
     fontWeight: 'bold',
     color: '#0c0c0c',
   },
 
-  rowSpacer:{
+  rowSpacer: {
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,

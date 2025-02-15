@@ -5,12 +5,21 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
-  SafeAreaView
+  SafeAreaView,
+  ScrollView,
+  Dimensions,
+  Switch,
+
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import Background from './Background';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+
+const { width, height } = Dimensions.get('window');
 
 export default function LanguageSelector({ onClose }) { // Accept onClose for closing
   const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [form, setForm] = useState({ notifications: true }); // Initialize form state
 
   const changeLanguage = (language) => {
     setSelectedLanguage(language);
@@ -18,8 +27,7 @@ export default function LanguageSelector({ onClose }) { // Accept onClose for cl
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <ImageBackground source={require('./background.png')} style={styles.background} blurRadius={10}>
-      <Background type="type2" />
+      <Background type="type2" blurRadius={10} />
       <View style = {styles.container}> 
           <Text style = {styles.headerText}>APP Settings</Text>
           <FeatherIcon name="settings" style = {styles.mainIcon} />
@@ -142,7 +150,6 @@ export default function LanguageSelector({ onClose }) { // Accept onClose for cl
             </View>
           </View>
         </View>
-      </ImageBackground>
     </SafeAreaView>
   );
 }

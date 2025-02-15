@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, ScrollView,  } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, Alert, } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
-import { useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Background from '../Background';
 import axios from 'axios';
 
@@ -41,7 +41,7 @@ export default function SignupScreen() {
   //     .catch(e => console.log(e));
   // }
 
-  function handleName(e){
+  function handleName(e) {
     const nameVar = e.nativeEvent.text;
     setName(nameVar);
     setNameVerify(false);
@@ -57,7 +57,7 @@ export default function SignupScreen() {
     }
   }
 
-  function handleEmail(e){
+  function handleEmail(e) {
     const emailVar = e.nativeEvent.text;
     setEmail(emailVar);
     setEmailVerify(false);
@@ -71,40 +71,40 @@ export default function SignupScreen() {
     }
   }
 
-  function handleMobile(e){
+  function handleMobile(e) {
     const mobileVar = e.nativeEvent.text;
     setMobile(mobileVar);
     setMobileVerify(false);
     setMobileError('');
 
     const mobileRegex = /[6-9]{1}[0-9]{8}/
-    if (mobileVar.length > 0 && !mobileRegex.test(mobileVar)){
+    if (mobileVar.length > 0 && !mobileRegex.test(mobileVar)) {
       setMobileError('Invalid Phone Number');
-  }else if(mobileRegex.test(mobileVar)){
+    } else if (mobileRegex.test(mobileVar)) {
       setMobileVerify(true);
     }
   }
 
-  function handlePassword(e){
+  function handlePassword(e) {
     const passwordVar = e.nativeEvent.text;
     setPassword(passwordVar);
     setPasswordVerify(false);
     setPasswordError('');
 
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/
-    if (passwordVar.length > 0 && !passwordRegex.test(passwordVar)){
+    if (passwordVar.length > 0 && !passwordRegex.test(passwordVar)) {
       setPasswordError('Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&#)')
-    }else if (passwordRegex.test(passwordVar)){
+    } else if (passwordRegex.test(passwordVar)) {
       setPasswordVerify(true);
     }
   }
 
-  function handleSignUp(){
-    if(nameVerify && emailVerify && mobileVerify && passwordVerify){
-      navigation.navigate('LoginScreen');
-    }else{
-      Alert.alert('Please fill all the fields correctly before proceeding.')
-    }
+  function handleSignUp() {
+    // if(nameVerify && emailVerify && mobileVerify && passwordVerify){
+    //   navigation.navigate('LoginScreen');
+    // }else{
+    //   Alert.alert('Please fill all the fields correctly before proceeding.')
+    // }
 
     const userData = {
       name: name,
@@ -112,19 +112,27 @@ export default function SignupScreen() {
       mobile,
       password,
     };
-    axios
-      .post('http://192.168.8.100:4000/register', userData)
-      .then(res => console.log(res.data))
-      .catch(e => console.log(e));
+      axios
+        .post('http://192.168.1.136:4000/register', userData)
+        .then(res => {
+          console.log(res.data);
+
+          if (res.data.status == 'OK') {
+            Alert.alert('User Created');
+          } else {
+            Alert.alert(JSON.stringify(res.data));
+          }
+        })
+        .catch(e => console.log(e));
   }
 
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={true}>
-    <Background type = "type1"/>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={true}>
+      <Background type="type1" />
 
       <View style={styles.container}>
-        <Text style = {styles.title}>Create Account</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style = {styles.loginTextContainer}>
+        <Text style={styles.title}>Create Account</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.loginTextContainer}>
           <Text style={styles.loginText}>Already Registered? Log In here</Text>
         </TouchableOpacity>
 
@@ -132,16 +140,16 @@ export default function SignupScreen() {
           <View style={styles.contBox}>
             <Text style={styles.label}>NAME</Text>
             <View style={styles.action}>
-              <TextInput 
-                placeholder="Name" 
+              <TextInput
+                placeholder="Name"
                 placeholderTextColor="black"
                 onChange={e => handleName(e)}
               />
               {name.length < 1 ? null : nameVerify ? (
-                <Feather name="check-circle" color="green" size={20} style = {styles.icon} />
-                ) : (
-                <Feather name="x-circle" color="red" size={20} style = {styles.icon} />
-                )}
+                <Feather name="check-circle" color="green" size={20} style={styles.icon} />
+              ) : (
+                <Feather name="x-circle" color="red" size={20} style={styles.icon} />
+              )}
             </View>
           </View>
 
@@ -150,18 +158,18 @@ export default function SignupScreen() {
           <View style={styles.contBox}>
             <Text style={styles.label}>EMAIL</Text>
             <View style={styles.action}>
-              <TextInput 
-                style={styles.input} 
-                placeholder="Email" 
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
                 placeholderTextColor="black"
                 keyboardType="email-address"
                 onChange={e => handleEmail(e)}
               />
               {email.length < 1 ? null : emailVerify ? (
-                <Feather name="check-circle" color="green" size={20} style = {styles.icon} />
-                ) : (
-                <Feather name="x-circle" color="red" size={20} style = {styles.icon} />
-                )}
+                <Feather name="check-circle" color="green" size={20} style={styles.icon} />
+              ) : (
+                <Feather name="x-circle" color="red" size={20} style={styles.icon} />
+              )}
             </View>
           </View>
 
@@ -170,52 +178,52 @@ export default function SignupScreen() {
           <View style={styles.contBox}>
             <Text style={styles.label}>MOBILE NUMBER</Text>
             <View style={styles.action}>
-              <TextInput 
-                style={styles.input} 
-                placeholder="Mobile number" 
+              <TextInput
+                style={styles.input}
+                placeholder="Mobile number"
                 placeholderTextColor="black"
                 keyboardType="phone-pad" // Allows phone number input
                 onChange={e => handleMobile(e)}
               />
               {mobile.length < 1 ? null : mobileVerify ? (
-                <Feather name="check-circle" color="green" size={20} style = {styles.icon} />
-                ) : (
-                <Feather name="x-circle" color="red" size={20} style = {styles.icon} />
-                )}
+                <Feather name="check-circle" color="green" size={20} style={styles.icon} />
+              ) : (
+                <Feather name="x-circle" color="red" size={20} style={styles.icon} />
+              )}
             </View>
           </View>
           {mobileError ? <Text style={styles.errorText}>{mobileError}</Text> : null}
-          
+
           <View style={styles.contBox}>
             <View style={styles.passwordContainer}>
-            <Text style={styles.label}>PASSWORD</Text>
+              <Text style={styles.label}>PASSWORD</Text>
               <View style={styles.action}>
-                <TextInput 
-                  style={styles.input} 
+                <TextInput
+                  style={styles.input}
                   placeholder='Password'
-                  placeholderTextColor="black"  
+                  placeholderTextColor="black"
                   value={password}
                   onChange={e => handlePassword(e)}
                   secureTextEntry={!showPassword}
                 />
-              
-                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style = {styles.icon}>
+
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.icon}>
                   {password.length < 1 ? null : showPassword ? (
-                    <Feather name="eye-off" color="black" size={20}  />
-                  ):(
-                    <Feather name="eye" color="black" size={20}  />
-                  ) }
-                  
+                    <Feather name="eye-off" color="black" size={20} />
+                  ) : (
+                    <Feather name="eye" color="black" size={20} />
+                  )}
+
                 </TouchableOpacity>
               </View>
             </View>
           </View>
           {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
-          <TouchableOpacity 
-            style={[styles.SignupButton, {opacity: nameVerify && emailVerify && mobileVerify && passwordVerify ? 1:0.5}]}
+          <TouchableOpacity
+            style={[styles.SignupButton, { opacity: nameVerify && emailVerify && mobileVerify && passwordVerify ? 1 : 0.5 }]}
             onPress={handleSignUp}
-            disabled = {!nameVerify || !emailVerify || !mobileVerify || !passwordVerify}     
+            disabled={!nameVerify || !emailVerify || !mobileVerify || !passwordVerify}
           >
             <Text style={styles.SignupButtonText}>Sign up</Text>
           </TouchableOpacity>
@@ -236,13 +244,13 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 
-  title:{
-    fontSize:40,
-    fontWeight:'bold',
+  title: {
+    fontSize: 40,
+    fontWeight: 'bold',
   },
 
-  loginTextContainer:{
-    alignSelf:'center',
+  loginTextContainer: {
+    alignSelf: 'center',
   },
 
   loginText: {
@@ -256,8 +264,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
-  contBox:{
-    marginBottom:20
+  contBox: {
+    marginBottom: 20
   },
 
   errorText: {
@@ -268,16 +276,16 @@ const styles = StyleSheet.create({
 
   action: {
     flexDirection: 'row',
-    alignItems:'center',
+    alignItems: 'center',
     paddingHorizontal: 15,
     borderWidth: 1,
     borderColor: '#420475',
     backgroundColor: '#d3d3d3',
     borderRadius: 15,
-    position:'relative',
+    position: 'relative',
   },
-  
-  icon:{
+
+  icon: {
     position: 'absolute',
     right: 15,
   },

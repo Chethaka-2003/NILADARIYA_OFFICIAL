@@ -6,9 +6,15 @@ import {
   StyleSheet,
   TextInput,
   ImageBackground,
-  SafeAreaView
+  SafeAreaView,
+  Dimensions,
+  ScrollView,
+  Switch,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+
+const { width, height } = Dimensions.get('window');
 
 export default function ChangePassword({ onClose }) {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -18,6 +24,8 @@ export default function ChangePassword({ onClose }) {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [form, setForm] = useState({ notifications: true });
 
   const handleChangePassword = () => {
     if (newPassword !== confirmPassword) {
@@ -29,8 +37,6 @@ export default function ChangePassword({ onClose }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <ImageBackground source={require('./background.png')} style={styles.background} blurRadius={10}>
-      <Background type="type2" />
       <View style = {styles.container}> 
           <Text style = {styles.headerText}>APP Settings</Text>
           <FeatherIcon name="settings" style = {styles.mainIcon} />
@@ -169,7 +175,7 @@ export default function ChangePassword({ onClose }) {
             <Text style={styles.submitText}>Change Password</Text>
           </TouchableOpacity>
         </View>
-      </ImageBackground>
+
     </SafeAreaView>
   );
 }

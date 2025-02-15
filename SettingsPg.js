@@ -4,7 +4,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import Background from './Background';
 
 
-export default function SettingsPg() {
+export default function SettingsPg({navigation}) {
 
   const [form, setForm] = useState({
     notifications: true,
@@ -23,7 +23,7 @@ export default function SettingsPg() {
           <View style = {styles.section}>
 
             {/* Language changer */}
-            <TouchableOpacity onPress={() => navigation.navigate ('Language.js') } style = {styles.row}>
+            <TouchableOpacity onPress={() => navigation.navigate ('Language') } style = {styles.row}>
               <View style = {styles.box}>
                 <FeatherIcon name="globe" style = {styles.icon}/>
               </View>
@@ -34,7 +34,7 @@ export default function SettingsPg() {
             </TouchableOpacity>
 
             {/* Security button */}
-            <TouchableOpacity onPress={() => navigation.navigate ('Security.js')} style = {styles.row}>
+            <TouchableOpacity onPress={() => navigation.navigate ('Security')} style = {styles.row}>
               <View style = {styles.box}>
                 <FeatherIcon name="shield" style = {styles.icon}/>
               </View>
@@ -61,7 +61,7 @@ export default function SettingsPg() {
             
 
             {/* About App */}
-            <TouchableOpacity onPress={() => navigation.navigate ('AboutUs.js')} style = {styles.row}>
+            <TouchableOpacity onPress={() => navigation.navigate ('AboutUs')} style = {styles.row}>
               <View style = {styles.box}>
                 <FeatherIcon name="info" style = {styles.icon}/>
               </View>
@@ -73,7 +73,7 @@ export default function SettingsPg() {
             </TouchableOpacity>
 
             {/* RateUs */}
-            <TouchableOpacity onPress={() => navigation.navigate ('Rate.js')} style = {styles.row}>
+            <TouchableOpacity onPress={() => navigation.navigate ('Rate')} style = {styles.row}>
               <View style = {styles.box}>
                 <FeatherIcon name="thumbs-up" style = {styles.icon}/>
               </View>
