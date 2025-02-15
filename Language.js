@@ -18,12 +18,80 @@ export default function LanguageSelector({ onClose }) { // Accept onClose for cl
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ImageBackground
-        source={require('../assets/settings.png')}
-        style={styles.background}
-        blurRadius={10}
-      >
-        <View style={styles.container}>
+    <ImageBackground source={require('./background.png')} style={styles.background} blurRadius={10}>
+      <Background type="type2" />
+      <View style = {styles.container}> 
+          <Text style = {styles.headerText}>APP Settings</Text>
+          <FeatherIcon name="settings" style = {styles.mainIcon} />
+        </View>
+
+        <ScrollView>
+          <View style = {styles.section}>
+
+            {/* Language changer */}
+            <TouchableOpacity onPress={() => alert('You have selected the first option') } style = {styles.row}>
+              <View style = {styles.box}>
+                <FeatherIcon name="globe" style = {styles.icon}/>
+              </View>
+              <Text style = {styles.rowLabel}>Language</Text>
+              <View style = {styles.rowSpacer}/>
+
+              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
+            </TouchableOpacity>
+
+            {/* Security button */}
+            <TouchableOpacity onPress={() => alert('You have selected the first option')} style = {styles.row}>
+              <View style = {styles.box}>
+                <FeatherIcon name="shield" style = {styles.icon}/>
+              </View>
+
+              <Text style = {styles.rowLabel}>Security</Text>
+              <View style = {styles.rowSpacer}/>
+
+              <FeatherIcon color = 'black' name='chevron-right' size={30}/>              
+            </TouchableOpacity>
+
+            {/* Notification changer */}
+            
+            <View style = {styles.row}>
+              <View style = {styles.box}>
+                <FeatherIcon name="bell" style = {styles.icon}/>
+              </View>
+              
+
+              <Text style = {styles.rowLabel}>Notifications</Text>
+              <View style = {styles.rowSpacer}/>
+
+              <Switch onValueChange={notifications => setForm ({...form, notifications})} value = {form.notifications}/>
+            </View>
+            
+
+            {/* About App */}
+            <TouchableOpacity onPress={() => alert('You have selected the first option')} style = {styles.row}>
+              <View style = {styles.box}>
+                <FeatherIcon name="info" style = {styles.icon}/>
+              </View>
+            
+              <Text style = {styles.rowLabel}>About App</Text>
+              <View style = {styles.rowSpacer}/>
+
+              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
+            </TouchableOpacity>
+
+            {/* RateUs */}
+            <TouchableOpacity onPress={() => alert('You have selected the first option')} style = {styles.row}>
+              <View style = {styles.box}>
+                <FeatherIcon name="thumbs-up" style = {styles.icon}/>
+              </View>
+            
+              <Text style = {styles.rowLabel}>Rate Us</Text>
+              <View style = {styles.rowSpacer}/>
+
+              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+        <View style={styles.container2}>
           {/* White Box */}
           <View style={styles.box}>
             {/* Close Button */}
@@ -87,7 +155,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Centers content vertically
     alignItems: 'center', // Centers content horizontally
   },
-  container: {
+  container2: {
     alignItems: 'center',
     width: '100%',
   },
@@ -138,5 +206,59 @@ const styles = StyleSheet.create({
     color: 'white', // White text
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  container:{ 
+    alignItems: 'center', 
+    marginTop: height * 0.05, 
+  },
+  
+  headerText:{
+    fontSize: width * 0.08,
+    fontWeight: 'bold',
+    fontFamily: 'Cochin',
+  },
+
+  mainIcon:{
+    fontSize: 60,
+    color: 'black',
+    marginTop: height * 0.02,
+  },
+
+  section:{
+    paddingHorizontal: width * 0.1,
+    paddingTop: height * 0.1,
+  },
+
+  icon:{
+    fontSize:30,
+    borderRadius: 9999,
+    marginRight: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  row:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    height: 55,
+    backgroundColor: '#f2f2f2',
+    borderRadius: 20,
+    marginBottom: 30,
+    paddingHorizontal: 12,
+  },
+
+  rowLabel:{
+    fontSize: width * 0.05,
+    paddingLeft: width * 0.02,
+    fontWeight: 'bold',
+    color: '#0c0c0c',
+  },
+
+  rowSpacer:{
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
   },
 });
