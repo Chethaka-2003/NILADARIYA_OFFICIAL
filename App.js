@@ -13,6 +13,7 @@ import Language from './Language';
 import Security from './Security';
 import AboutUs from './AboutUs';
 import Rate from './Rate';
+import CustomAlert from './screens/CustomAlert';
 
 
 const Stack = createStackNavigator();
@@ -38,6 +39,7 @@ export default function App() {
           <Stack.Screen name="Security" component={Security} />
           <Stack.Screen name="AboutUs" component={AboutUs} />
           <Stack.Screen name="Rate" component={Rate} />
+          <Stack.Screen name="CustomAlert" component={CustomAlert} />
         </Stack.Navigator>
       </NavigationContainer>;
     </>

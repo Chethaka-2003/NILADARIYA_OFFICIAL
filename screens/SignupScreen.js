@@ -1,11 +1,12 @@
-
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, Alert, } from 'react-native';
-import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import Background from '../Background';
 import axios from 'axios';
-
+import Background from '../Background';
+import CustomAlert from './CustomAlert';
+import CustomLottieAlert from './CustomLottieAlert';
+import successAnimation from '../assets/done.json';
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
@@ -24,22 +25,20 @@ export default function SignupScreen() {
   const [passwordVerify, setPasswordVerify] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
-  const [showPassword, setShowPassword] = useState(false)
+  const [verificationCode, setVerificationCode] = useState('');
+  const [isCodeSent, setIsCodeSent] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [lottieAlertVisible, setLottieAlertVisible] = useState(false);
+
 
   const navigation = useNavigation();
 
-  // function handleSubmit(){
-  //   const userDate = {
-  //     name: name,
-  //     email,
-  //     mobile,
-  //     password,
-  //   };
-  //   axios
-  //     .post('http://192.168.8.100:4000/register', userData)
-  //     .then(res => console.log(res.data))
-  //     .catch(e => console.log(e));
-  // }
 
   function handleName(e) {
     const nameVar = e.nativeEvent.text;
@@ -99,35 +98,53 @@ export default function SignupScreen() {
     }
   }
 
-  function handleSignUp() {
-    // if(nameVerify && emailVerify && mobileVerify && passwordVerify){
-    //   navigation.navigate('LoginScreen');
-    // }else{
-    //   Alert.alert('Please fill all the fields correctly before proceeding.')
-    // }
 
-    const userData = {
-      name: name,
-      email,
-      mobile,
-      password,
-    };
-      axios
-        .post('http://192.168.1.136:4000/register', userData)
-        .then(res => {
-          console.log(res.data);
+  const handleSendVerification = () => {   // Verification Part
+    if (!email) {
+      setAlertTitle('Error');
+      setAlertMessage('Please enter your email to receive a verification code.');
+      setAlertVisible(true);
+      return;
+    }
 
-          if (res.data.status == 'OK') {
-            Alert.alert('User Created');
-          } else {
-            Alert.alert(JSON.stringify(res.data));
-          }
-        })
-        .catch(e => console.log(e));
-  }
+    axios.post('http://192.168.8.101:4000/send-verification', { email })
+      .then(res => {
+        if (res.data.status === "OK") {
+          setAlertTitle('Verification Code Sent');
+          setAlertMessage('Check your email for the verification code.');
+          setAlertVisible(true);
+          setIsCodeSent(true);
+        } else {
+          Alert.alert('Error', res.data.data);
+        }
+      })
+      .catch(err => console.log(err));
+  };
+
+  const handleSignUp = () => {
+    if (!isCodeSent || !verificationCode) {
+      Alert.alert('Error', 'Please enter the verification code first.');
+      return;
+    }
+
+    const userData = { name, email, mobile, password, code: verificationCode };
+
+    axios.post('http://192.168.8.101:4000/register', userData)
+      .then(res => {
+        if (res.data.status === "OK") {
+          setAlertTitle('Success');
+          setAlertMessage('Account created successfully.');
+          setLottieAlertVisible(true);
+          setIsVerified(true);
+        } else {
+          Alert.alert('Error', res.data.data);
+        }
+      })
+      .catch(err => console.log(err));
+  };
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={true}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
       <Background type="type1" />
 
       <View style={styles.container}>
@@ -137,6 +154,7 @@ export default function SignupScreen() {
         </TouchableOpacity>
 
         <View style={styles.inputContainer}>
+
           <View style={styles.contBox}>
             <Text style={styles.label}>NAME</Text>
             <View style={styles.action}>
@@ -152,34 +170,13 @@ export default function SignupScreen() {
               )}
             </View>
           </View>
-
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <View style={styles.contBox}>
-            <Text style={styles.label}>EMAIL</Text>
-            <View style={styles.action}>
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                placeholderTextColor="black"
-                keyboardType="email-address"
-                onChange={e => handleEmail(e)}
-              />
-              {email.length < 1 ? null : emailVerify ? (
-                <Feather name="check-circle" color="green" size={20} style={styles.icon} />
-              ) : (
-                <Feather name="x-circle" color="red" size={20} style={styles.icon} />
-              )}
-            </View>
-          </View>
-
-          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
           <View style={styles.contBox}>
             <Text style={styles.label}>MOBILE NUMBER</Text>
             <View style={styles.action}>
               <TextInput
-                style={styles.input}
                 placeholder="Mobile number"
                 placeholderTextColor="black"
                 keyboardType="phone-pad" // Allows phone number input
@@ -194,12 +191,12 @@ export default function SignupScreen() {
           </View>
           {mobileError ? <Text style={styles.errorText}>{mobileError}</Text> : null}
 
+
           <View style={styles.contBox}>
             <View style={styles.passwordContainer}>
               <Text style={styles.label}>PASSWORD</Text>
               <View style={styles.action}>
                 <TextInput
-                  style={styles.input}
                   placeholder='Password'
                   placeholderTextColor="black"
                   value={password}
@@ -220,58 +217,102 @@ export default function SignupScreen() {
           </View>
           {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
-          <TouchableOpacity
-            style={[styles.SignupButton, { opacity: nameVerify && emailVerify && mobileVerify && passwordVerify ? 1 : 0.5 }]}
-            onPress={handleSignUp}
-            disabled={!nameVerify || !emailVerify || !mobileVerify || !passwordVerify}
-          >
-            <Text style={styles.SignupButtonText}>Sign up</Text>
+          <View style={styles.contBox}>
+            <Text style={styles.label}>EMAIL</Text>
+            <View style={styles.action}>
+              <TextInput
+                placeholder="Email"
+                placeholderTextColor="black"
+                keyboardType="email-address"
+                onChange={e => handleEmail(e)}
+                
+              />
+              {email.length < 1 ? null : emailVerify ? (
+                <Feather name="check-circle" color="green" size={20} style={styles.icon} />
+              ) : (
+                <Feather name="x-circle" color="red" size={20} style={styles.icon} />
+              )}
+          
+            </View>
+            
+          </View>
+          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+
+
+          <View style={styles.container3}>
+            
+
+            <TouchableOpacity style={styles.buttonSmall} onPress={handleSendVerification}>
+              <Text style={styles.buttonText2}>Send Code</Text>
+            </TouchableOpacity>
+
+          </View>
+
+          {isCodeSent && (
+            <>
+              <Text style={styles.label}>VERIFICATION CODE</Text>
+              <TextInput style={styles.input} placeholder="Enter Code" keyboardType="numeric" onChangeText={setVerificationCode} />
+            </>
+          )}
+
+
+          <TouchableOpacity style={styles.button} onPress={handleSignUp} disabled={!isCodeSent || isVerified}>
+            <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        onClose={() => setAlertVisible(false)}
+      />
+
+      <CustomLottieAlert
+        visible={lottieAlertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        onClose={() => setLottieAlertVisible(false)}
+        animationSource={successAnimation} // Pass the Lottie animation source here
+      />
+
+
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 130,
+    marginTop: 100,
     backgroundColor: 'white',
     borderTopLeftRadius: 120,
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
 
-  title: {
-    fontSize: 40,
-    fontWeight: 'bold',
+  container3: {
+    marginTop: -20,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
   },
 
-  loginTextContainer: {
-    alignSelf: 'center',
-  },
-
-  loginText: {
-    fontSize: 11,
-    color: 'black',
-    textDecorationLine: 'underline',
-  },
-
-  inputContainer: {
-    width: '80%',
-    marginTop: 20,
-  },
+  title: { fontSize: 30, fontWeight: 'bold' },
+  loginTextContainer: { alignSelf: 'center' },
+  loginText: { fontSize: 12, color: 'black', textDecorationLine: 'underline' },
+  inputContainer: { width: '85%', marginTop: 20 },
 
   contBox: {
-    marginBottom: 20
+    marginBottom: 30,
   },
+
 
   errorText: {
     color: 'red',
     marginTop: -15,
-    marginBottom: 15,
+    marginBottom: 25,
   },
 
   action: {
@@ -297,29 +338,30 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  SignupButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  label: { fontSize: 14, fontWeight: 'bold', marginBottom: 5 },
+  input: {
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#420475',
+    backgroundColor: '#d3d3d3',
+    borderRadius: 10,
+    marginBottom: 10,
   },
-
-  SignupButton: {
-    marginTop: 70,
+  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  buttonSmall: {
+    padding: 10,
+    backgroundColor: 'transparent',
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: '#420475',
+  },
+  button: {
+    marginTop: 20,
     backgroundColor: 'black',
-    paddingVertical: 15,
-    paddingHorizontal: 50,
-    borderRadius: 25,
-    width: '65%',
-    alignSelf: 'center',
+    paddingVertical: 12,
+    borderRadius: 20,
+    alignItems: 'center',
   },
-
-  label: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: 'black',
-    marginBottom: 8, // Adjusted gap between label and input field
-    marginLeft: 5,
-  },
-
+  buttonText: { color: 'white', fontWeight: 'bold' },
+  buttonText2: { color: 'black', fontWeight: 'bold' },
 });
