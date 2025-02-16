@@ -1,45 +1,50 @@
 import User from '../models/userModel';
+import multer from 'multer';
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
 
 class UserController {
   async getUserProfile(req, res) {
     try {
-      const userId = req.params.id;
-      const user = await User.findById(userId);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-      res.status(200).json(user);
+      const user = await User.findById(req.params.id);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      res.json(user);
     } catch (error) {
-      res.status(500).json({ message: 'Error retrieving user profile', error });
+      res.status(500).json({ message: 'Server error' });
     }
   }
 
   async updateUserProfile(req, res) {
     try {
-      const userId = req.params.id;
-      const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
-      if (!updatedUser) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-      res.status(200).json(updatedUser);
+      const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      res.json(user);
     } catch (error) {
-      res.status(500).json({ message: 'Error updating user profile', error });
+      res.status(500).json({ message: 'Server error' });
     }
   }
 
-  async uploadProfileImage(req, res) {
-    try {
-      const userId = req.params.id;
-      const profileImage = req.file.path; // Assuming you're using multer for file uploads
-      const updatedUser = await User.findByIdAndUpdate(userId, { profileImage }, { new: true });
-      if (!updatedUser) {
-        return res.status(404).json({ message: 'User not found' });
+  uploadProfileImage(req, res) {
+    upload.single('profileImage')(req, res, async (err) => {
+      if (err) return res.status(500).json({ message: 'Upload error' });
+      try {
+        const user = await User.findByIdAndUpdate(req.params.id, { profileImage: req.file.path }, { new: true });
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.json(user);
+      } catch (error) {
+        res.status(500).json({ message: 'Server error' });
       }
-      res.status(200).json(updatedUser);
-    } catch (error) {
-      res.status(500).json({ message: 'Error uploading profile image', error });
-    }
+    });
   }
 }
 
-export default new UserController();
+export default UserController;
