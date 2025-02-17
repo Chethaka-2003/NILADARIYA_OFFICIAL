@@ -1,14 +1,39 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import NavigationBar from '../NavigationBar';
+import axios from 'axios';
 
 
 export default function LoginScreen() {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
   const navigation = useNavigation();
+
+  const handleLogin = () => {
+    if (!email || !password) {
+      Alert.alert('Please enter email and password');
+      return;
+    } 
+
+    axios.post('http://192.168.8.101:4000/login', { email, password })
+    .then(res => {
+      if (res.data.status === 'OK') {
+        Alert.alert('Success', 'Logged in successfully');
+        navigation.navigate(NavigationBar);
+      } else {
+        Alert.alert('Error', res.data.message);
+      }
+    })
+    .catch(error => {
+      Alert.alert('Error', error.message);
+    });
+  }
+
+
   return (
     <View style={styles.container}>
       <Image source={require('../assets/login 1.jpg')} style={styles.backgroundImage} />
@@ -43,7 +68,7 @@ export default function LoginScreen() {
       <TouchableOpacity onPress={() => alert('Forgot Password functionality')}>
         <Text style={styles.forgotPassword}>Forgot Password?</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate(NavigationBar)}>
+      <TouchableOpacity style={styles.loginButton} onPress = {handleLogin}>
         <Text style={styles.loginButtonText}>Log In</Text>
       </TouchableOpacity>
     </View>

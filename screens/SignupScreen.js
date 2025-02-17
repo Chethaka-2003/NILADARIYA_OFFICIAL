@@ -100,14 +100,14 @@ export default function SignupScreen() {
 
 
   const handleSendVerification = () => {   // Verification Part
-    if (!email) {
+    if (!email || !mobile) {
       setAlertTitle('Error');
-      setAlertMessage('Please enter your email to receive a verification code.');
+      setAlertMessage('Please enter your email and phone number to receive a verification code.');
       setAlertVisible(true);
       return;
     }
 
-    axios.post('http://192.168.8.101:4000/send-verification', { email })
+    axios.post('http://192.168.8.101:4000/send-verification', { email , mobile })
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Verification Code Sent');
@@ -115,7 +115,9 @@ export default function SignupScreen() {
           setAlertVisible(true);
           setIsCodeSent(true);
         } else {
-          Alert.alert('Error', res.data.data);
+          setAlertTitle('Email Already Exists');
+          setAlertMessage('Enter a different email address.');
+          setAlertVisible(true);
         }
       })
       .catch(err => console.log(err));
