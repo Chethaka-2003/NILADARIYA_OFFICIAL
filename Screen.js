@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, SafeAreaView, Image, Dimensions, Platform, } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, SafeAreaView, Image, Dimensions, Platform } from 'react-native';
+import { LanguageContext } from './LanguageContext';
 
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
 
 export default function Screen({ navigation }) {
-  // State to handle the current language
-  const [language, setLanguage] = useState('en'); // Default language: English
+  const { language, setLanguage } = useContext(LanguageContext); // Use language context
 
   // Language dictionary
   const translations = {
@@ -68,7 +68,6 @@ export default function Screen({ navigation }) {
           <Text style={styles.languageButtonText}>
             {language === 'en' ? 'සිංහල' : 'English'}
           </Text>
-
         </TouchableOpacity>
 
         <StatusBar style="light" />
