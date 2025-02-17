@@ -55,7 +55,7 @@ export default function MenuOptions() {
         <ScrollView contentContainerStyle={styles.scrollView}>
         
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Page2")}>
             <ImageBackground source={require('./assets/flag.png')} style={styles.buttonBackground}>
               <Text style={styles.buttonText}> DIVISIONAL COUNCIL</Text>
             </ImageBackground>
@@ -94,7 +94,17 @@ export default function MenuOptions() {
         
         <Modal visible={isModalVisible} transparent={true} animationType="slide">
           <View style={styles.modalContainer}>
+
+            /*Icons Container*/
           <Animated.View style={[styles.modalContent, { transform: [{ scale }] }]}>
+          <View style={styles.Icons}>
+               <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
+                <Icon name="close" size={20} color="black" />
+               </TouchableOpacity>
+               <TouchableOpacity onPress={handleZoom} style={styles.zoomIcon}>
+                  <Icon name="expand-outline" size={20} color="black" />
+               </TouchableOpacity>
+              </View>  
               <Image source={require('./assets/chatbotIcon.png')} style={styles.modalImage} />
               <View style={styles.textContainer}>
                 <Text style={styles.title}> HIII THERE!!!! </Text>
@@ -116,14 +126,6 @@ export default function MenuOptions() {
                   <Text style={styles.languageButtonText}>தமிழ்</Text>
                 </TouchableOpacity>
               </View>
-              <View style={styles.iconsContainer}>
-                <TouchableOpacity onPress={handleZoom} style={styles.zoomIcon}>
-                  <Icon name="expand-arrows-alt" size={30} color="black" />
-                </TouchableOpacity>
-              </View>
-              <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
             </Animated.View>
           </View>
         </Modal>
@@ -234,6 +236,7 @@ const styles = StyleSheet.create({
     height: 60,
     width: 200,
     resizeMode: 'contain',
+    marginTop: 5,
   },
   modalContainer: {
     flex: 1,
@@ -254,17 +257,6 @@ const styles = StyleSheet.create({
     height: 50,
     resizeMode: 'contain',
   },
-  closeButton: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: 'gray',
-    borderRadius: 5,
-  },
-  closeButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
   draggableChatbot: {
     position: 'absolute',
     bottom: 20,
@@ -275,7 +267,6 @@ const styles = StyleSheet.create({
     width: 200,
     resizeMode: 'contain',
   },
-  textContainer: {},
   title: {
     fontSize: 23,
     textAlign: 'center',
@@ -291,7 +282,7 @@ const styles = StyleSheet.create({
   },
   Questions: {
     alignItems: 'center',
-    marginTop: 100,
+    marginTop: 50,
     fontSize: 19,
     fontWeight: "bold",
   },
@@ -313,5 +304,31 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+   closeButton: {
+    backgroundColor: '#FF4D4F', // Red close button
+    borderRadius: 50,
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    marginRight: 10,
+  },
+  zoomIcon: {
+    backgroundColor: '#4CAF50', // Green expand button
+    borderRadius: 50,
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+  },
+  Icons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 20,
+    marginBottom: 10,
   },
 });
