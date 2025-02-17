@@ -1,21 +1,22 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView } from 'react-native';
-import Screen from './Screen'; // Make sure the path to Screen.js is correct
+import { StyleSheet, View } from 'react-native';
+import ProfilePage from './userprofile';
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-      <Screen />
+    <View style={styles.container}>
+      <ProfilePage />
       <StatusBar style="auto" />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#fff',
     alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -2,13 +2,16 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const mongoose = require('mongoose');
 const connectDB = require('./config/db'); // Import the connectDB function
+const setUserRoutes = require('./routes/userRoutes'); // Import the setUserRoutes function
 
 app.use(express.json());
 app.use(cors());
 
 connectDB();
+
+// Set up routes
+setUserRoutes(app);
 
 app.listen(process.env.PORT, () => {
   console.log("Local server Started");

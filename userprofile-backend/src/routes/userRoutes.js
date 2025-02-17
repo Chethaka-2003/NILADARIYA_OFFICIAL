@@ -1,5 +1,5 @@
-import express from 'express';
-import UserController from '../controllers/userController';
+const express = require('express');
+const UserController = require('../controllers/userController');
 
 const router = express.Router();
 const userController = new UserController();
@@ -12,4 +12,4 @@ const setUserRoutes = (app) => {
   app.use('/api', router);
 };
 
-export default setUserRoutes;
+module.exports = setUserRoutes;

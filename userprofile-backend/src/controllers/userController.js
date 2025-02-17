@@ -1,5 +1,5 @@
-import User from '../models/userModel';
-import multer from 'multer';
+const User = require('../models/userModel');
+const multer = require('multer');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -47,4 +47,4 @@ class UserController {
   }
 }
 
-export default UserController;
+module.exports = UserController;

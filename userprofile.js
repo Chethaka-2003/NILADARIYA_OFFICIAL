@@ -8,7 +8,7 @@ const ProfilePage = () => {
 
   return (
     <ImageBackground 
-      source={require('../assets/Selection.jpg')} 
+      source={require('./assets/Selection.jpg')} 
       style={styles.backgroundImage}
     >
       <View style={styles.container}>
@@ -26,7 +26,7 @@ const ProfilePage = () => {
         {/* Profile Picture */}
         <View style={styles.profilePictureContainer}>
           <Image
-            source={require("../assets/profile.jpg")}
+            source={require("./assets/officer.png")}
             style={styles.profilePicture}
           />
         </View>
@@ -37,7 +37,7 @@ const ProfilePage = () => {
           <TouchableOpacity style={styles.option}>
             <View style={styles.optionContent}>
               <Image
-                source={require("../assets/officer.png")}
+                source={require("./assets/officer.png")}
                 style={styles.icon}
               />
               <Text style={styles.optionText}>Profile Details</Text>
@@ -47,7 +47,7 @@ const ProfilePage = () => {
           <TouchableOpacity style={styles.option}>
             <View style={styles.optionContent}>
               <Image
-                source={require("../assets/Activity.png")}
+                source={require("./assets/Activity.png")}
                 style={styles.icon}
               />
               <Text style={styles.optionText}>Activity</Text>
