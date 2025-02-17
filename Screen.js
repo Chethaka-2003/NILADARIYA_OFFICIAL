@@ -5,7 +5,7 @@ import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, SafeAreaView
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
 
-export default function App() {
+export default function Screen({ navigation }) {
   // State to handle the current language
   const [language, setLanguage] = useState('en'); // Default language: English
 
@@ -47,14 +47,14 @@ export default function App() {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, styles.publicButton]} // Apply specific style
-            onPress={() => console.log("Public Button pressed")}
+            onPress={() => navigation.navigate('Profile')} // Navigate to ProfilePage
           >
             <Text style={[styles.buttonText, styles.publicButtonText]}>{publicButton}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.governmentButton]} // Apply specific style
-            onPress={() => console.log("Government Button pressed")}
+            onPress={() => navigation.navigate('Profile')} // Navigate to ProfilePage
           >
             <Text style={[styles.buttonText, styles.governmentButtonText]}>{governmentButton}</Text>
           </TouchableOpacity>
