@@ -1,15 +1,13 @@
 const express = require('express');
 const UserController = require('../controllers/userController');
-
 const router = express.Router();
 const userController = new UserController();
 
-const setUserRoutes = (app) => {
-  router.get('/user/:id', userController.getUserProfile);
-  router.put('/user/:id', userController.updateUserProfile);
-  router.post('/user/:id/profile-image', userController.uploadProfileImage);
+router.get('/user/:id', userController.getUserProfile);
+router.put('/user/:id', userController.updateUserProfile);
+router.post('/user/:id/profileImage', userController.uploadProfileImage);
 
-  app.use('/api', router);
-};
+// New route to export all users
+router.get('/export/users', userController.exportUsers);
 
-module.exports = setUserRoutes;
+module.exports = router;

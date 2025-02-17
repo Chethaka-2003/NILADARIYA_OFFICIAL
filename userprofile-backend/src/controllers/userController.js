@@ -45,6 +45,16 @@ class UserController {
       }
     });
   }
+
+  // New method to export all users
+  async exportUsers(req, res) {
+    try {
+      const users = await User.find();
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
 }
 
 module.exports = UserController;
