@@ -1,79 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Image, StyleSheet, Switch, TouchableOpacity, ImageBackground, ActivityIndicator } from "react-native";
-import { LanguageContext } from './LanguageContext';
+import React, { useState } from "react";
+import { View, Text, Image, StyleSheet, Switch, TouchableOpacity, ImageBackground } from "react-native";
 
 const ProfilePage = () => {
-  const { language } = useContext(LanguageContext); // Use language context
   const [isEnabled, setIsEnabled] = useState(false);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
 
-  useEffect(() => {
-    // Simulate fetching user profile data from the backend
-    const fetchUserProfile = async () => {
-      try {
-        // Simulate a delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        // Simulate user data
-        const userData = {
-          name: "John Doe",
-          profileImage: "path/to/officer.png",
-          preferences: {
-            notifications: true,
-          },
-        };
-        setUser(userData);
-        setIsEnabled(userData.preferences.notifications);
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-      } finally {
-        setLoading(false); // Set loading to false after data is fetched
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
-
-  const toggleSwitch = () => {
-    setIsEnabled(!isEnabled);
-    // Simulate updating user profile data
-    console.log('User profile updated:', { notifications: !isEnabled });
-  };
-
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-
-  if (!user) {
-    return <Text>Loading...</Text>;
-  }
-
-  // Language dictionary
-  const translations = {
-    en: {
-      permission: 'Permission',
-      profileDetails: 'Profile Details',
-      activity: 'Activity',
-      access: 'Access',
-      managePrivacy: 'Manage Privacy',
-      logout: 'LOG OUT',
-    },
-    si: {
-      permission: 'අවසර',
-      profileDetails: 'පැතිකඩ විස්තර',
-      activity: 'ක්‍රියාකාරකම්',
-      access: 'ප්‍රවේශය',
-      managePrivacy: 'පෞද්ගලිකත්වය කළමනාකරණය කරන්න',
-      logout: 'පිටවන්න',
-    },
-  };
-
-  // Get the current translations
-  const { permission, profileDetails, activity, access, managePrivacy, logout } = translations[language];
+  const toggleSwitch = () => setIsEnabled(!isEnabled);
 
   return (
     <ImageBackground 
@@ -83,7 +14,7 @@ const ProfilePage = () => {
       <View style={styles.container}>
         {/* Header Section */}
         <View style={styles.header}>
-          <Text style={styles.userName}>{user.name}</Text>
+          <Text style={styles.userName}>Chethaka Fernando</Text>
           <Switch
             trackColor={{ false: "#767577", true: "green" }}
             thumbColor={isEnabled ? "white" : "white"}
@@ -98,18 +29,18 @@ const ProfilePage = () => {
             source={require("./assets/profile-placeholder.png")}
             style={styles.profilePicture}
           />
-          </View>
+        </View>
 
         {/* Permission Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{permission}</Text>
+          <Text style={styles.sectionTitle}>Permission</Text>
           <TouchableOpacity style={styles.option}>
             <View style={styles.optionContent}>
               <Image
                 source={require("./assets/officer.png")}
                 style={styles.icon}
               />
-              <Text style={styles.optionText}>{profileDetails}</Text>
+              <Text style={styles.optionText}>Profile Details</Text>
             </View>
             <Text style={styles.arrowIcon}>{">"}</Text>
           </TouchableOpacity>
@@ -119,7 +50,7 @@ const ProfilePage = () => {
                 source={require("./assets/Activity.png")}
                 style={styles.icon}
               />
-              <Text style={styles.optionText}>{activity}</Text>
+              <Text style={styles.optionText}>Activity</Text>
             </View>
             <Text style={styles.arrowIcon}>{">"}</Text>
           </TouchableOpacity>
@@ -127,16 +58,16 @@ const ProfilePage = () => {
 
         {/* Access Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{access}</Text>
+          <Text style={styles.sectionTitle}>Access</Text>
         </View>
 
         {/* White Container */}
         <View style={styles.whiteContainer}>
           <TouchableOpacity style={styles.managePrivacyButton}>
-            <Text style={styles.managePrivacyText}>{managePrivacy}</Text>
+            <Text style={styles.managePrivacyText}>Manage Privacy</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.logoutButton}>
-            <Text style={styles.logoutText}>{logout}</Text>
+            <Text style={styles.logoutText}>LOG OUT</Text>
           </TouchableOpacity>
         </View>
 
@@ -281,11 +212,6 @@ const styles = StyleSheet.create({
   footerIcon: {
     fontSize: 24,
     color: "#000",
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
 
