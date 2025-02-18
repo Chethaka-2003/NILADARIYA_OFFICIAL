@@ -1,192 +1,236 @@
-import React, { useState } from "react";
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    ImageBackground,
-    Modal
-} from 'react-native';
-import { MaterialIcons as Icon } from '@expo/vector-icons';
+import React, { useEffect, useRef } from "react";
+import { View, Text, Image, StyleSheet, Animated, ImageBackground, TouchableOpacity } from "react-native";
 
-const PublicProfile = () => {
-    const [isSwitchOn, setSwitchOn] = useState(false);
-    const [isModalVisible, setModalVisible] = useState(false);
 
-    const toggleSwitch = () => setSwitchOn(!isSwitchOn);
-    const toggleModal = () => setModalVisible(!isModalVisible);
+const ProfilePage = () => {
+    const pulseAnim = useRef(new Animated.Value(1)).current;
 
-    return (
-        <ImageBackground
-            source={require('./assets/background2.jpg')} 
-            style={styles.backgroundImage}
-        >
-            <View style={styles.container}>
-                <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconLeft}>
-                        <Icon name="arrow-back" size={24} color="black"/>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Icon name="list" size={20} color="black" />
-                        <Text style={styles.buttonText}>Activity</Text>
-                        <Icon name="chevron-right" size={20} color="black" />
-                    </TouchableOpacity>
-                </View>
+    useEffect(() => {
+      const startPulse = () => {
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(pulseAnim, {
+              toValue: 0.5, // Shrinks the spot
+              duration: 500,
+              useNativeDriver: true,
+            }),
+            Animated.timing(pulseAnim, {
+              toValue: 1, // Restores to original size
+              duration: 500,
+              useNativeDriver: true,
+            }),
+          ])
+        ).start();
+      };
+      startPulse();
+    }, [pulseAnim]);
 
-                <View style={styles.accessSection}>
-                    <Text style={styles.sectionTitle}>Access</Text>
-                    <TouchableOpacity style={styles.managePrivacyButton}>
-                        <Text style={styles.managePrivacyText}>Manage Privacy</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.logoutButton}>
-                        <Text style={styles.logoutText}>LOG OUT</Text>
-                    </TouchableOpacity>
-                </View>
+  return (
+    <ImageBackground 
+      source={require('../assets/Selection.jpg')} 
+      style={styles.backgroundImage}
+    >
+      <View style={styles.container}>
+        {/* Header Section */}
+        <View style={styles.header}>
+          <Text style={styles.userName}>Chethaka Fernando</Text>
+    
+        </View>
 
-                <View style={styles.bottomNavigation}>
-                    <TouchableOpacity>
-                        <Icon name="home" size={28} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Icon name="person" size={28} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Icon name="settings" size={28} color="black" />
-                    </TouchableOpacity>
-                </View>
+        {/* Profile Picture */}
+        <View style={styles.profilePictureContainer}>
+        {/* Blinking Availability Indicator */}
+        <Animated.View
+            style={[
+              styles.availabilityIndicator,
+              { transform: [{ scale: pulseAnim }] }, // Apply pulsating animation
+            ]}
+          />
+          <Image
+            source={require("../assets/profile.jpg")}
+            style={styles.profilePicture}
+          />
+        </View>
 
-                <Modal visible={isModalVisible} animationType="slide" transparent>
-                    <View style={styles.modalOverlay}>
-                        <View style={styles.modalContent}>
-                            <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
-                                <Icon name="close" size={24} color="black" />
-                            </TouchableOpacity>
-
-                            <View style={styles.profileImageContainer}>
-                                <View style={styles.profileImageCircle}>
-                                    <Icon name="person" size={40} color="black" />
-                                </View>
-                            </View>
-
-                            <Text style={styles.inputLabel}>Name In Full</Text>
-                            <TextInput style={styles.input} value="Savini Perera" />
-
-                            <Text style={styles.inputLabel}>Contact Number</Text>
-                            <TextInput style={styles.input} value="+94 76 9997498" />
-
-                            <Text style={styles.inputLabel}>Email Address</Text>
-                            <TextInput style={styles.input} value="savini@gmail.com" />
-
-                            <Text style={styles.inputLabel}>District</Text>
-                            <TextInput style={styles.input} value="Puttalam" />
-
-                            <TouchableOpacity style={styles.saveButton}>
-                                <Text style={styles.saveButtonText}>Save Changes</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
+        {/* Permission Section */}
+        <View style={styles.section}>
+          <TouchableOpacity style={styles.option}>
+            <View style={styles.optionContent}>
+              <Image
+                source={require("../assets/officer.png")}
+                style={styles.icon}
+              />
+              <Text style={styles.optionText}>Profile Details</Text>
             </View>
-        </ImageBackground>
-    );
+            <Text style={styles.arrowIcon}>{">"}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.option}>
+            <View style={styles.optionContent}>
+              <Image
+                source={require("../assets/Activity.png")}
+                style={styles.icon}
+              />
+              <Text style={styles.optionText}>Activity</Text>
+            </View>
+            <Text style={styles.arrowIcon}>{">"}</Text>
+          </TouchableOpacity>
+        </View>
+
+
+        {/* Footer Section */}
+        <View style={styles.footer}>
+          <TouchableOpacity style={[styles.footerButton, styles.activeFooterButton]}>
+            <Text style={styles.footerIcon}>👤</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.footerButton}>
+            <Text style={styles.footerIcon}>🏠</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.footerButton}>
+            <Text style={styles.footerIcon}>⚙️</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ImageBackground>
+  );
 };
 
 const styles = StyleSheet.create({
-    backgroundImage: {
-        flex: 1,
-        paddingInline: 110,
-        resizeMode: 'cover',
-    },
-    container: {
-        flex: 1,
-        padding: 20,
-    },
-    header: {
-        position: 'relative',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 20,
-        paddingVertical: 10,
-    },
-    iconLeft: {
-        position: 'absolute',
-        right: 220,
-        transform: [{ translateY: -120 }], 
-    },
-    iconRight: {
-        position: 'absolute',
-        left: 220,
-        transform: [{ translateY: -120 }], 
-    },
-    headerTitle: {
-        fontSize: 26,
-        fontWeight: 'bold',
-        marginBottom: 200,
-        alignContent:'center',
-    },
-    profileImageContainer: {
-        width: 220, 
-        height: 220, 
-        borderRadius: 110, 
-        backgroundColor: 'white', 
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    modalContent: {
-        width: '90%',
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 20,
-        alignItems: 'center',
-    },
-    closeButton: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-    },
-    profileImageContainer: {
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    profileImageCircle: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        backgroundColor: '#f4f4f4',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 2,
-        borderColor: '#333',
-    },
-    inputLabel: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        color: '#333',
-        alignSelf: 'flex-start',
-        marginBottom: 5,
-    },
-    input: {
-        width: '100%',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        marginBottom: 15,
-        fontSize: 16,
-        color: '#333',
-    },
-    saveButton: {
-        backgroundColor: '#007BFF',
-        padding: 15,
-        borderRadius: 10,
-        marginTop: 20,
-        alignItems: 'center',
-        width: '100%',
-    },
-    saveButtonText: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: '#fff',
-    },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover",
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 30,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "black",
+    left: 100,
+  },
+  profilePictureContainer: {
+    marginVertical: 20,
+    alignItems: "center",
+  },
+  profilePicture: {
+    width: 170,
+    height: 170,
+    borderRadius: 90,
+    borderWidth: 5,
+    borderColor: "#fff",
+  },
+  section: {
+    width: "100%",
+    marginTop: 80,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#fff",
+    marginBottom: 10,
+  },
+  option: {
+    height: 60,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 8,
+    marginVertical: 30,
+    top: 0,
+    justifyContent: "space-between",
+  },
+  optionContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  icon: {
+    width: 27,
+    height: 27,
+    marginRight: 10,
+  },
+  optionText: {
+    fontSize: 16,
+    color: "#000",
+  },
+  arrowIcon: {
+    fontSize: 16,
+    color: "#000",
+  },
+  whiteContainer: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 15,
+    width: "100%",
+    marginTop: 20,
+  },
+  managePrivacyButton: {
+    backgroundColor: "#d9d9d9",
+    padding: 15,
+    borderRadius: 20,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  managePrivacyText: {
+    fontSize: 16,
+    color: "#000",
+  },
+  logoutButton: {
+    backgroundColor: "#f53b3b",
+    padding: 15,
+    borderRadius: 20,
+    alignItems: "center",
+  },
+  logoutText: {
+    fontSize: 16,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    width: "110%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  footerButton: {
+    padding: 10,
+  },
+  activeFooterButton: {
+    backgroundColor: "#A63A2C",
+    borderRadius: 20,
+  },
+  footerIcon: {
+    fontSize: 24,
+    color: "#000",
+  },
+  availabilityIndicator: {
+    position: "absolute",
+    top: -42, // Adjust to position slightly outside the top-left
+    left: 200, // Adjust to position slightly outside the top-left
+    width: 20,
+    height: 20,
+    backgroundColor: "green",
+    borderRadius: 10, // Makes it a perfect circle
+    borderWidth: -4, // Optional, for a border around the circle
+    borderColor: "#fff", // Matches the profile picture border
+    zIndex: 1, // Ensures it is on top of the profile picture
+  },
 });
 
-export default PublicProfile;
+export default ProfilePage;
