@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import PublicProfile from './PublicProfile';
+import PublicProfile from './Officer.js';
 
 export default function App() {
   return (
