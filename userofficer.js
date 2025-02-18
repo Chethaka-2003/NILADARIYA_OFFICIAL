@@ -1,10 +1,28 @@
-import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, Switch, TouchableOpacity, ImageBackground } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, Text, Image, StyleSheet, Animated, ImageBackground, TouchableOpacity } from "react-native";
 
 const ProfilePage = () => {
-  const [isEnabled, setIsEnabled] = useState(false);
+    const pulseAnim = useRef(new Animated.Value(1)).current;
 
-  const toggleSwitch = () => setIsEnabled(!isEnabled);
+    useEffect(() => {
+      const startPulse = () => {
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(pulseAnim, {
+              toValue: 0.5, // Shrinks the spot
+              duration: 500,
+              useNativeDriver: true,
+            }),
+            Animated.timing(pulseAnim, {
+              toValue: 1, // Restores to original size
+              duration: 500,
+              useNativeDriver: true,
+            }),
+          ])
+        ).start();
+      };
+      startPulse();
+    }, [pulseAnim]);
 
   return (
     <ImageBackground 
@@ -15,72 +33,41 @@ const ProfilePage = () => {
         {/* Header Section */}
         <View style={styles.header}>
           <Text style={styles.userName}>Chethaka Fernando</Text>
-          <Switch
-            trackColor={{ false: "#767577", true: "green" }}
-            thumbColor={isEnabled ? "white" : "white"}
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-          />
         </View>
 
         {/* Profile Picture */}
         <View style={styles.profilePictureContainer}>
+          {/* Blinking Availability Indicator */}
+          <Animated.View
+            style={[
+              styles.availabilityIndicator,
+              { transform: [{ scale: pulseAnim }] }, // Apply pulsating animation
+            ]}
+          />
           <Image
-            source={require("./assets/profile-placeholder.png")}
+            source={require("./assets/officer.png")}
             style={styles.profilePicture}
           />
         </View>
 
-        {/* Permission Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Permission</Text>
-          <TouchableOpacity style={styles.option}>
-            <View style={styles.optionContent}>
-              <Image
-                source={require("./assets/officer.png")}
-                style={styles.icon}
-              />
-              <Text style={styles.optionText}>Profile Details</Text>
-            </View>
-            <Text style={styles.arrowIcon}>{">"}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.option}>
-            <View style={styles.optionContent}>
-              <Image
-                source={require("./assets/Activity.png")}
-                style={styles.icon}
-              />
-              <Text style={styles.optionText}>Activity</Text>
-            </View>
-            <Text style={styles.arrowIcon}>{">"}</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Access Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Access</Text>
-        </View>
-
-        {/* White Container */}
-        <View style={styles.whiteContainer}>
-          <TouchableOpacity style={styles.managePrivacyButton}>
-            <Text style={styles.managePrivacyText}>Manage Privacy</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.logoutButton}>
-            <Text style={styles.logoutText}>LOG OUT</Text>
-          </TouchableOpacity>
+        {/* Officer Details Section */}
+        <View style={styles.officerDetailsContainer}>
+          <Text style={styles.officerDetailsTitle}>Officer Name</Text>
+          <Text style={styles.officerDetail}>Rank: Sergeant</Text>
+          <Text style={styles.officerDetail}>Badge Number: 12345</Text>
+          <Text style={styles.officerDetail}>Department: Education</Text>
         </View>
 
         {/* Footer Section */}
         <View style={styles.footer}>
           <TouchableOpacity style={[styles.footerButton, styles.activeFooterButton]}>
-            <Text style={styles.footerIcon}>👤</Text>
+            <Text style={styles.footerIcon}></Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.footerButton}>
-            <Text style={styles.footerIcon}>🏠</Text>
+            <Text style={styles.footerIcon}></Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.footerButton}>
-            <Text style={styles.footerIcon}>⚙️</Text>
+            <Text style={styles.footerIcon}></Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -97,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 40,
+    paddingTop: 30,
   },
   header: {
     flexDirection: "row",
@@ -122,72 +109,22 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: "#fff",
   },
-  section: {
-    width: "100%",
-    marginTop: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#fff",
-    marginBottom: 10,
-  },
-  option: {
-    height: 60,
-    flexDirection: "row",
+  officerDetailsContainer: {
+    marginVertical: 20,
     alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 8,
-    marginVertical: 12,
-    top: 0,
-    justifyContent: "space-between",
-  },
-  optionContent: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  icon: {
-    width: 27,
-    height: 27,
-    marginRight: 10,
-  },
-  optionText: {
-    fontSize: 16,
-    color: "#000",
-  },
-  arrowIcon: {
-    fontSize: 16,
-    color: "#000",
-  },
-  whiteContainer: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 15,
+    borderRadius: 10,
     width: "100%",
-    marginTop: 20,
   },
-  managePrivacyButton: {
-    backgroundColor: "#d9d9d9",
-    padding: 15,
-    borderRadius: 20,
-    alignItems: "center",
+  officerDetailsTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
     marginBottom: 10,
   },
-  managePrivacyText: {
+  officerDetail: {
     fontSize: 16,
-    color: "#000",
-  },
-  logoutButton: {
-    backgroundColor: "#f53b3b",
-    padding: 15,
-    borderRadius: 20,
-    alignItems: "center",
-  },
-  logoutText: {
-    fontSize: 16,
-    color: "#fff",
-    fontWeight: "bold",
+    marginBottom: 5,
   },
   footer: {
     position: "absolute",
@@ -212,6 +149,18 @@ const styles = StyleSheet.create({
   footerIcon: {
     fontSize: 24,
     color: "#000",
+  },
+  availabilityIndicator: {
+    position: "absolute",
+    top: -42, // Adjust to position slightly outside the top-left
+    left: 200, // Adjust to position slightly outside the top-left
+    width: 20,
+    height: 20,
+    backgroundColor: "green",
+    borderRadius: 10, // Makes it a perfect circle
+    borderWidth: -4, // Optional, for a border around the circle
+    borderColor: "#fff", // Matches the profile picture border
+    zIndex: 1, // Ensures it is on top of the profile picture
   },
 });
 
