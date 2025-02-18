@@ -71,8 +71,8 @@ export default function MenuOptions({navigation}) {
   return (
     <ImageBackground source={require('./assets/background.png')} style={styles.background}>
         
-        <View style={styles.logoAndTextContainer}>
-          <Image source={require("./assets/Logo.png")} style={styles.logo} />
+        <View style={styles.logo}>
+          <Image source={require("./assets/Logo.png")} style={styles.logoImage} />
         </View>
         
         <View style={styles.pickerContainer}>
@@ -86,17 +86,18 @@ export default function MenuOptions({navigation}) {
             ))}
           </Picker>
         </View>
+
         <ScrollView contentContainerStyle={styles.scrollView}>
         
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={styles.button} >
-            <ImageBackground source={require('./assets/flag.png')} style={styles.buttonBackground}>
+            <ImageBackground source={require('./assets/flag.png')} style={styles.buttonBackground} borderRadius={30}>
               <Text style={styles.buttonText}> DIVISIONAL COUNCIL</Text>
             </ImageBackground>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
-            <ImageBackground source={require('./assets/MunicipalCoun.jpg')} style={styles.buttonBackground}>
+            <ImageBackground source={require('./assets/MunicipalCoun.jpg')} style={styles.buttonBackground}borderRadius={30}>
               <Text style={styles.buttonText}> MUNICIPAL COUNCIL</Text>
             </ImageBackground>
           </TouchableOpacity>
@@ -204,28 +205,31 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'space-between',
   },
-  logoAndTextContainer: {
+  logo: {
     alignItems: 'center',
   },
-  logo: {
+  
+  logoImage: {
     width: width * 0.5,
     height: height * 0.2,
     resizeMode: 'contain',
     marginTop: height * 0.03,
     marginBottom:10,
+    alignItems: 'center',
   },
   picker: {
     height: 50,
-    width: width * 0.7,
+    width: 200,
     backgroundColor: '#ffffff',
     borderColor: '#000000',
     borderWidth: 1,
-    borderRadius: 5,
-    marginTop: 10,
+    borderRadius: 30,
+    marginTop: -25,
+    
   },
   pickerContainer: {
     alignItems: 'center',
-    marginTop: 2,
+    // marginTop: 1,
   },
   buttonsContainer: {
     flexDirection: 'column',
@@ -244,13 +248,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     marginBottom: 10,
     marginTop: 10,
+    borderRadius: 50,
   },
   buttonBackground: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: 300,
-    borderRadius: 10,
+    borderRadius: 50,
   },
   buttonText: {
     fontSize: 20,
