@@ -1,10 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
-import Homepage from './UpdatedMenuOptions';
+// import { StatusBar } from 'expo-status-bar';
+// import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+// import Homepage from './UpdatedMenuOptions';
 import NavigationBar from './NavigationBar';
-import MunicipalCouncil from './MunicipalCouncil';
 import MenuOptions from './UpdatedMenuOptions';
+// import MunicipalCouncil from './MunicipalCouncil';
+
 
 const Stack = createStackNavigator();
 
