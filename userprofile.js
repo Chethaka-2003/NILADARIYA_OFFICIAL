@@ -74,6 +74,7 @@ const ProfilePage = () => {
 
   // Get the current translations
   const { permission, profileDetails, activity, access, managePrivacy, logout } = translations[language];
+  
 
   return (
     <ImageBackground 
@@ -95,7 +96,7 @@ const ProfilePage = () => {
         {/* Profile Picture */}
         <View style={styles.profilePictureContainer}>
           <Image
-            source={require("./assets/profile-placeholder.png")}
+            source={require("./assets/officer.png")}
             style={styles.profilePicture}
           />
           </View>
@@ -125,33 +126,9 @@ const ProfilePage = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Access Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{access}</Text>
-        </View>
+        
 
-        {/* White Container */}
-        <View style={styles.whiteContainer}>
-          <TouchableOpacity style={styles.managePrivacyButton}>
-            <Text style={styles.managePrivacyText}>{managePrivacy}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.logoutButton}>
-            <Text style={styles.logoutText}>{logout}</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Footer Section */}
-        <View style={styles.footer}>
-          <TouchableOpacity style={[styles.footerButton, styles.activeFooterButton]}>
-            <Text style={styles.footerIcon}>👤</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.footerButton}>
-            <Text style={styles.footerIcon}>🏠</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.footerButton}>
-            <Text style={styles.footerIcon}>⚙️</Text>
-          </TouchableOpacity>
-        </View>
+        
       </View>
     </ImageBackground>
   );

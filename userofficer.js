@@ -58,18 +58,7 @@ const ProfilePage = () => {
           <Text style={styles.officerDetail}>Department: Education</Text>
         </View>
 
-        {/* Footer Section */}
-        <View style={styles.footer}>
-          <TouchableOpacity style={[styles.footerButton, styles.activeFooterButton]}>
-            <Text style={styles.footerIcon}></Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.footerButton}>
-            <Text style={styles.footerIcon}></Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.footerButton}>
-            <Text style={styles.footerIcon}></Text>
-          </TouchableOpacity>
-        </View>
+        
       </View>
     </ImageBackground>
   );
