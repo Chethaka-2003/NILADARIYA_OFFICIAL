@@ -23,7 +23,7 @@ const Lock = () => {
     } else {
       setErrorMessage('Passcode cannot be more than 6 digits');
       Vibration.vibrate(); // Vibrate on error
-      setPasscode(''); // Clear passcode
+      //setPasscode(''); // Clear passcode
     }
   };
 
