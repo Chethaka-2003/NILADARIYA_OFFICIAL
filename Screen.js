@@ -21,6 +21,11 @@ export default function Screen({ navigation }) {
       publicButton: 'මහජනයා',
       governmentButton: 'රාජ්‍ය සේවය',
     },
+    ta: {
+      greeting: 'ආයුබෝවන්                வணக்கம்                    WELCOME',
+      publicButton: 'பொது',
+      governmentButton: 'அரசு',
+    },
   };
 
   // Get the current translations
@@ -47,14 +52,14 @@ export default function Screen({ navigation }) {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, styles.publicButton]} // Apply specific style
-            onPress={() => navigation.navigate('Profile')} // Navigate to ProfilePage
+            onPress={() => navigation.navigate('UserProfile')} // Navigate to UserProfile
           >
             <Text style={[styles.buttonText, styles.publicButtonText]}>{publicButton}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.governmentButton]} // Apply specific style
-            onPress={() => navigation.navigate('Profile')} // Navigate to ProfilePage
+            onPress={() => navigation.navigate('UserOfficer')} // Navigate to UserOfficer
           >
             <Text style={[styles.buttonText, styles.governmentButtonText]}>{governmentButton}</Text>
           </TouchableOpacity>
@@ -63,10 +68,10 @@ export default function Screen({ navigation }) {
         {/* Language Toggle Button */}
         <TouchableOpacity
           style={styles.languageButton}
-          onPress={() => setLanguage(language === 'en' ? 'si' : 'en')} // Toggle language
+          onPress={() => setLanguage(language === 'en' ? 'si' : language === 'si' ? 'ta' : 'en')} // Toggle language
         >
           <Text style={styles.languageButtonText}>
-            {language === 'en' ? 'සිංහල' : 'English'}
+            {language === 'en' ? 'සිංහල' : language === 'si' ? 'தமிழ்' : 'English'}
           </Text>
         </TouchableOpacity>
 
@@ -85,49 +90,48 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 30,
+    paddingHorizontal: width * 0.05,
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: height * 0.05, // Adjusted for better spacing
+    marginBottom: height * 0.16,
   },
   logo: {
-    width: width * 0.7, // Set specific width
-    height: height * 0.2, // Set specific height
-    marginBottom: height * 0.05,
+    width: width * 0.6,
+    height: height * 0.14,
     resizeMode: 'contain',
   },
   headingText: {
     color: '#333333',
-    fontSize: width * 0.08,
+    fontSize: width * 0.07,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: height * 0.05, // Adjust spacing below heading
-    lineHeight: width * 0.1, // Better alignment with font size
+    marginBottom: height * 0.04,
+    lineHeight: width * 0.09,
   },
   buttonContainer: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: height * 0.03,
+    marginBottom: height * 0.02,
   },
   button: {
-    paddingVertical: height * 0.02,
-    paddingHorizontal: width * 0.05,
-    marginBottom: height * 0.02, // Reduced margin between buttons
-    borderRadius: 8,
+    paddingVertical: height * 0.018,
+    paddingHorizontal: width * 0.04,
+    marginBottom: height * 0.015,
+    borderRadius: 10,
     width: '80%',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2, // Reduced shadow opacity for natural look
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
   publicButton: {
-    backgroundColor: '#4CAF50', // Green for Public Button
+    backgroundColor: '#4CAF50',
   },
   governmentButton: {
-    backgroundColor: '#F44336', // Red for Government Button
+    backgroundColor: '#F44336',
   },
   buttonText: {
     fontSize: width * 0.05,
@@ -141,11 +145,11 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   languageButton: {
-    position: 'absolute', // Position near the bottom
-    bottom: Platform.OS === 'ios' ? height * 0.05 : height * 0.03, //Adjust for platform
+    position: 'absolute',
+    bottom: Platform.OS === 'ios' ? height * 0.14 : height * 0.12,
     alignSelf: 'center',
-    paddingVertical: height * 0.015,
-    paddingHorizontal: width * 0.05,
+    paddingVertical: height * 0.012,
+    paddingHorizontal: width * 0.04,
     backgroundColor: '#2196F3',
     borderRadius: 8,
   },

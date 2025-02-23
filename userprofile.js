@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Image, StyleSheet, Switch, TouchableOpacity, ImageBackground, ActivityIndicator } from "react-native";
 import { LanguageContext } from './LanguageContext';
+import { UserContext } from './UserContext';
 
 const ProfilePage = () => {
   const { language } = useContext(LanguageContext); // Use language context
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const { user, setUser, isEnabled, setIsEnabled, loading, setLoading } = useContext(UserContext); // Use user context
 
   useEffect(() => {
     // Simulate fetching user profile data from the backend
@@ -32,7 +31,7 @@ const ProfilePage = () => {
     };
 
     fetchUserProfile();
-  }, []);
+  }, [setUser, setIsEnabled, setLoading]);
 
   const toggleSwitch = () => {
     setIsEnabled(!isEnabled);
@@ -70,11 +69,18 @@ const ProfilePage = () => {
       managePrivacy: 'පෞද්ගලිකත්වය කළමනාකරණය කරන්න',
       logout: 'පිටවන්න',
     },
+    ta: {
+      permission: 'அனுமதி',
+      profileDetails: 'சுயவிவர விவரங்கள்',
+      activity: 'செயல்பாடு',
+      access: 'அணுகல்',
+      managePrivacy: 'தனியுரிமையை நிர்வகிக்கவும்',
+      logout: 'வெளியேறு',
+    },
   };
 
   // Get the current translations
   const { permission, profileDetails, activity, access, managePrivacy, logout } = translations[language];
-  
 
   return (
     <ImageBackground 
@@ -96,10 +102,10 @@ const ProfilePage = () => {
         {/* Profile Picture */}
         <View style={styles.profilePictureContainer}>
           <Image
-            source={require("./assets/officer.png")}
+            source={{ uri: user.profileImage }}
             style={styles.profilePicture}
           />
-          </View>
+        </View>
 
         {/* Permission Section */}
         <View style={styles.section}>
@@ -125,10 +131,6 @@ const ProfilePage = () => {
             <Text style={styles.arrowIcon}>{">"}</Text>
           </TouchableOpacity>
         </View>
-
-        
-
-        
       </View>
     </ImageBackground>
   );

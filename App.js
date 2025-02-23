@@ -1,15 +1,26 @@
 import React from 'react';
-import AppNavigator from './AppNavigator';
-import { LanguageProvider } from './LanguageContext';
-import NavigationBar from './NavigationBar';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Screen from './Screen';
+import UserOfficer from './userofficer';
+import UserProfile from './userprofile';
+import { LanguageProvider } from './LanguageContext';
+import { UserProvider } from './UserContext';
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <UserProvider>
       <LanguageProvider>
-        <NavigationBar />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="Home" component={Screen} options={{ headerShown: false }} />
+            <Stack.Screen name="UserOfficer" component={UserOfficer} />
+            <Stack.Screen name="UserProfile" component={UserProfile} />
+          </Stack.Navigator>
+        </NavigationContainer>
       </LanguageProvider>
-    </NavigationContainer>
+    </UserProvider>
   );
 }
