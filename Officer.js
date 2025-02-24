@@ -100,16 +100,7 @@ const ProfilePage = () => {
                 source={require("./assets/officer.png")}
                 style={styles.icon}
               />
-              <Text style={styles.optionText}>Profile Details</Text>
-            </View>
-            <Text style={styles.arrowIcon}>{">"}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.option}>
-            <View style={styles.optionContent}>
-              <Image
-                source={require("./assets/Activity.png")}
-                style={styles.icon}
-              />
+              
               <Text style={styles.optionText}>Activity</Text>
             </View>
             <Text style={styles.arrowIcon}>{">"}</Text>

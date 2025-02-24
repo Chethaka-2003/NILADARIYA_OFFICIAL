@@ -1,21 +1,12 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const connectDB = require("./config/db");
-const officerRoutes = require("./routes/officerRoutes");
+import mongoose from "mongoose";    // Importing mongoose
+import express from "express";    // Importing express
+import cors from "cors";    // Importing cors
 
-dotenv.config();
-connectDB();
+const app = express();    // Creating an express app
+app.use(cors());    // Using cors
+app.use(express.json());    // Using express.json
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-app.use("/api/officers", officerRoutes);
-
-app.get("/", (req, res) => {
-    res.send("Officer Profile Management API is running...");
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+mongoose.connect(process.env.MONGO_URI, {    // Connecting to the database
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => console.log("MongoDB connected!")).catch((err) => console.log(err));
