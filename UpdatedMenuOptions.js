@@ -74,7 +74,8 @@ export default function MenuOptions({navigation}) {
     setQuestion(newQuestion); // Set the current question
     setQuestionHistory((prev) => [...prev, { language, question: nextQuestion[language] }]);
   };
-
+  
+  
   const handleBack = () => {
     setQuestionHistory((prev) => {
       const newHistory = [...prev];
@@ -405,9 +406,10 @@ const styles = StyleSheet.create({
   },
   Questions: {
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 25,
     fontSize: width * 0.05,
     fontWeight: "bold",
+    marginBottom: 10,
   },
   languageButtonsContainer: {
     flexDirection: 'column',
@@ -461,14 +463,22 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
-    marginTop: 20,
+    marginTop: 5,
   },
   serviceButtonText: {
     color: 'white',
-    fontSize: width * 0.04,
+    fontSize: 8,
     fontWeight: 'bold',
     textAlign: 'center',
   }, 
+  serviceButton: {
+    backgroundColor: 'black',
+    borderRadius: 5,
+     paddingVertical: 9,
+     //paddingHorizontal: 60,
+     marginHorizontal: 100,
+    width: width * 0.5,
+  },
   chatbotContainer: {
     position: 'relative',
     marginLeft: 2,
