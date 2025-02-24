@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, ImageBackground, Modal, Dimensions, Animated, PanResponder } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 //import Draggable from 'react-native-draggable';
 import NavigationBar from './NavigationBar';
 import Icon from 'react-native-vector-icons/Ionicons';
-
 
 const districts = [
   'Ampara', 'Anuradhapura', 'Badulla', 'Batticaloa', 'Colombo', 'Galle', 'Gampaha', 'Hambantota',
@@ -22,7 +21,29 @@ export default function MenuOptions({navigation}) {
   const [selectedLanguage, setSelectedLanguage] = useState(null); // To track selected language
   const [question, setQuestion] = useState(null); // To track the current question
   const [questionHistory, setQuestionHistory] = useState([]);
+  const [showTooltip, setShowTooltip] = useState(true);
+  const tooltipOpacity = new Animated.Value(0);
+ 
+  useEffect(() => {
+    // Fade in the tooltip
+    Animated.sequence([
+      Animated.timing(tooltipOpacity, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+      // Wait for 5 seconds
+      Animated.delay(5000),
+      // Fade out the tooltip
+      Animated.timing(tooltipOpacity, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setShowTooltip(false));
+  }, []);
 
+ 
 
   const handleChatbotPress = () => {
     setModalVisible(true);
@@ -53,7 +74,6 @@ export default function MenuOptions({navigation}) {
     setQuestion(newQuestion); // Set the current question
     setQuestionHistory((prev) => [...prev, { language, question: nextQuestion[language] }]);
   };
-  
 
   const handleBack = () => {
     setQuestionHistory((prev) => {
@@ -67,7 +87,6 @@ export default function MenuOptions({navigation}) {
 
   const currentQuestion = question || (questionHistory[questionHistory.length - 1]?.question ?? null);
 
-
   return (
     <ImageBackground source={require('./assets/background.png')} style={styles.background}>
         
@@ -76,15 +95,38 @@ export default function MenuOptions({navigation}) {
         </View>
         
         <View style={styles.pickerContainer}>
+         <View style={styles.pickerWrapper}>  
           <Picker
             selectedValue={selectedDistrict}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setSelectedDistrict(itemValue)}
+            onValueChange={(itemValue) => setSelectedDistrict(itemValue)}
           >
             {districts.map((district, index) => (
               <Picker.Item key={index} label={district} value={district} />
             ))}
           </Picker>
+
+          <View style={styles.chatbotContainer}>   
+          <TouchableOpacity style={styles.pickerChatbot} onPress={handleChatbotPress}>
+          <Image source={require('./assets/chatbotIcon.png')} style={styles.pickerChatbotImage} />
+          </TouchableOpacity>
+
+          {showTooltip && (
+              <Animated.View 
+                style={[
+                  styles.tooltip,
+                  {
+                    opacity: tooltipOpacity,
+                  }
+                ]}
+              >
+                <View style={styles.tooltipTriangle} />
+                <Text style={styles.tooltipText}>Hi! I'm here to help you!</Text>
+              </Animated.View>
+            )}
+
+        </View>
+        </View>
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollView}>
@@ -120,25 +162,19 @@ export default function MenuOptions({navigation}) {
           </View>
         </View>
 
-        //Chatbot
-        
-          <TouchableOpacity style={styles.Chatbot} onPress={handleChatbotPress}>
-            <Image source={require('./assets/chatbotIcon.png')} style={styles.chatbotImage} />
-          </TouchableOpacity>
         
         
         <Modal visible={isModalVisible} transparent={true} animationType="slide">
           <View style={styles.modalContainer}>
 
-            /*Icons Container*/
-          <Animated.View style={[styles.modalContent, { transform: [{ scale }] }]}>
-          <View style={styles.Icons}>
-               <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
-                <Icon name="close" size={20} color="black" />
-               </TouchableOpacity>
-               <TouchableOpacity onPress={handleZoom} style={styles.zoomIcon}>
-                  <Icon name="expand-outline" size={20} color="black" />
-               </TouchableOpacity>
+            <Animated.View style={[styles.modalContent, { transform: [{ scale }] }]}>
+              <View style={styles.Icons}>
+                <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
+                  <Icon name="close" size={15} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleZoom} style={styles.zoomIcon}>
+                  <Icon name="expand-outline" size={15} color="black" />
+                </TouchableOpacity>
               </View>  
               <Image source={require('./assets/chatbotIcon.png')} style={styles.modalImage} />
               <View style={styles.textContainer}>
@@ -147,48 +183,63 @@ export default function MenuOptions({navigation}) {
               </View>
 
               {currentQuestion === null ? (
-  <View style={styles.Questions}>
-    <Text style={styles.QEnglish}>Choose the language you want.</Text>
-    <Text style={styles.QSinhala}>ඔබට අවශ්‍ය භාෂාව තෝරාගන්න.</Text>
-    <Text style={styles.QTamil}>நீங்கள் விரும்பும் மொழியைத் தேர்ந்தெடுக்கவும்.</Text>
+                <View style={styles.Questions}>
+                  <Text style={styles.QEnglish}>Choose the language you want.</Text>
+                  <Text style={styles.QSinhala}>ඔබට අවශ්‍ය භාෂාව තෝරාගන්න.</Text>
+                  <Text style={styles.QTamil}>நீங்கள் விரும்பும் மொழியைத் தேர்ந்தெடுக்கவும்.</Text>
 
-    <View style={styles.languageButtonsContainer}>
-      <TouchableOpacity style={styles.languageButton} onPress={() => handleLanguageSelect('English')}>
-        <Text style={styles.languageButtonText}>English</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.languageButton} onPress={() => handleLanguageSelect('Sinhala')}>
-        <Text style={styles.languageButtonText}>සිංහල</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.languageButton} onPress={() => handleLanguageSelect('Tamil')}>
-        <Text style={styles.languageButtonText}>தமிழ்</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-) : (
-  currentQuestion && (
-    <View style={styles.Questions}>
-      <Text style={styles.selectedQuestion}>{currentQuestion}</Text>
-      {/* Add buttons for services */}
-      {currentQuestion === "Please select the service you need." && (
-        <View style={styles.servicesContainer}>
-          <TouchableOpacity style={styles.serviceButton}>
-            <Text style={styles.serviceButtonText}>Service 1</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.serviceButton}>
-            <Text style={styles.serviceButtonText}>Service 2</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
-  )
-)}
+                  <View style={styles.languageButtonsContainer}>
+                    <TouchableOpacity style={styles.languageButton} onPress={() => handleLanguageSelect('English')}>
+                      <Text style={styles.languageButtonText}>English</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.languageButton} onPress={() => handleLanguageSelect('Sinhala')}>
+                      <Text style={styles.languageButtonText}>සිංහල</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.languageButton} onPress={() => handleLanguageSelect('Tamil')}>
+                      <Text style={styles.languageButtonText}>தமிழ்</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ) : (
+                currentQuestion && (
+                  <View style={styles.Questions}>
+                    <Text style={styles.selectedQuestion}>{currentQuestion}</Text>
+                    {currentQuestion === "Please select the service you need." && (
+                      <View style={styles.servicesContainer}>
+                        <TouchableOpacity style={styles.serviceButton}>
+                          <Text style={styles.serviceButtonText}>Civil Registrations</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.serviceButton}>
+                          <Text style={styles.serviceButtonText}>Issuance of Permits</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.serviceButton}>
+                          <Text style={styles.serviceButtonText}>Issuing of Certicates</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.serviceButton}>
+                          <Text style={styles.serviceButtonText}>Payment of Pensions</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.serviceButton}>
+                          <Text style={styles.serviceButtonText}>Land Administration</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.serviceButton}>
+                          <Text style={styles.serviceButtonText}>Social Welfare and Benefits</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.serviceButton}>
+                          <Text style={styles.serviceButtonText}>Development Program</Text>
+                        </TouchableOpacity>
+                        
 
-{questionHistory.length > 0 && (
-  <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-    <Icon name="arrow-back" size={24} color="white" />
-  </TouchableOpacity>
-)}
+                      </View>
+                    )}
+                  </View>
+                )
+              )}
 
+              {questionHistory.length > 0 && (
+                <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+                  <Icon name="arrow-back" size={18} color="white" />
+                </TouchableOpacity>
+              )}
             </Animated.View>
           </View>
         </Modal>
@@ -208,28 +259,41 @@ const styles = StyleSheet.create({
   logo: {
     alignItems: 'center',
   },
-  
   logoImage: {
     width: width * 0.5,
     height: height * 0.2,
     resizeMode: 'contain',
     marginTop: height * 0.03,
-    marginBottom:10,
+    marginBottom: height * 0.01,
     alignItems: 'center',
   },
   picker: {
     height: 50,
-    width: 200,
+    width: width * 0.6,
     backgroundColor: '#ffffff',
     borderColor: '#000000',
     borderWidth: 1,
     borderRadius: 30,
     marginTop: -25,
-    
+    marginLeft: 45,
   },
   pickerContainer: {
     alignItems: 'center',
-    // marginTop: 1,
+    marginVertical: 10,
+  },
+  pickerWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: width * 0.8,
+  },
+  pickerChatbot: {
+    marginLeft: 28,
+  },
+  pickerChatbotImage: {
+    width: 48,
+    height: 48,
+    resizeMode: 'contain',
   },
   buttonsContainer: {
     flexDirection: 'column',
@@ -239,7 +303,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   button: {
-    height: 190,
+    height: height * 0.25,
     margin: 10,
     borderRadius: 10,
     padding: 10,
@@ -254,11 +318,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 300,
+    width: width * 0.8,
     borderRadius: 50,
   },
   buttonText: {
-    fontSize: 20,
+    fontSize: width * 0.05,
     color: 'black',
     fontWeight: 'bold',
     textAlign: 'center',
@@ -269,21 +333,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 10,
     marginTop: 2,
-    width: 250,
+    width: width * 0.7,
     alignItems: 'center',
     marginLeft: 5,
+    height: height * 0.25,
   },
   icon: {
     backgroundColor: 'gray',
     borderRadius: 50,
-    padding: 10,
+    padding: 0.1,
     alignItems: 'center',
     width: '50%',
     marginVertical: 10,
   },
   iconImage: {
-    width: 70,
-    height: 55,
+    width: width * 0.2,
+    height: height * 0.1,
     marginBottom: 1,
   },
   iconsContainer: {
@@ -291,17 +356,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginVertical: 20,
-    width: 290,
-    marginLeft: 65,
+    width: width * 0.8,
+    marginLeft: width * 0.1,
   },
   Chatbot: {
     resizeMode: 'contain',
-    height: 50,
-    width: 200,
+    height: height * 0.1,
+    width: width * 0.5,
   },
   chatbotImage: {
-    height: 60,
-    width: 200,
+    height: height * 0.1,
+    width: width * 0.5,
     resizeMode: 'contain',
     marginTop: 5,
   },
@@ -316,33 +381,24 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
-    height: 500,
-    width: 280,
+    height: height * 0.67,
+    width: width * 0.68,
   },
   modalImage: {
-    width: 60,
-    height: 50,
+    width: width * 0.2,
+    height: height * 0.1,
     resizeMode: 'contain',
   },
-  draggableChatbot: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-  },
-  draggableChatbotImage: {
-    height: 60,
-    width: 200,
-    resizeMode: 'contain',
-  },
+ 
   title: {
-    fontSize: 23,
+    fontSize: width * 0.06,
     textAlign: 'center',
     fontStyle: 'normal',
     color: 'orange',
     fontWeight: "bold",
   },
   subTitle: {
-    fontSize: 14,
+    fontSize: width * 0.03,
     color: 'grey',
     fontStyle: 'italic',
     fontWeight: "bold",
@@ -350,7 +406,7 @@ const styles = StyleSheet.create({
   Questions: {
     alignItems: 'center',
     marginTop: 50,
-    fontSize: 19,
+    fontSize: width * 0.05,
     fontWeight: "bold",
   },
   languageButtonsContainer: {
@@ -364,23 +420,23 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 60,
     marginHorizontal: 100,
-    width: 200,
+    width: width * 0.5,
   },
   languageButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: width * 0.04,
     fontWeight: 'bold',
     textAlign: 'center',
   },
-   closeButton: {
+  closeButton: {
     backgroundColor: '#FF4D4F', // Red close button
     borderRadius: 50,
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 40,
-    height: 40,
-    marginRight: 10,
+    width: 35,
+    height: 35,
+    marginRight: 30,
   },
   zoomIcon: {
     backgroundColor: '#4CAF50', // Green expand button
@@ -388,8 +444,8 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
   },
   Icons: {
     flexDirection: 'row',
@@ -406,5 +462,56 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 50,
     marginTop: 20,
+  },
+  serviceButtonText: {
+    color: 'white',
+    fontSize: width * 0.04,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  }, 
+  chatbotContainer: {
+    position: 'relative',
+    marginLeft: 2,
+  },
+  tooltip: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 8,
+    width: width * 0.4,
+    right: width * 0.05,
+    top: -height * 0.06,
+    zIndex: 1000,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  tooltipText: {
+    color: 'black',
+    fontSize: width * 0.035,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  tooltipTriangle: {
+    position: 'absolute',
+    bottom: -10,
+    right: 20,
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderBottomWidth: 0,
+    borderTopWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: 'white',
+    transform: [{ rotate: '180deg' }],
   },
 });
