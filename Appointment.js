@@ -37,9 +37,7 @@ export default function App({ navigation }) {
       who: 'Banu Ahuraliya',
     },
   ]);
-  
 
-  const [requisites, setRequisites] = useState([]); // New state to store the created requests
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((prev) => !prev);
 
@@ -56,11 +54,6 @@ export default function App({ navigation }) {
     setAppointments(updatedAppointments);
   };
 
-  const handleCancelRequest = (id) => {
-    const updatedRequisites = requisites.filter((item) => item.id !== id);
-    setRequisites(updatedRequisites); // Remove request from requisites
-  };
-
   const handleCreateRequest = () => {
     if (
       requestTitle &&
@@ -70,8 +63,8 @@ export default function App({ navigation }) {
       requestPersonBooking &&
       requestPersonBooked
     ) {
-      const newRequest = {
-        id: Math.random().toString(), // Unique ID for the request
+      const newAppointment = {
+        id: Math.random().toString(), // Unique ID for the appointment
         title: requestTitle,
         description: requestDescription,
         date: requestDate,
@@ -80,9 +73,9 @@ export default function App({ navigation }) {
         personBooked: requestPersonBooked,
       };
 
-      setRequisites((prevRequisites) => [...prevRequisites, newRequest]); // Add request to requisites
+      setAppointments((prevAppointments) => [...prevAppointments, newAppointment]); // Add appointment to appointments
 
-      alert('Request Created: ' + requestTitle); // Optional alert
+      alert('Appointment Created: ' + requestTitle); // Optional alert
       setModalVisible(false); // Close the modal
       setRequestTitle(''); // Clear input fields
       setRequestDescription('');
@@ -126,14 +119,6 @@ export default function App({ navigation }) {
           >
             <Text style={[styles.tabText, activeTab === 'Appointments' && styles.activeTabText]}>
               Appointments
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'Requisites' && styles.activeTab]}
-            onPress={() => setActiveTab('Requisites')}
-          >
-            <Text style={[styles.tabText, activeTab === 'Requisites' && styles.activeTabText]}>
-              Requisites
             </Text>
           </TouchableOpacity>
         </View>
@@ -194,7 +179,7 @@ export default function App({ navigation }) {
 
         {/* Request Button */}
         <TouchableOpacity style={styles.requestButton} onPress={() => setModalVisible(true)}>
-          <Text style={styles.requestButtonText}>+ Request</Text>
+          <Text style={styles.requestButtonText}>Add Appointment</Text>
         </TouchableOpacity>
       </ImageBackground>
 
@@ -207,7 +192,7 @@ export default function App({ navigation }) {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Create Request</Text>
+            <Text style={styles.modalTitle}>Create Appointment</Text>
             <TextInput
               style={styles.input}
               placeholder="Enter Request Title"
@@ -247,7 +232,7 @@ export default function App({ navigation }) {
             />
 
             <TouchableOpacity style={styles.createButton} onPress={handleCreateRequest}>
-              <Text style={styles.createButtonText}>Create Request</Text>
+              <Text style={styles.createButtonText}>Add</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
