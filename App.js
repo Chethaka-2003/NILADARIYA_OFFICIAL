@@ -14,6 +14,8 @@ import Security from './Security';
 import AboutUs from './AboutUs';
 import Rate from './Rate';
 import CustomAlert from './screens/CustomAlert';
+import CustomeRate from './screens/CustomeRate';
+import FeedbackSubmitted from './FeedbackSubmitted';
 
 
 const Stack = createStackNavigator();
@@ -37,9 +39,12 @@ export default function App() {
           <Stack.Screen name='NavigationBar' component={NavigationBar} />
           <Stack.Screen name='Language' component={Language} />
           <Stack.Screen name="Security" component={Security} />
-          <Stack.Screen name="AboutUs" component={AboutUs} />
           <Stack.Screen name="Rate" component={Rate} />
+          <Stack.Screen name="AboutUs" component={AboutUs} />
           <Stack.Screen name="CustomAlert" component={CustomAlert} />
+          <Stack.Screen name="CustomeRate" component={CustomeRate} />
+          <Stack.Screen name="FeedbackSubmitted" component={FeedbackSubmitted} />
+          
         </Stack.Navigator>
       </NavigationContainer>;
     </>

@@ -1,150 +1,100 @@
-import React, {useState} from 'react';
-import {StyleSheet, SafeAreaView, View, TouchableOpacity, Image, Text, ScrollView, Switch, navigation, Dimensions} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Switch, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Background from './Background';
 
+export default function SettingsPage({ navigation }) {
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false);
 
-export default function SettingsPg({navigation}) {
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>App Settings</Text>
+        <FeatherIcon name="settings" style={styles.headerIcon} />
+      </View>
 
-  const [form, setForm] = useState({
-    notifications: true,
-  });
-
-  return(
-    <SafeAreaView style = {{flex:1}}>
-      <Background type = "type2"/>
-
-        <View style = {styles.container}> 
-          <Text style = {styles.headerText}>APP Settings</Text>
-          <FeatherIcon name="settings" style = {styles.mainIcon} />
+      {/* Settings List */}
+      <View style={styles.settingsContainer}>
+        <View style={styles.settingItem}>
+          <FeatherIcon name="bell" style={styles.settingIcon} />
+          <Text style={styles.settingText}>Notification</Text>
+          <Switch
+            value={isNotificationsEnabled}
+            onValueChange={setIsNotificationsEnabled}
+          />
         </View>
 
-        <ScrollView>
-          <View style = {styles.section}>
+        <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('Security')}>
+          <FeatherIcon name="shield" style={styles.settingIcon} />
+          <Text style={styles.settingText}>Security</Text>
+          <FeatherIcon name="chevron-right" style={styles.arrowIcon} />
+        </TouchableOpacity>
 
-            {/* Language changer */}
-            <TouchableOpacity onPress={() => navigation.navigate ('Language') } style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="globe" style = {styles.icon}/>
-              </View>
-              <Text style = {styles.rowLabel}>Language</Text>
-              <View style = {styles.rowSpacer}/>
+        <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('Language')}>
+          <FeatherIcon name="globe" style={styles.settingIcon} />
+          <Text style={styles.settingText}>Language</Text>
+          <FeatherIcon name="chevron-right" style={styles.arrowIcon} />
+        </TouchableOpacity>
 
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
-            </TouchableOpacity>
+        <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('AboutUs')}>
+          <FeatherIcon name="info" style={styles.settingIcon} />
+          <Text style={styles.settingText}>About App</Text>
+          <FeatherIcon name="chevron-right" style={styles.arrowIcon} />
+        </TouchableOpacity>
 
-            {/* Security button */}
-            <TouchableOpacity onPress={() => navigation.navigate ('Security')} style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="shield" style = {styles.icon}/>
-              </View>
-
-              <Text style = {styles.rowLabel}>Security</Text>
-              <View style = {styles.rowSpacer}/>
-
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>              
-            </TouchableOpacity>
-
-            {/* Notification changer */}
-            
-            <View style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="bell" style = {styles.icon}/>
-              </View>
-              
-
-              <Text style = {styles.rowLabel}>Notifications</Text>
-              <View style = {styles.rowSpacer}/>
-
-              <Switch onValueChange={notifications => setForm ({...form, notifications})} value = {form.notifications}/>
-            </View>
-            
-
-            {/* About App */}
-            <TouchableOpacity onPress={() => navigation.navigate ('AboutUs')} style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="info" style = {styles.icon}/>
-              </View>
-            
-              <Text style = {styles.rowLabel}>About App</Text>
-              <View style = {styles.rowSpacer}/>
-
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
-            </TouchableOpacity>
-
-            {/* RateUs */}
-            <TouchableOpacity onPress={() => navigation.navigate ('Rate')} style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="thumbs-up" style = {styles.icon}/>
-              </View>
-            
-              <Text style = {styles.rowLabel}>Rate Us</Text>
-              <View style = {styles.rowSpacer}/>
-
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-        
+        <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('Rate')}>
+          <FeatherIcon name="thumbs-up" style={styles.settingIcon} />
+          <Text style={styles.settingText}>Rate Us</Text>
+          <FeatherIcon name="chevron-right" style={styles.arrowIcon} />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
-  )
+  );
 }
 
-const {width, height} = Dimensions.get('window');
-
 const styles = StyleSheet.create({
-  container:{ 
-    alignItems: 'center', 
-    marginTop: height * 0.05, 
+  container: {
+    flex: 1,
+    backgroundColor: '#b55427',
   },
-  
-  headerText:{
-    fontSize: width * 0.08,
+  headerContainer: {
+    alignItems: 'center',
+    paddingVertical: 30,
+    backgroundColor: '#fff',
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+  },
+  headerText: {
+    fontSize: 24,
     fontWeight: 'bold',
-    fontFamily: 'Cochin',
   },
-
-  mainIcon:{
-    fontSize: 60,
-    color: 'black',
-    marginTop: height * 0.02,
+  headerIcon: {
+    fontSize: 40,
+    marginTop: 10,
   },
-
-  section:{
-    paddingHorizontal: width * 0.1,
-    paddingTop: height * 0.1,
+  settingsContainer: {
+    padding: 20,
   },
-
-  icon:{
-    fontSize:30,
-    borderRadius: 9999,
-    marginRight: 12,
+  settingItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 15,
+    marginBottom: 15,
+    marginTop: 30,
   },
-
-  row:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    height: 55,
-    backgroundColor: '#f2f2f2',
-    borderRadius: 20,
-    marginBottom: 30,
-    paddingHorizontal: 12,
+  settingIcon: {
+    fontSize: 24,
+    marginRight: 10,
   },
-
-  rowLabel:{
-    fontSize: width * 0.05,
-    paddingLeft: width * 0.02,
+  settingText: {
+    flex: 1,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#0c0c0c',
   },
-
-  rowSpacer:{
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+  arrowIcon: {
+    fontSize: 24,
+    color: '#555',
   },
 });

@@ -1,276 +1,139 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  TextInput,
-  ImageBackground,
-  SafeAreaView,
-  Dimensions,
-  ScrollView,
-  Switch,
-
-} from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { ImageBackground, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Background from './Background';
-import { BlurView } from 'expo-blur';
 
-const { width, height } = Dimensions.get('window');
-
-export default function RateApp({ onClose }) { // Accept onClose for closing
+const RateUs = ({ navigation }) => {
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
-  const [form, setForm] = useState({ notifications: true }); // Initialize form state
-
-  const handleRating = (selectedRating) => {
-    setRating(selectedRating);
+  
+  const handleSubmit = () => {
+    navigation.navigate('FeedbackSubmitted');
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Background type="type2" />
-
+    <ImageBackground source={require('./assets/Background.jpg')} style={styles.background}>
       <View style={styles.container}>
-        <Text style={styles.headerText}>APP Settings</Text>
-        <FeatherIcon name="settings" style={styles.mainIcon} />
-      </View>
-
-      <ScrollView>
-        <View style={styles.section}>
-
-          {/* Language changer */}
-          <TouchableOpacity onPress={() => alert('You have selected the first option')} style={styles.row}>
-            <View style={styles.box}>
-              <FeatherIcon name="globe" style={styles.icon} />
-            </View>
-            <Text style={styles.rowLabel}>Language</Text>
-            <View style={styles.rowSpacer} />
-
-            <FeatherIcon color='black' name='chevron-right' size={30} />
+         {/* Close Button */}
+         <TouchableOpacity onPress={() => navigation.navigate('SettingsPg')} style={styles.closeButton}>
+            <FeatherIcon name="x-circle" size={30} color="black" />
           </TouchableOpacity>
+        <Text style={styles.title}>Rate Our App</Text>
 
-          {/* Security button */}
-          <TouchableOpacity onPress={() => alert('You have selected the first option')} style={styles.row}>
-            <View style={styles.box}>
-              <FeatherIcon name="shield" style={styles.icon} />
-            </View>
-
-            <Text style={styles.rowLabel}>Security</Text>
-            <View style={styles.rowSpacer} />
-
-            <FeatherIcon color='black' name='chevron-right' size={30} />
-          </TouchableOpacity>
-
-          {/* Notification changer */}
-
-          <View style={styles.row}>
-            <View style={styles.box}>
-              <FeatherIcon name="bell" style={styles.icon} />
-            </View>
-
-
-            <Text style={styles.rowLabel}>Notifications</Text>
-            <View style={styles.rowSpacer} />
-
-            <Switch onValueChange={notifications => setForm({ ...form, notifications })} value={form.notifications} />
-          </View>
-
-
-          {/* About App */}
-          <TouchableOpacity onPress={() => alert('You have selected the first option')} style={styles.row}>
-            <View style={styles.box}>
-              <FeatherIcon name="info" style={styles.icon} />
-            </View>
-
-            <Text style={styles.rowLabel}>About App</Text>
-            <View style={styles.rowSpacer} />
-
-            <FeatherIcon color='black' name='chevron-right' size={30} />
-          </TouchableOpacity>
-
-          {/* RateUs */}
-          <TouchableOpacity onPress={() => alert('You have selected the first option')} style={styles.row}>
-            <View style={styles.box}>
-              <FeatherIcon name="thumbs-up" style={styles.icon} />
-            </View>
-
-            <Text style={styles.rowLabel}>Rate Us</Text>
-            <View style={styles.rowSpacer} />
-
-            <FeatherIcon color='black' name='chevron-right' size={30} />
-          </TouchableOpacity>
+        {/* Star Rating */}
+        <View style={styles.starContainer}>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <TouchableOpacity key={star} onPress={() => setRating(star)} style={styles.starWrapper}>
+              <Icon 
+                name="star" 
+                size={40} 
+                color={star <= rating ? '#FFD700' : '#D3D3D3'} 
+                style={styles.starIcon} 
+              />
+            </TouchableOpacity>
+          ))}
         </View>
-      </ScrollView>
-      <BlurView intensity={190} style={StyleSheet.absoluteFill}>
-        <View style={styles.container2}>
-          {/* Close Button */}
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <FeatherIcon name="x-circle" size={35} color="white" />
-          </TouchableOpacity>
 
-
-          <Text style={styles.title}>Rate This App</Text>
-
-          {/* Star Rating System */}
-          <View style={styles.starContainer}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <TouchableOpacity key={star} onPress={() => handleRating(star)}>
-                <MaterialIcons
-                  name={star <= rating ? 'star' : 'star-border'}
-                  size={40}
-                  color={star <= rating ? '#FFD700' : '#bbb'}
-                />
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {/* Optional Feedback Input */}
+        {/* Creative Feedback Box */}
+        <View style={styles.feedbackBox}>
           <TextInput
-            style={styles.feedbackInput}
-            placeholder="Leave a comment (optional)"
-            placeholderTextColor="#888"
-            value={feedback}
-            onChangeText={setFeedback}
+            style={styles.input}
+            placeholder="Tell us what you think..."
+            placeholderTextColor="#666"
             multiline
+            value={feedback}
+            onChangeText={(text) => setFeedback(text)}
           />
-
-          {/* Submit Button */}
-          <TouchableOpacity style={styles.submitButton}>
-            <Text style={styles.submitText}>Submit</Text>
-          </TouchableOpacity>
         </View>
-      </BlurView>
 
-    </SafeAreaView>
-
+        {/* Submit Button */}
+        <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+          <Text style={styles.buttonText}>Submit Feedback</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
-}
+};
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center', // Center content vertically
-    alignItems: 'center', // Center content horizontally
-  },
-  container2: {
-    borderWidth: 3,
-    borderColor: "black",
-    backgroundColor: 'white', // White box
-    padding: 20,
-    borderRadius: 10, // Rounded corners
     justifyContent: 'center',
     alignItems: 'center',
-    width: '80%', // Responsive width
-    elevation: 5, // Shadow effect (for Android)
-    shadowColor: '#000', // Shadow effect (for iOS)
-    shadowOffset: { width: 0, height: 2 },
+  },
+  container: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 20,
+    borderRadius: 15,
+    alignItems: 'center',
+    width: '90%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    position: 'absolute', // Absolute positioning
-    top: '60%', // Center vertically
-    left: '50%', // Center horizontally
-    transform: [{ translateX: -width * 0.4 }, { translateY: -height * 0.25 }], // Adjust for width and height
+    elevation: 5,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    color: 'black',
-    marginBottom: 20,
+    marginBottom: 15,
+    color: '#333',
   },
   starContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
     marginBottom: 20,
   },
-  feedbackInput: {
+  starWrapper: {
+    borderWidth: 2, // Black Border
+    borderColor: 'black',
+    borderRadius: 10, // Slightly Rounded Edges
+    padding: 5,
+    marginHorizontal: 5,
+  },
+  starIcon: {
+    marginHorizontal: 2,
+  },
+  feedbackBox: {
     width: '100%',
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
-    fontSize: 16,
-    textAlignVertical: 'top',
-    minHeight: 60,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 10,
+    padding: 15,
     marginBottom: 20,
     borderWidth: 1,
     borderColor: '#ccc',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
-  submitButton: {
-    backgroundColor: '#28a745',
-    padding: 12,
-    borderRadius: 5,
-    width: '100%',
-    alignItems: 'center',
+  input: {
+    height: 100,
+    fontSize: 16,
+    textAlignVertical: 'top',
+    color: '#333',
   },
-  submitText: {
+  button: {
+    backgroundColor: '#007bff',
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4,
+  },
+  buttonText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
   },
   closeButton: {
     position: 'absolute',
-    top: -20,
-    right: -20,
-    backgroundColor: 'black',
-    borderRadius: 100,
-
-  },
-
-  container: {
-    alignItems: 'center',
-    marginTop: height * 0.05,
-  },
-
-  headerText: {
-    fontSize: width * 0.08,
-    fontWeight: 'bold',
-    fontFamily: 'Cochin',
-  },
-
-  mainIcon: {
-    fontSize: 60,
-    color: 'black',
-    marginTop: height * 0.02,
-  },
-
-  section: {
-    paddingHorizontal: width * 0.1,
-    paddingTop: height * 0.1,
-  },
-
-  icon: {
-    fontSize: 30,
-    borderRadius: 9999,
-    marginRight: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    height: 55,
-    backgroundColor: '#f2f2f2',
-    borderRadius: 20,
-    marginBottom: 30,
-    paddingHorizontal: 12,
-  },
-
-  rowLabel: {
-    fontSize: width * 0.05,
-    paddingLeft: width * 0.02,
-    fontWeight: 'bold',
-    color: '#0c0c0c',
-  },
-
-  rowSpacer: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
+    top: 10,
+    right: 10,
+  }, 
 });
+
+export default RateUs;
