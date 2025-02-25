@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Screen from './Appointment';
+import Screen from './Screen';
 import UserOfficer from './userofficer';
 import UserProfile from './userprofile';
 import { LanguageProvider } from './LanguageContext';

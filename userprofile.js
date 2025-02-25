@@ -16,7 +16,7 @@ const ProfilePage = () => {
         // Simulate user data
         const userData = {
           name: "John Doe",
-          profileImage: "path/to/officer.png",
+          profileImage: "./assets/officer.png",
           preferences: {
             notifications: true,
           },
@@ -102,7 +102,7 @@ const ProfilePage = () => {
         {/* Profile Picture */}
         <View style={styles.profilePictureContainer}>
           <Image
-            source={{ uri: user.profileImage }}
+            source={require("./assets/officer.png")}
             style={styles.profilePicture}
           />
         </View>
