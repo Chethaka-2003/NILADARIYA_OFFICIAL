@@ -1,27 +1,72 @@
-// In App.js in a new project
-
+import 'react-native-gesture-handler';
 import * as React from 'react';
-import { View, Text } from 'react-native';
-import { createStaticNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from './screens/LoginScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import SplashScreen from './SplashScreen';
+import Screen from './Screen';
 import SignupScreen from './screens/SignupScreen';
-import Loading from './screens/Loading';
-import SelectionPage from './screens/SelectionScreen1';
-import AboutUs from './screens/AboutUs';
-import ProfilePage from './screens/profile_1';
-import ProfilePage2 from './screens/profile_2';
-import ProfilePage3 from './screens/profile_3';
-import Language from './screens/Language';
-import RateApp from './screens/Rate';
-import ChangePassword from './screens/Security';
+import LoginScreen from './screens/LoginScreen';
+import SettingsPg from './SettingsPg';
+import NavigationBar from './NavigationBar';
+import { StatusBar } from 'expo-status-bar';
+import Language from './Language';
+import Security from './Security';
+import AboutUs from './AboutUs';
+import Rate from './Rate';
+import CustomAlert from './screens/CustomAlert';
+import CustomeRate from './screens/CustomeRate';
+import FeedbackSubmitted from './FeedbackSubmitted';
 
-const Stack = createNativeStackNavigator();
 
-function App() {
+const Stack = createStackNavigator();
+
+export default function App() {
+
+
+  // return (< Loading/>);
   return (
-    <ChangePassword/>
+    <>
+      <StatusBar style='auto' />
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="SplashScreen"
+          screenOptions={{ headerShown: false }}>
+
+          <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Screen" component={Screen} />
+          <Stack.Screen name="SignupScreen" component={SignupScreen} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="SettingsPg" component={SettingsPg} />
+          <Stack.Screen name='NavigationBar' component={NavigationBar} />
+          <Stack.Screen name='Language' component={Language} />
+          <Stack.Screen name="Security" component={Security} />
+          <Stack.Screen name="Rate" component={Rate} />
+          <Stack.Screen name="AboutUs" component={AboutUs} />
+          <Stack.Screen name="CustomAlert" component={CustomAlert} />
+          <Stack.Screen name="CustomeRate" component={CustomeRate} />
+          <Stack.Screen name="FeedbackSubmitted" component={FeedbackSubmitted} />
+          
+        </Stack.Navigator>
+      </NavigationContainer>;
+    </>
+
+    // const [isSplashVisible, setIsSplashVisible] = useState(true);
+
+    // useEffect(() => {
+    //   const timer = setTimeout(() => {
+    //     setIsSplashVisible(false);
+    //   }, 4000); // 3 seconds
+
+    //   return () => clearTimeout(timer);
+    // }, []);
+
+    // return (
+    //   <View style={{ flex: 1 }}>
+    //     {isSplashVisible ? <SplashScreen /> : <Screen />}
+    //   </View>
+    // );
   );
 }
 
-export default App;
+
+
+
