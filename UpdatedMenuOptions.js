@@ -144,27 +144,34 @@ export default function MenuOptions({navigation}) {
               <Text style={styles.buttonText}> MUNICIPAL COUNCIL</Text>
             </ImageBackground>
           </TouchableOpacity>
-        </View>
 
-        <View style={styles.iconsContainer}>
-          <View style={styles.iconsGrid}>
-            <TouchableOpacity style={styles.icon}>
-              <Image source={require('./assets/water_board.png')} style={styles.iconImage} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.icon}>
-              <Image source={require('./assets/electricity.png')} style={styles.iconImage} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.icon}>
-              <Image source={require('./assets/police.jpg')} style={styles.iconImage} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.icon}>
-              <Image source={require('./assets/court.png')} style={styles.iconImage} />
-            </TouchableOpacity>
-          </View>
-        </View>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
+            <ImageBackground source={require('./assets/CEB-1.jpg')} style={styles.buttonBackground}borderRadius={30}>
+              <Text style={styles.buttonText}>CEYLON ELECTRICITY BOARD</Text>
+            </ImageBackground>
+          </TouchableOpacity>
 
-        
-        
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
+            <ImageBackground source={require('./assets/Water.png')} style={styles.buttonBackground}borderRadius={30}>
+              <Text style={styles.buttonText}>NATIONAL WATER SUPPLY & DRAINAGE BOARD</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
+            <ImageBackground source={require('./assets/law_court.jpeg')} style={styles.buttonBackground}borderRadius={30}>
+              <Text style={styles.buttonText}>LAW COURT</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
+            <ImageBackground source={require('./assets/policeImg.jpg')} style={styles.buttonBackground}borderRadius={30}>
+              <Text style={styles.buttonText}>SRI LANKA POLICE</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+              
+
+        </View>
+  
         <Modal visible={isModalVisible} transparent={true} animationType="slide">
           <View style={styles.modalContainer}>
 
@@ -324,41 +331,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: width * 0.05,
-    color: 'black',
+    color: '#283747',
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  iconsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-    marginTop: 2,
-    width: width * 0.7,
-    alignItems: 'center',
-    marginLeft: 5,
-    height: height * 0.25,
-  },
-  icon: {
-    backgroundColor: 'gray',
-    borderRadius: 50,
-    padding: 0.1,
-    alignItems: 'center',
-    width: '50%',
-    marginVertical: 10,
-  },
-  iconImage: {
-    width: width * 0.2,
-    height: height * 0.1,
-    marginBottom: 1,
-  },
-  iconsContainer: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    alignItems: 'center',
-    marginVertical: 20,
-    width: width * 0.8,
-    marginLeft: width * 0.1,
   },
   Chatbot: {
     resizeMode: 'contain',
@@ -467,7 +442,7 @@ const styles = StyleSheet.create({
   },
   serviceButtonText: {
     color: 'white',
-    fontSize: 8,
+    fontSize: 9.5,
     fontWeight: 'bold',
     textAlign: 'center',
   }, 
