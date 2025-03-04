@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Animated, Image, Vibration } from 'react-native';
 
 const Lock = () => {
-  const [username, setUsername] = useState('John Doe'); // Example username
+  const [username, setUsername] = useState(''); // Example username
   const [passcode, setPasscode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [fadeAnim] = useState(new Animated.Value(0)); // Fade effect for card
@@ -64,7 +64,7 @@ const Lock = () => {
 
   return (
     <ImageBackground
-      source={require('./assets/ABF.png')}
+      source={require('./assets/ABC.jpg')}
       style={styles.backgroundImage}
       resizeMode="cover"
     >
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 200,
     height: 100,
-    marginBottom: 25,
+    
   },
   welcome: {
     fontSize: 24,
