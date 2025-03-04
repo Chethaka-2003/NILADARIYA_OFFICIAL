@@ -1,36 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, SafeAreaView, Image, Dimensions, Platform } from 'react-native';
-import { LanguageContext } from './LanguageContext';
 
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
 
 export default function Screen({ navigation }) {
-  const { language, setLanguage } = useContext(LanguageContext); // Use language context
-
-  // Language dictionary
-  const translations = {
-    en: {
-      greeting: 'ආයුබෝවන්                வணக்கம்                    WELCOME',
-      publicButton: 'PUBLIC',
-      governmentButton: 'GOVERNMENT',
-    },
-    si: {
-      greeting: 'ආයුබෝවන්                வணக்கம்                    WELCOME',
-      publicButton: 'මහජනයා',
-      governmentButton: 'රාජ්‍ය සේවය',
-    },
-    ta: {
-      greeting: 'ආයුබෝවන්                வணக்கம்                    WELCOME',
-      publicButton: 'பொது',
-      governmentButton: 'அரசு',
-    },
-  };
-
-  // Get the current translations
-  const { greeting, publicButton, governmentButton } = translations[language];
-
   return (
     <ImageBackground
       source={require('./assets/ABC.jpg')}
@@ -46,7 +21,7 @@ export default function Screen({ navigation }) {
         </View>
 
         {/* Greeting Text */}
-        <Text style={styles.headingText}>{greeting}</Text>
+        <Text style={styles.headingText}>WELCOME</Text>
 
         {/* Buttons Section */}
         <View style={styles.buttonContainer}>
@@ -54,26 +29,16 @@ export default function Screen({ navigation }) {
             style={[styles.button, styles.publicButton]} // Apply specific style
             onPress={() => navigation.navigate('UserProfile')} // Navigate to UserProfile
           >
-            <Text style={[styles.buttonText, styles.publicButtonText]}>{publicButton}</Text>
+            <Text style={[styles.buttonText, styles.publicButtonText]}>PUBLIC</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.governmentButton]} // Apply specific style
             onPress={() => navigation.navigate('UserOfficer')} // Navigate to UserOfficer
           >
-            <Text style={[styles.buttonText, styles.governmentButtonText]}>{governmentButton}</Text>
+            <Text style={[styles.buttonText, styles.governmentButtonText]}>GOVERNMENT</Text>
           </TouchableOpacity>
         </View>
-
-        {/* Language Toggle Button */}
-        <TouchableOpacity
-          style={styles.languageButton}
-          onPress={() => setLanguage(language === 'en' ? 'si' : language === 'si' ? 'ta' : 'en')} // Toggle language
-        >
-          <Text style={styles.languageButtonText}>
-            {language === 'en' ? 'සිංහල' : language === 'si' ? 'தமிழ்' : 'English'}
-          </Text>
-        </TouchableOpacity>
 
         <StatusBar style="light" />
       </SafeAreaView>
@@ -143,19 +108,5 @@ const styles = StyleSheet.create({
   },
   governmentButtonText: {
     color: '#FFFFFF',
-  },
-  languageButton: {
-    position: 'absolute',
-    bottom: Platform.OS === 'ios' ? height * 0.14 : height * 0.12,
-    alignSelf: 'center',
-    paddingVertical: height * 0.012,
-    paddingHorizontal: width * 0.04,
-    backgroundColor: '#2196F3',
-    borderRadius: 8,
-  },
-  languageButtonText: {
-    fontSize: width * 0.045,
-    color: '#ffffff',
-    fontWeight: 'bold',
   },
 });

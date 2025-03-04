@@ -3,8 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Screen from './Screen';
 import UserOfficer from './userofficer';
-import UserProfile from './userprofile';
-import { LanguageProvider } from './LanguageContext';
+import UserProfile from './ChatApp/chat';
 import { UserProvider } from './UserContext';
 
 const Stack = createStackNavigator();
@@ -12,15 +11,14 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <UserProvider>
-      <LanguageProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name="Home" component={Screen} options={{ headerShown: false }} />
-            <Stack.Screen name="UserOfficer" component={UserOfficer} />
-            <Stack.Screen name="UserProfile" component={UserProfile} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </LanguageProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen name="Home" component={Screen} options={{ headerShown: false }} />
+          <Stack.Screen name="UserOfficer" component={UserOfficer} />
+          <Stack.Screen name="UserProfile" component={UserProfile} />
+          <Stack.Screen name="Chat" component={Screen} />  
+        </Stack.Navigator>
+      </NavigationContainer>
     </UserProvider>
   );
 }
