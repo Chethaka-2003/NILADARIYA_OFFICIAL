@@ -34,9 +34,12 @@ const ProfilePage = () => {
 
   // Handle profile updates
   const handleProfileUpdate = (key, value) => {
-    setProfile((prev) => ({ ...prev, [key]: value }));
+    setProfile((prev) => ({
+      ...prev,
+      [key]: value, // Ensures the new text is appended properly
+    }));
   };
-
+  
   return (
     <ImageBackground 
       source={require('./assets/Selection.jpg')} 
@@ -83,8 +86,8 @@ const ProfilePage = () => {
 
               <TextInput style={styles.input} placeholder="Enter Name" value={profile.name} onChangeText={(text) => handleProfileUpdate("name", text)} />
               <TextInput style={styles.input} placeholder="Enter Position" value={profile.position} onChangeText={(text) => handleProfileUpdate("position", text)} />
-              <TextInput style={styles.input} placeholder="Enter Service" value={profile.service} onChangeText={(text) => handleProfileUpdate("contact", text)} />
-              <TextInput style={styles.input} placeholder="Enter Contact" value={profile.contact} onChangeText={(text) => handleProfileUpdate("service", text)} />
+              <TextInput style={styles.input} placeholder="Enter Service" value={profile.service} onChangeText={(text) => handleProfileUpdate("service", text)} />
+              <TextInput style={styles.input} placeholder="Enter Contact" value={profile.contact} onChangeText={(text) => handleProfileUpdate("contact", text)} />
 
               <TouchableOpacity style={styles.saveButton} onPress={() => setModalVisible(false)}>
                 <Text style={styles.saveButtonText}>Save</Text>
@@ -223,11 +226,11 @@ const styles = StyleSheet.create({
   },
   profileDetails: {
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    width : width * 0.8,
-    height : height * 0.3,
-  },
+    borderRadius: 15,  // Slightly smaller border radius
+    padding: 15,       // Reduce padding
+    width: width * 0.7, // Reduce width
+    height: height * 0.2, // Reduce height
+  },  
   detailText: {
     fontSize: 16,
     color: "#000",
