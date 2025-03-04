@@ -11,6 +11,36 @@ const districts = [
   'Matara', 'Monaragala', 'Mullaitivu', 'Nuwara Eliya', 'Polonnaruwa', 'Puttalam', 'Ratnapura', 'Trincomalee', 'Vavuniya'
 ];
 
+// Multilingual services data
+const services = {
+  English: [
+    "Civil Registrations",
+    "Issuance of Permits",
+    "Issuing of Certicates",
+    "Payment of Pensions",
+    "Land Administration",
+    "Social Welfare and Benefits",
+    "Development Program"
+  ],
+  Sinhala: [
+    "සිවිල් ලියාපදිංචි කිරීම්",
+    "බලපත්‍ර නිකුත් කිරීම",
+    "සහතිකපත් නිකුත් කිරීම",
+    "විශ්‍රාම වැටුප් ගෙවීම",
+    "ඉඩම් පරිපාලනය",
+    "සමාජ සුභසාධන හා ප්‍රතිලාභ",
+    "සංවර්ධන වැඩසටහන"
+  ],
+  Tamil: [
+    "சிவில் பதிவுகள்",
+    "அனுமதிப்பத்திரங்கள் வழங்குதல்",
+    "சான்றிதழ்கள் வழங்குதல்",
+    "ஓய்வூதியம் செலுத்துதல்",
+    "நில நிர்வாகம்",
+    "சமூக நலன் மற்றும் நன்மைகள்",
+    "அபிவிருத்தி திட்டம்"
+  ]
+};
 const { width, height } = Dimensions.get('window');
 
 export default function MenuOptions({navigation}) {
@@ -87,6 +117,12 @@ export default function MenuOptions({navigation}) {
   };
 
   const currentQuestion = question || (questionHistory[questionHistory.length - 1]?.question ?? null);
+
+  // Get the current language services based on the selected language
+  const getCurrentServices = () => {
+    if (!selectedLanguage) return services.English;
+    return services[selectedLanguage];
+  };
 
   return (
     <ImageBackground source={require('./assets/background.png')} style={styles.background}>
@@ -212,36 +248,23 @@ export default function MenuOptions({navigation}) {
                 currentQuestion && (
                   <View style={styles.Questions}>
                     <Text style={styles.selectedQuestion}>{currentQuestion}</Text>
-                    {currentQuestion === "Please select the service you need." && (
+                    
+                    {/* Display services based on the selected language */}
+                    {(currentQuestion === "Please select the service you need." || 
+                      currentQuestion === "ඔබට අවශ්‍ය සේවාව තෝරාගන්න." || 
+                      currentQuestion === "நீங்கள் தேவைப்படும் சேவையைத் தேர்ந்தெடுக்கவும்.") && (
                       <View style={styles.servicesContainer}>
-                        <TouchableOpacity style={styles.serviceButton}>
-                          <Text style={styles.serviceButtonText}>Civil Registrations</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.serviceButton}>
-                          <Text style={styles.serviceButtonText}>Issuance of Permits</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.serviceButton}>
-                          <Text style={styles.serviceButtonText}>Issuing of Certicates</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.serviceButton}>
-                          <Text style={styles.serviceButtonText}>Payment of Pensions</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.serviceButton}>
-                          <Text style={styles.serviceButtonText}>Land Administration</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.serviceButton}>
-                          <Text style={styles.serviceButtonText}>Social Welfare and Benefits</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.serviceButton}>
-                          <Text style={styles.serviceButtonText}>Development Program</Text>
-                        </TouchableOpacity>
-                        
-
+                        {getCurrentServices().map((service, index) => (
+                          <TouchableOpacity key={index} style={styles.serviceButton}>
+                            <Text style={styles.serviceButtonText}>{service}</Text>
+                          </TouchableOpacity>
+                        ))}
                       </View>
                     )}
                   </View>
                 )
               )}
+
 
               {questionHistory.length > 0 && (
                 <TouchableOpacity onPress={handleBack} style={styles.backButton}>
@@ -382,14 +405,14 @@ const styles = StyleSheet.create({
   Questions: {
     alignItems: 'center',
     marginTop: 25,
-    fontSize: width * 0.05,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontSize: 5,
+    //fontWeight: "bold",
+    marginBottom: 4,
   },
   languageButtonsContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: 10,
   },
   languageButton: {
     backgroundColor: 'black',
@@ -398,6 +421,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 60,
     marginHorizontal: 100,
     width: width * 0.5,
+    marginTop: 10,
   },
   languageButtonText: {
     color: 'white',
@@ -453,6 +477,7 @@ const styles = StyleSheet.create({
      //paddingHorizontal: 60,
      marginHorizontal: 100,
     width: width * 0.5,
+    marginTop: 4,
   },
   chatbotContainer: {
     position: 'relative',
