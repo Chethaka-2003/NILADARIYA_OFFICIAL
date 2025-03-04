@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Image, StyleSheet, Switch, TouchableOpacity, ImageBackground, ActivityIndicator } from "react-native";
-import { LanguageContext } from './LanguageContext';
 import { UserContext } from './UserContext';
 
 const ProfilePage = () => {
-  const { language } = useContext(LanguageContext); // Use language context
   const { user, setUser, isEnabled, setIsEnabled, loading, setLoading } = useContext(UserContext); // Use user context
 
   useEffect(() => {
@@ -51,37 +49,6 @@ const ProfilePage = () => {
     return <Text>Loading...</Text>;
   }
 
-  // Language dictionary
-  const translations = {
-    en: {
-      permission: 'Permission',
-      profileDetails: 'Profile Details',
-      activity: 'Activity',
-      access: 'Access',
-      managePrivacy: 'Manage Privacy',
-      logout: 'LOG OUT',
-    },
-    si: {
-      permission: 'අවසර',
-      profileDetails: 'පැතිකඩ විස්තර',
-      activity: 'ක්‍රියාකාරකම්',
-      access: 'ප්‍රවේශය',
-      managePrivacy: 'පෞද්ගලිකත්වය කළමනාකරණය කරන්න',
-      logout: 'පිටවන්න',
-    },
-    ta: {
-      permission: 'அனுமதி',
-      profileDetails: 'சுயவிவர விவரங்கள்',
-      activity: 'செயல்பாடு',
-      access: 'அணுகல்',
-      managePrivacy: 'தனியுரிமையை நிர்வகிக்கவும்',
-      logout: 'வெளியேறு',
-    },
-  };
-
-  // Get the current translations
-  const { permission, profileDetails, activity, access, managePrivacy, logout } = translations[language];
-
   return (
     <ImageBackground 
       source={require('./assets/Selection.jpg')} 
@@ -109,14 +76,14 @@ const ProfilePage = () => {
 
         {/* Permission Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{permission}</Text>
+          <Text style={styles.sectionTitle}>Permission</Text>
           <TouchableOpacity style={styles.option}>
             <View style={styles.optionContent}>
               <Image
                 source={require("./assets/officer.png")}
                 style={styles.icon}
               />
-              <Text style={styles.optionText}>{profileDetails}</Text>
+              <Text style={styles.optionText}>Profile Details</Text>
             </View>
             <Text style={styles.arrowIcon}>{">"}</Text>
           </TouchableOpacity>
@@ -126,7 +93,7 @@ const ProfilePage = () => {
                 source={require("./assets/Activity.png")}
                 style={styles.icon}
               />
-              <Text style={styles.optionText}>{activity}</Text>
+              <Text style={styles.optionText}>Activity</Text>
             </View>
             <Text style={styles.arrowIcon}>{">"}</Text>
           </TouchableOpacity>
