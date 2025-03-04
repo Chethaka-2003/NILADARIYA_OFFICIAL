@@ -1,14 +1,14 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Officer = require("../models/Officer");
+const Officer = require("../models/Officerbackend");
 const authenticate = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 // Register Officer
 router.post("/register", async (req, res) => {
-    const { name, email, phone, position, password } = req.body;
+    const { name, position, service, contact, email, password } = req.body;
 
     try {
         let officer = await Officer.findOne({ email });
@@ -18,9 +18,10 @@ router.post("/register", async (req, res) => {
 
         officer = new Officer({
             name,
-            email,
-            phone,
             position,
+            service,
+            contact,
+            email,
             password: hashedPassword,
         });
 
@@ -64,12 +65,12 @@ router.get("/profile", authenticate, async (req, res) => {
 
 // Update Officer Profile (Protected)
 router.put("/profile", authenticate, async (req, res) => {
-    const { name, phone, position } = req.body;
+    const { name, position, service, contact } = req.body;
 
     try {
         const officer = await Officer.findByIdAndUpdate(
             req.officer.id,
-            { name, phone, position },
+            { name, position, service, contact },
             { new: true }
         ).select("-password");
 
@@ -81,3 +82,5 @@ router.put("/profile", authenticate, async (req, res) => {
 });
 
 module.exports = router;
+
+

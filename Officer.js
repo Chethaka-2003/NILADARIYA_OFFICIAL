@@ -16,11 +16,13 @@ const ProfilePage = () => {
 
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
+  const API_BASE_URL = "mongodb+srv://niladariya:8QnJRJmLNSc3pJaA@niladariya.fnv7s.mongodb.net/?retryWrites=true&w=majority&appName=NILADARIYA"; // Replace with actual backend URL
+
   //Fetch profile details from the backend
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get("mongodb+srv://niladariya:<db_password>@niladariya.fnv7s.mongodb.net/?retryWrites=true&w=majority&appName=NILADARIYA");
+        const response = await axios.get(`${API_BASE_URL}/profile`);
         setProfile(response.data);
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -240,7 +242,7 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 20,
+    padding:20,
     width: width * 0.8,
   },
   modalTitle: {
