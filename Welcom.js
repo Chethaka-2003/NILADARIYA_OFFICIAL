@@ -1,17 +1,19 @@
 import React from "react";
 import { StyleSheet,View, Text,ImageBackground } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
+
 
 
 export default function WelcomeScreen(){
     return (
-        <ImageBackground source={require('./assets/Background.jpg')} style={styles.background} resizeMode="cover">
+        <SafeAreaView style = {{flex:1}}>
+        <Background type = "type2"/>
         <View style = {styles.container}>
             <View>
-                <Text style={styles.text}>Welcome to the App</Text>
+                
+                <Text style={styles.text}>UNDER CONSTRUCTION...!!!</Text>
             </View>
         </View>
-        </ImageBackground>
+        </SafeAreaView>
     )
 }
 

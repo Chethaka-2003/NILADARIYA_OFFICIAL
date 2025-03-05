@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import SettingsPg from "./SettingsPg";
-import Profile from './screens/profile_1';
+import Profile from './Officer(User)';
 import HomePg from './UpdatedMenuOptions';
 
 
@@ -42,10 +42,10 @@ export default function NavigationBar() {
 
         tabBarLabel: () => null, //hide the lable
 
-        tabBarActiveTintColor: 'white',
-        tabBarInactiveTintColor: 'black',
+        tabBarActiveTintColor: 'black',
+        tabBarInactiveTintColor: 'white',
         tabBarStyle: {
-          backgroundColor: '#f8f8f8',
+          backgroundColor: '#2c3e50',
           borderTopWidth: 0,
           elevation: 5,
           height: 50,
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     width: 65,
     height: 65,
     borderRadius: 100,
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
 

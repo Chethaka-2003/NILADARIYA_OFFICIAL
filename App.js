@@ -14,11 +14,13 @@ import Security from './Security';
 import AboutUs from './AboutUs';
 import Rate from './Rate';
 import CustomAlert from './screens/CustomAlert';
-import CustomeRate from './screens/CustomeRate';
 import FeedbackSubmitted from './FeedbackSubmitted';
-
+import { LogBox } from 'react-native';
 
 const Stack = createStackNavigator();
+LogBox.ignoreLogs([
+  'Warning: Text strings must be rendered within a <Text> component.'
+]);
 
 export default function App() {
 
@@ -28,9 +30,10 @@ export default function App() {
     <>
       <StatusBar style='auto' />
       <NavigationContainer>
+        
         <Stack.Navigator initialRouteName="SplashScreen"
           screenOptions={{ headerShown: false }}>
-
+          
           <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Screen" component={Screen} />
           <Stack.Screen name="SignupScreen" component={SignupScreen} />
@@ -39,12 +42,11 @@ export default function App() {
           <Stack.Screen name='NavigationBar' component={NavigationBar} />
           <Stack.Screen name='Language' component={Language} />
           <Stack.Screen name="Security" component={Security} />
-          <Stack.Screen name="Rate" component={Rate} />
           <Stack.Screen name="AboutUs" component={AboutUs} />
+          <Stack.Screen name="Rate" component={Rate} />
           <Stack.Screen name="CustomAlert" component={CustomAlert} />
-          <Stack.Screen name="CustomeRate" component={CustomeRate} />
           <Stack.Screen name="FeedbackSubmitted" component={FeedbackSubmitted} />
-          
+
         </Stack.Navigator>
       </NavigationContainer>;
     </>

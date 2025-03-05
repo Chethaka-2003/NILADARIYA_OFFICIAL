@@ -1,100 +1,156 @@
 import React, { useState } from 'react';
-import { View, Text, Switch, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, View, TouchableOpacity, Image, Text, ScrollView, Switch, navigation, Dimensions } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import Background from './Background';
+import RateUsModal from './Rate';
+import PasswordChange from './Security';
+import Language from './Language';
+import LogOut from './LogOut';
 
-export default function SettingsPage({ navigation }) {
-  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false);
+
+
+
+export default function SettingsPg({ navigation }) {
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [form, setForm] = useState({
+    notifications: true,
+  });
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>App Settings</Text>
-        <FeatherIcon name="settings" style={styles.headerIcon} />
+    <SafeAreaView style={{ flex: 1 }}>
+      <Background type="type2" />
+
+      <View style={styles.container}>
+        <Text style={styles.headerText}>APP Settings</Text>
+        <FeatherIcon name="settings" style={styles.mainIcon} />
       </View>
 
-      {/* Settings List */}
-      <View style={styles.settingsContainer}>
-        <View style={styles.settingItem}>
-          <FeatherIcon name="bell" style={styles.settingIcon} />
-          <Text style={styles.settingText}>Notification</Text>
-          <Switch
-            value={isNotificationsEnabled}
-            onValueChange={setIsNotificationsEnabled}
-          />
-        </View>
+      <ScrollView>
+        <View style={styles.section}>
 
-        <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('Security')}>
-          <FeatherIcon name="shield" style={styles.settingIcon} />
-          <Text style={styles.settingText}>Security</Text>
-          <FeatherIcon name="chevron-right" style={styles.arrowIcon} />
-        </TouchableOpacity>
 
-        <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('Language')}>
-          <FeatherIcon name="globe" style={styles.settingIcon} />
-          <Text style={styles.settingText}>Language</Text>
-          <FeatherIcon name="chevron-right" style={styles.arrowIcon} />
-        </TouchableOpacity>
+          <Language visible={modalVisible} onClose={() => setModalVisible(false)} />
+          <PasswordChange visible={modalVisible} onClose={() => setModalVisible(false)} />
 
-        <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('AboutUs')}>
-          <FeatherIcon name="info" style={styles.settingIcon} />
-          <Text style={styles.settingText}>About App</Text>
-          <FeatherIcon name="chevron-right" style={styles.arrowIcon} />
-        </TouchableOpacity>
+          {/* Notification changer */}
 
-        <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('Rate')}>
-          <FeatherIcon name="thumbs-up" style={styles.settingIcon} />
-          <Text style={styles.settingText}>Rate Us</Text>
-          <FeatherIcon name="chevron-right" style={styles.arrowIcon} />
-        </TouchableOpacity>
+          <View style={styles.row}>
+            <View style={styles.box}>
+              <FeatherIcon name="bell" style={styles.icon} />
+            </View>
+
+
+            <Text style={styles.rowLabel}>Notifications</Text>
+            <View style={styles.rowSpacer} />
+
+            <Switch onValueChange={notifications => setForm({ ...form, notifications })} value={form.notifications} />
+          </View>
+
+
+          {/* About App */}
+          <TouchableOpacity onPress={() => navigation.navigate('AboutUs')} style={styles.row}>
+            <View style={styles.box}>
+              <FeatherIcon name="info" style={styles.icon} />
+            </View>
+
+            <Text style={styles.rowLabel}>About App</Text>
+            <View style={styles.rowSpacer} />
+
+            <FeatherIcon color='black' name='chevron-right' size={30} />
+          </TouchableOpacity>
+
+          <RateUsModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+        
+
+        {/* White Container */}
+        <View style={styles.whiteContainer}>
+          
+        <LogOut visible={modalVisible} onClose={() => setModalVisible(false)} />
+        </View>
       </View>
+
+      </ScrollView>
+
     </SafeAreaView>
-  );
+  )
 }
+
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#b55427',
-  },
-  headerContainer: {
     alignItems: 'center',
-    paddingVertical: 30,
-    backgroundColor: '#fff',
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
+    marginTop: height * 0.05,
   },
+
   headerText: {
-    fontSize: 24,
+    fontSize: width * 0.08,
     fontWeight: 'bold',
+    fontFamily: 'Cochin',
   },
-  headerIcon: {
-    fontSize: 40,
-    marginTop: 10,
+
+  mainIcon: {
+    fontSize: 60,
+    color: 'black',
+    marginTop: height * 0.02,
   },
-  settingsContainer: {
-    padding: 20,
+
+  section: {
+    paddingHorizontal: width * 0.1,
+    paddingTop: height * 0.1,
   },
-  settingItem: {
+
+  icon: {
+    fontSize: 30,
+    borderRadius: 9999,
+    marginRight: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 15,
-    marginBottom: 15,
-    marginTop: 30,
+    justifyContent: 'center',
   },
-  settingIcon: {
-    fontSize: 24,
-    marginRight: 10,
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    height: 55,
+    backgroundColor: '#f2f2f2',
+    borderRadius: 20,
+    marginBottom: 30,
+    paddingHorizontal: 12,
   },
-  settingText: {
-    flex: 1,
-    fontSize: 18,
+
+  rowLabel: {
+    fontSize: width * 0.05,
+    paddingLeft: width * 0.02,
     fontWeight: 'bold',
+    color: '#0c0c0c',
   },
-  arrowIcon: {
-    fontSize: 24,
-    color: '#555',
+
+  rowSpacer: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
   },
+  whiteContainer: {
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 15,
+    width: "100%",
+    
+    
+  },
+  managePrivacyButton: {
+    backgroundColor: "#d9d9d9",
+    padding: 15,
+    borderRadius: 20,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  managePrivacyText: {
+    fontSize: 16,
+    color: "#000",
+  },
+  
 });
