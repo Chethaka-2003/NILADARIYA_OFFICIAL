@@ -70,12 +70,12 @@ const styles = StyleSheet.create({
   },
   headingText: {
     color: '#333333',
-    fontSize: width * 0.07,
+    fontSize: width * 0.10,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: height * 0.04,
-    lineHeight: width * 0.09,
-  },
+    lineHeight: width * 0.14,
+  },
   buttonContainer: {
     width: '100%',
     alignItems: 'center',
