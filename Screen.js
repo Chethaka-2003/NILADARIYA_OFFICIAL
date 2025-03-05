@@ -21,7 +21,9 @@ export default function Screen({ navigation }) {
         </View>
 
         {/* Greeting Text */}
+        <Text style={styles.headingText}>ආයුබෝවන්</Text>
         <Text style={styles.headingText}>WELCOME</Text>
+        <Text style={styles.headingText}>வணக்கம்</Text>
 
         {/* Buttons Section */}
         <View style={styles.buttonContainer}>
@@ -72,8 +74,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: height * 0.04,
-    lineHeight: width * 0.09,
-  },
+    lineHeight: width * 0.09,
+  },
   buttonContainer: {
     width: '100%',
     alignItems: 'center',

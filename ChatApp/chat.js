@@ -11,7 +11,16 @@ const ChatScreen = () => {
     if (message.trim()) {
       setMessages((prev) => [...prev, { text: message, type: 'text', sender: 'user' }]);
       setMessage('');
+      // Simulate receiving a message
+      setTimeout(() => {
+        receiveMessage('This is a received message');
+      }, 1000);
     }
+  };
+
+  // Simulate receiving a message
+  const receiveMessage = (text) => {
+    setMessages((prev) => [...prev, { text, type: 'text', sender: 'other' }]);
   };
 
   // Handle file or image upload
