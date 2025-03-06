@@ -149,6 +149,25 @@ const certificateServices = {
   ]
 };
 
+  // Pension Documents in multiple languages
+const pensionDocuments = {
+  English: [
+    "Documents required for the creation of widows' & orphans' pension",
+    "Documents required for the creation of Civil Pension Revisions and Ten Years Life Certificate 2021",
+    "Rail Warrant"
+  ],
+  Sinhala: [
+    "වැන්දඹු සහ අනාථ විශ්‍රාම වැටුප් සඳහා අවශ්‍ය සාක්ෂි",
+    "සිවිල් විශ්‍රාම වැටුප් සංශෝධන සහ දස වසර ජීවන සහතිකය 2021",
+    "දුම්රිය warrant"
+  ],
+  Tamil: [
+    "விதவைகள் மற்றும் அநாதைகளின் ஓய்வூதிய ஆவணங்கள்",
+    "சிவில் ஓய்வூதிய மீட்டமைப்பு மற்றும் பத்து வருட வாழ்வுச் சான்றிதழ் 2021",
+    "ரயில் வாரண்ட்"
+  ]
+};
+
 const { width, height } = Dimensions.get('window');
 
 export default function MenuOptions({navigation}) {
@@ -162,7 +181,6 @@ export default function MenuOptions({navigation}) {
   const [showTooltip, setShowTooltip] = useState(true);
   const tooltipOpacity = new Animated.Value(0);
   const [selectedService, setSelectedService] = useState(null);
-  const [selectedCertificateService, setSelectedCertificateService] = useState(null);
 
   useEffect(() => {
     // Fade in the tooltip
@@ -263,6 +281,21 @@ export default function MenuOptions({navigation}) {
       }]);
       setSelectedService("certificates");
     }
+     // For payment of pensions (index 4)
+    else if (serviceIndex === 4) {
+      const serviceQuestions = {
+        English: "Please select the pension documents you need:",
+        Sinhala: "ඔබට අවශ්‍ය විශ්‍රාම වැටුප් සඳහා අවශ්‍ය සාක්ෂි තෝරාගන්න:",
+        Tamil: "நீங்கள் தேவைப்படும் ஓய்வூதிய ஆவணங்களைத் தேர்ந்தெடுக்கவும்:"
+      };
+      setQuestion(serviceQuestions[selectedLanguage]);
+      setQuestionHistory((prev) => [...prev, { 
+        language: selectedLanguage, 
+        question: serviceQuestions[selectedLanguage],
+        serviceType: "pension"
+      }]);
+      setSelectedService("pension");
+    }
 
     else {
       // For other services, we could expand this in the future
@@ -310,6 +343,18 @@ export default function MenuOptions({navigation}) {
   const getPermitServices = () => {
     if (!selectedLanguage) return permitServices.English;
     return permitServices[selectedLanguage];
+  };
+
+  // Get certificate services based on selected language
+  const getCertificateServices = () => {
+    if (!selectedLanguage) return certificateServices.English;
+    return certificateServices[selectedLanguage];
+};
+
+  // Method to get pension documents based on selected language
+  const getPensionDocuments = () => {
+    if (!selectedLanguage) return pensionDocuments.English;
+    return pensionDocuments[selectedLanguage];
   };
 
   return (
@@ -473,17 +518,45 @@ export default function MenuOptions({navigation}) {
                     {/* NEW: Display permit services based on the selected language */}
                     {selectedService === "permit" && (
                         <View style={styles.servicesContainer}>
-                          {getPermitServices().map((service, index) => (
+                          {getPermitServices().map((document, index) => (
                             <TouchableOpacity 
                               key={index} 
                               style={styles.serviceButton}
                             >
-                              <Text style={styles.serviceButtonText}>{service}</Text>
+                              <Text style={styles.serviceButtonText}>{document}</Text>
                             </TouchableOpacity>
                           ))}
                         </View>
                     )}  
+                    
+                    {/* Display certificate services based on the selected language */}
+                    {selectedService === "certificates" && (
+                       <View style={styles.servicesContainer}>
+                         {getCertificateServices().map((service, index) => (
+                            <TouchableOpacity 
+                            key={index} 
+                            style={styles.serviceButton}
+                            >
+                          <Text style={styles.serviceButtonText}>{service}</Text>
+                           </TouchableOpacity>
+                           ))}
+                       </View>
+                     )} 
 
+                     {/* NEW: Pension Documents Section */}
+                  {selectedService === "pension" && (
+                    <View style={styles.servicesContainer}>
+                      {getPensionDocuments().map((service, index) => (
+                        <TouchableOpacity 
+                          key={index} 
+                          style={styles.serviceButton}
+                         
+                        >
+                          <Text style={styles.serviceButtonText}>{service}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  )}
 
                   </View>
                  </ScrollView> 
