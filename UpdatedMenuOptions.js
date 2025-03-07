@@ -251,7 +251,7 @@ export default function MenuOptions({navigation}) {
         serviceType: "civil"
       }]);
       setSelectedService("civil");
-    } // NEW: For permits issuance (index 1), show sub-services
+    } //For permits issuance (index 1), show sub-services
     else if (serviceIndex === 1) {
       const serviceQuestions = {
         English: "Please select the specific permit you need:",
@@ -445,6 +445,7 @@ export default function MenuOptions({navigation}) {
           <View style={styles.modalContainer}>
 
             <Animated.View style={[styles.modalContent, { transform: [{ scale }] }]}>
+            
               <View style={styles.Icons}>
                 <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
                   <Icon name="close" size={12} color="black" />
@@ -549,8 +550,7 @@ export default function MenuOptions({navigation}) {
                       {getPensionDocuments().map((service, index) => (
                         <TouchableOpacity 
                           key={index} 
-                          style={styles.serviceButton}
-                         
+                          style={styles.serviceButton} 
                         >
                           <Text style={styles.serviceButtonText}>{service}</Text>
                         </TouchableOpacity>
@@ -569,13 +569,15 @@ export default function MenuOptions({navigation}) {
                   <Icon name="arrow-back" size={12} color="white" />
                 </TouchableOpacity>
               )}
+             
             </Animated.View>
           </View>
         </Modal>
       </ScrollView>
     </ImageBackground>
-  );
-}
+    );
+  }
+
 
 const styles = StyleSheet.create({
   background: {
@@ -687,7 +689,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginTop: 1,
   },
- 
   title: {
     fontSize: width * 0.06,
     textAlign: 'center',
@@ -726,8 +727,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     marginTop: 10,
-    alignItems: 'center', // Add this
-  width: '100%', // Add this
+    alignItems: 'center', 
+    width: '100%', 
   },
   languageButton: {
     backgroundColor: 'black',
@@ -786,12 +787,9 @@ const styles = StyleSheet.create({
   serviceButton: {
     backgroundColor: 'black',
     borderRadius: 5,
-     paddingVertical: 9,
-
+    paddingVertical: 9,
     width: width * 0.5,
-    marginTop: 4,
-    
-    
+    marginTop: 4,  
   },
   chatbotContainer: {
     position: 'relative',
