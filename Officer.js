@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, Switch, TouchableOpacity, ImageBackground, Modal, TextInput, Dimensions } from "react-native";
 import axios from "axios";
+//import e from "cors"; 
 
 const { width, height } = Dimensions.get("window");
 
@@ -13,6 +14,10 @@ const ProfilePage = () => {
     contact: " ",
     service: " ",
   });
+
+  const [appointmentCount, setAppointmentCount] = useState(0);
+  const [chatCount, setChatCount] = useState(0);
+  const [interOfficerChatCount, setInterOfficerChatCount] = useState(0);
 
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
@@ -30,6 +35,20 @@ const ProfilePage = () => {
     };
 
     fetchProfile();
+  }, []);
+
+  //fetch appointment count
+  useEffect(() => {
+    const fetchAppointmentCount = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/appointment/count`);
+        setAppointmentCount(response.data.length);
+      } catch (error) {
+        console.error("Error fetching appointment count:", error);
+      }
+    };
+
+    fetchAppointmentCount();
   }, []);
 
   // Handle profile updates
@@ -96,21 +115,18 @@ const ProfilePage = () => {
           </View>
         </Modal>
 
-        {/* Permission Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Permission</Text>
-          <TouchableOpacity style={styles.option}>
-            <View style={styles.optionContent}>
-              <Image
-                source={require("./assets/officer.png")}
-                style={styles.icon}
-              />
-              
-              <Text style={styles.optionText}>Activity</Text>
-            </View>
-            <Text style={styles.arrowIcon}>{">"}</Text>
+        {/*Chat Button, Appoinment Button*/}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.appointmentButton}>
+            <Text style={styles.buttonText}>Appoinment</Text>
           </TouchableOpacity>
-        </View>
+          <TouchableOpacity style={styles.liveChatButton}>
+            <Text style={styles.buttonText}>Live Chat with Public</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.interOfficerChatButton}>
+            <Text style={styles.buttonText}>Chat with Officers</Text>
+          </TouchableOpacity>
+        </View>  
 
         {/* Footer Section */}
         <View style={styles.footer}>
@@ -163,43 +179,6 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: "#fff",
   },
-  section: {
-    width: "100%",
-    marginTop: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#fff",
-    marginBottom: 10,
-  },
-  option: {
-    height: 60,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 8,
-    marginVertical: 12,
-    justifyContent: "space-between",
-  },
-  optionContent: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  icon: {
-    width: 27,
-    height: 27,
-    marginRight: 10,
-  },
-  optionText: {
-    fontSize: 16,
-    color: "#000",
-  },
-  arrowIcon: {
-    fontSize: 16,
-    color: "#000",
-  },
   footer: {
     position: "absolute",
     bottom: 0,
@@ -212,6 +191,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+  },
+  editButton: {
+    backgroundColor: "#A63A2C",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  editButtonText: {
+    color: "white",
+    fontWeight: "bold",
   },
   footerButton: {
     padding: 10,
@@ -226,10 +216,10 @@ const styles = StyleSheet.create({
   },
   profileDetails: {
     backgroundColor: "white",
-    borderRadius: 15,  // Slightly smaller border radius
-    padding: 15,       // Reduce padding
-    width: width * 0.7, // Reduce width
-    height: height * 0.2, // Reduce height
+    borderRadius: 15,  
+    padding: 15,       
+    width: width * 0.7, 
+    height: height * 0.2, 
   },  
   detailText: {
     fontSize: 16,
@@ -271,6 +261,61 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+  buttonsContainer: {
+    marginTop: 20,
+    width: "100%",
+    alignItems: "center",
+  },
+  appointmentButtonContainer: {
+    position: "relative",
+    width: "80%",
+    marginBottom: 10,
+  },
+  appointmentButton: {
+    backgroundColor: "#A63A2C",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 10,
+    width: "80%",
+  },
+  liveChatButton: {
+    backgroundColor: "#A63A2C",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 10,
+    width: "80%",
+  },
+  interOfficerChatButton: {
+    backgroundColor: "#A63A2C",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 10,
+    width: "80%",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  notificationBadge: {
+    position: "absolute",
+    top: -5,
+    right: -5,
+    backgroundColor: "red",
+    borderRadius: 10,
+    padding: 5,
+    minWidth: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  notificationText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+  
 });
 
 export default ProfilePage;
