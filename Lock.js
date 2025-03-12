@@ -46,6 +46,27 @@ const Lock = () => {
     }
   };
 
+  var Lock = {
+    showLockScreen: function(message) {
+        return new Promise((resolve, reject) => {
+            const pin = prompt(message); // Replace with actual lock screen implementation
+            if (pin) {
+                resolve(pin);
+            } else {
+                reject(new Error("No pin entered"));
+            }
+        });
+    },
+
+    setPin: function(pin) {
+        return new Promise((resolve, reject) => {
+            // Simulate saving the pin
+            localStorage.setItem('userPin', pin);
+            resolve();
+        });
+    }
+};
+
   const renderPasscodeDots = () => {
     const dots = [];
     for (let i = 0; i < 6; i++) {
