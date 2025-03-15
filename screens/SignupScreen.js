@@ -107,7 +107,7 @@ export default function SignupScreen() {
       return;
     }
 
-    axios.post('http://192.168.8.101:4000/send-verification', { email , mobile })
+    axios.post('https://backend-xsbs.onrender.com/send-verification', { email , mobile })
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Verification Code Sent');
@@ -131,7 +131,7 @@ export default function SignupScreen() {
 
     const userData = { name, email, mobile, password, code: verificationCode };
 
-    axios.post('http://192.168.8.101:4000/register', userData)
+    axios.post('https://backend-xsbs.onrender.com/register', userData)
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Success');

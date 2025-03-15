@@ -12,6 +12,7 @@ import { StatusBar } from 'expo-status-bar';
 import Language from './Language';
 import Security from './Security';
 import AboutUs from './AboutUs';
+import Welcom from './Welcom';
 import Rate from './Rate';
 import CustomAlert from './screens/CustomAlert';
 import FeedbackSubmitted from './FeedbackSubmitted';
@@ -46,6 +47,7 @@ export default function App() {
           <Stack.Screen name="Rate" component={Rate} />
           <Stack.Screen name="CustomAlert" component={CustomAlert} />
           <Stack.Screen name="FeedbackSubmitted" component={FeedbackSubmitted} />
+          <Stack.Screen name="Under" component={Welcom} />
 
         </Stack.Navigator>
       </NavigationContainer>;

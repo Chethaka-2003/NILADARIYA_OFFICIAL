@@ -5,6 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import NavigationBar from './NavigationBar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Background from './Background';
+import Under from './Welcom';
 
 const districts = [
   'Ampara', 'Anuradhapura', 'Badulla', 'Batticaloa', 'Colombo', 'Galle', 'Gampaha', 'Hambantota',
@@ -359,7 +360,7 @@ export default function MenuOptions({navigation}) {
         <ScrollView contentContainerStyle={styles.scrollView}>
         
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.button} >
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(Under)} >
             <ImageBackground source={require('./assets/UpdatedMenuOption/flag.png')} style={styles.buttonBackground} borderRadius={30}>
               <Text style={styles.buttonText}> DIVISIONAL COUNCIL</Text>
             </ImageBackground>

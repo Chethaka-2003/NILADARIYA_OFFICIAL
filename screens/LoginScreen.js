@@ -14,21 +14,27 @@ export default function LoginScreen() {
   const navigation = useNavigation();
 
   const handleLogin = () => {
+    console.log('Email:', email);
+    console.log('Password:', password);
+
     if (!email || !password) {
       Alert.alert('Please enter email and password');
       return;
     } 
 
-    axios.post('http://192.168.8.101:4000/login', { email, password })
+    axios.post('https://backend-xsbs.onrender.com/login', { email, password })
     .then(res => {
+      console.log('Response:', res.data);
       if (res.data.status === 'OK') {
         Alert.alert('Success', 'Logged in successfully');
         navigation.navigate(NavigationBar);
       } else {
+        console.log('Error:', res.data.message);
         Alert.alert('Error', res.data.message);
       }
     })
     .catch(error => {
+      console.log('Error:', error);
       Alert.alert('Error', error.message);
     });
   }
@@ -43,6 +49,8 @@ export default function LoginScreen() {
           style={styles.input} 
           placeholder="Username" 
           placeholderTextColor="black"
+          value={email}
+          onChangeText={setEmail}
         />
          <View style={styles.passwordContainer}>
           <TextInput 
