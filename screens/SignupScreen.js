@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert 
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import Background from '../Background';
+import Background from '../GradientBackground';
 import CustomAlert from './CustomAlert';
 import CustomLottieAlert from './CustomLottieAlert';
 import successAnimation from '../assets/done.json';
@@ -107,7 +107,7 @@ export default function SignupScreen() {
       return;
     }
 
-    axios.post('https://backend-xsbs.onrender.com/send-verification', { email , mobile })
+    axios.post('http://192.168.1.136:4000/send-verification', { email , mobile })
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Verification Code Sent');
@@ -131,7 +131,7 @@ export default function SignupScreen() {
 
     const userData = { name, email, mobile, password, code: verificationCode };
 
-    axios.post('https://backend-xsbs.onrender.com/register', userData)
+    axios.post('http://192.168.1.136:4000/register', userData)
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Success');
@@ -147,7 +147,7 @@ export default function SignupScreen() {
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-      <Background type="type1" />
+      <Background/>
 
       <View style={styles.container}>
         <Text style={styles.title}>Create Account</Text>
@@ -278,7 +278,7 @@ export default function SignupScreen() {
         onClose={() => setLottieAlertVisible(false)}
         animationSource={successAnimation} // Pass the Lottie animation source here
       />
-
+{/* http://192.168.1.136:4000 */}
 
     </ScrollView>
   );
@@ -287,8 +287,6 @@ export default function SignupScreen() {
 const styles = StyleSheet.create({
   container: {
     marginTop: 100,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 120,
     flex: 1,
     alignItems: 'center',
     padding: 20,

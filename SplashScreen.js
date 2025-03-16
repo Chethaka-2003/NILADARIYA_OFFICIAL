@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
-import { Image,StyleSheet,View, SafeAreaView } from "react-native";
+import React, { useEffect , useRef} from 'react';
+import { Image,StyleSheet,View, SafeAreaView, Animated } from "react-native";
 import LottieView from "lottie-react-native"
-import Background from "./Background";
+import Background from "./GradientBackground";
 import { useNavigation } from "@react-navigation/native";
 
 export default function SplashScreen(){
     const navigation = useNavigation();
+    const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -14,12 +15,26 @@ export default function SplashScreen(){
         return () => clearTimeout(timer);
     }, [navigation]);
 
+    useEffect(() => {
+        Animated.timing(
+            fadeAnim,
+            {
+                toValue: 1,
+                duration: 5000,
+                useNativeDriver: true,
+            }
+        ).start();
+    }, [fadeAnim]);
+
     return (
         <SafeAreaView style = {{flex:1}}>
-            <Background type = "type1"/>
+            <Background/>
                 <View style = {styles.container}>
                     <View>
-                    <Image source={require('./assets/Logo.png')} style={styles.image} />
+                    <Animated.Image
+                        source={require('./assets/Logo.png')}
+                        style={[styles.image, { opacity: fadeAnim }]}
+                    />
                         <LottieView source={require('./assets/Animation - 1735760151144.json')} autoPlay loop style = {styles.animation}/>
                     </View>
                 </View>
@@ -44,7 +59,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain', 
         },
     animation:{
-        marginTop: -145,
+        marginTop: -50,
         width: 250,
         height: 250,
     }

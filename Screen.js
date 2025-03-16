@@ -1,18 +1,17 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, SafeAreaView, Image, Dimensions, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image, Dimensions,} from 'react-native';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
+import Background from './GradientBackground';
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
 
 export default function Screen({ navigation }) {
   return (
-    <ImageBackground
-      source={require('./assets/ABC.jpg')}
-      style={styles.background}
-    >
+    
       <SafeAreaView style={styles.container}>
+        <Background />
         {/* Logo Section */}
         <View style={styles.logoContainer}>
           <Image 
@@ -43,23 +42,23 @@ export default function Screen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <StatusBar style="light" />
+        <StatusBar style="auto" />
       </SafeAreaView>
-    </ImageBackground>
+    
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',  // Ensure full width
+    height: '100%', // Ensure full height
     paddingHorizontal: width * 0.05,
+    position: 'relative', // Position the background absolutely
   },
+  
   logoContainer: {
     alignItems: 'center',
     marginBottom: height * 0.16,

@@ -17,6 +17,8 @@ import Rate from './Rate';
 import CustomAlert from './screens/CustomAlert';
 import FeedbackSubmitted from './FeedbackSubmitted';
 import { LogBox } from 'react-native';
+import DeathCertificateForm from './DeathCertificateForm';
+import BackgroundTest from './GradientBackground';
 
 const Stack = createStackNavigator();
 LogBox.ignoreLogs([
@@ -33,9 +35,9 @@ export default function App() {
       <NavigationContainer>
         
         <Stack.Navigator initialRouteName="SplashScreen"
-          screenOptions={{ headerShown: false }}>
+          screenOptions={{ headerShown: false }}> 
           
-          <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
+         <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Screen" component={Screen} />
           <Stack.Screen name="SignupScreen" component={SignupScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -48,8 +50,10 @@ export default function App() {
           <Stack.Screen name="CustomAlert" component={CustomAlert} />
           <Stack.Screen name="FeedbackSubmitted" component={FeedbackSubmitted} />
           <Stack.Screen name="Under" component={Welcom} />
+         <Stack.Screen name="DeathCertificateForm" component={DeathCertificateForm} />
 
-        </Stack.Navigator>
+          
+        </Stack.Navigator> 
       </NavigationContainer>;
     </>
 

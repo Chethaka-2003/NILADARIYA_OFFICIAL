@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import NavigationBar from '../NavigationBar';
+import Background from '../GradientBackground';
 import axios from 'axios';
+import CustomAlert from './CustomAlert';
 
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+
 
   const navigation = useNavigation();
 
@@ -18,68 +25,81 @@ export default function LoginScreen() {
     console.log('Password:', password);
 
     if (!email || !password) {
-      Alert.alert('Please enter email and password');
+      setAlertTitle('ERROR');
+      setAlertMessage('Please enter email and password');
+      setAlertVisible(true);
       return;
-    } 
+    }
 
-    axios.post('https://backend-xsbs.onrender.com/login', { email, password })
-    .then(res => {
-      console.log('Response:', res.data);
-      if (res.data.status === 'OK') {
-        Alert.alert('Success', 'Logged in successfully');
-        navigation.navigate(NavigationBar);
-      } else {
-        console.log('Error:', res.data.message);
-        Alert.alert('Error', res.data.message);
-      }
-    })
-    .catch(error => {
-      console.log('Error:', error);
-      Alert.alert('Error', error.message);
-    });
+    axios.post('http://192.168.1.136:4000/login', { email, password })
+      .then(res => {
+        console.log('Response:', res.data);
+        if (res.data.status === 'OK') {
+          navigation.navigate(NavigationBar);
+        } else {
+          console.log('Error:', res.data.message);
+          setAlertTitle('ERROR');
+          setAlertMessage(res.data.message);
+          setAlertVisible(true);
+        }
+      })
+      .catch(error => {
+        console.log('Error:', error);
+        setAlertTitle('ERROR');
+        setAlertMessage(error.message);
+        setAlertVisible(true);
+      });
   }
 
 
   return (
-    <View style={styles.container}>
-      <Image source={require('../assets/login 1.jpg')} style={styles.backgroundImage} />
-      <Image source={require('../assets/Logo.png')} style={styles.logo} />
-      <View style={styles.inputContainer}>
-        <TextInput 
-          style={styles.input} 
-          placeholder="Username" 
-          placeholderTextColor="black"
-          value={email}
-          onChangeText={setEmail}
-        />
-         <View style={styles.passwordContainer}>
-          <TextInput 
-            style={styles.input} 
-            placeholder="Password" 
-            placeholderTextColor="black" 
-            secureTextEntry={!showPassword} 
-            value={password} 
-            onChangeText={setPassword}
+    <SafeAreaView style={{ flex: 1 }}>
+      <Background />
+      <View style={styles.container}>
+        <Text style={styles.title}>Log In</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            placeholderTextColor="black"
+            value={email}
+            onChangeText={setEmail}
           />
-          <TouchableOpacity 
-            onPress={() => setShowPassword(!showPassword)} 
-            style={styles.showPasswordIcon}
-          >
-            <MaterialIcons 
-              name={showPassword ? 'visibility' : 'visibility-off'} 
-              size={24} 
-              color="black" 
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              placeholderTextColor="black"
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={setPassword}
             />
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.showPasswordIcon}
+            >
+              <MaterialIcons
+                name={showPassword ? 'visibility' : 'visibility-off'}
+                size={24}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
         </View>
+        <TouchableOpacity onPress={() => alert('Forgot Password functionality')}>
+          <Text style={styles.forgotPassword}>Forgot Password?</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginButtonText}>Log In</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => alert('Forgot Password functionality')}>
-        <Text style={styles.forgotPassword}>Forgot Password?</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.loginButton} onPress = {handleLogin}>
-        <Text style={styles.loginButtonText}>Log In</Text>
-      </TouchableOpacity>
-    </View>
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        onClose={() => setAlertVisible(false)}
+      />
+    </SafeAreaView>
   );
 }
 
@@ -94,23 +114,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  title: { fontSize: 30, fontWeight: 'bold' },
   text: {
     fontSize: 24,
     color: '#fff',
     fontWeight: 'bold',
   },
-  logo: {
-    width: 200
-    , // Adjust the width as needed
-    height: 100, // Adjust the height as needed
-    marginTop: 50, // Space from the top of the window
-    position: 'absolute', // Ensures it's placed above the background
-    top: 50, // Positions the logo near the top
-    alignSelf: 'center', // Centers the logo horizontally
-  },
   inputContainer: {
     width: '80%',
-    marginTop: 420, // Adjust this based on your layout
+    marginTop: 50,
   },
   input: {
     height: 50,
