@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert, Dimensions } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
@@ -7,6 +7,8 @@ import Background from '../Required/GradientBackground';
 import CustomAlert from '../Alerts/CustomAlert';
 import CustomLottieAlert from '../Alerts/CustomLottieAlert';
 import successAnimation from '../assets/done.json';
+
+const { width, height } = Dimensions.get('window'); // Get screen dimensions
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
@@ -147,8 +149,7 @@ export default function SignupScreen() {
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-      <Background/>
-
+      <Background />
       <View style={styles.container}>
         <Text style={styles.title}>Create Account</Text>
         <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.loginTextContainer}>
@@ -285,83 +286,32 @@ export default function SignupScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 100,
-    flex: 1,
-    alignItems: 'center',
-    padding: 20,
-  },
 
-  container3: {
-    marginTop: -20,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
+  container: {marginTop: height * 0.1, flex: 1, alignItems: 'center', padding: width * 0.05},
 
-  title: { fontSize: 30, fontWeight: 'bold' },
+  container3: { justifyContent: 'space-between', alignItems: 'center', marginBottom: height * 0.05,},
+
+  title: { fontSize: width * 0.10, fontWeight: 'bold' },
+
   loginTextContainer: { alignSelf: 'center' },
-  loginText: { fontSize: 12, color: 'black', textDecorationLine: 'underline' },
-  inputContainer: { width: '85%', marginTop: 20 },
 
-  contBox: {
-    marginBottom: 30,
-  },
+  loginText: { fontSize: width * 0.035, color: 'black', textDecorationLine: 'underline' },
 
+  inputContainer: { width: '85%', marginTop: height * 0.065},
 
-  errorText: {
-    color: 'red',
-    marginTop: -15,
-    marginBottom: 25,
-  },
+  contBox: { marginBottom: height * 0.04 },
 
-  action: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: '#420475',
-    backgroundColor: '#d3d3d3',
-    borderRadius: 15,
-    position: 'relative',
-  },
+  errorText: { color: 'red', marginTop: height * 0.005, marginBottom: height * 0.005, },
 
-  icon: {
-    position: 'absolute',
-    right: 15,
-  },
-
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'black',
-    marginBottom: 20,
-  },
+  action: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, borderWidth: 1, borderColor: '#420475', backgroundColor: '#d3d3d3', borderRadius: 15, position: 'relative' },
 
   label: { fontSize: 14, fontWeight: 'bold', marginBottom: 5 },
-  input: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#420475',
-    backgroundColor: '#d3d3d3',
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  buttonSmall: {
-    padding: 10,
-    backgroundColor: 'transparent',
-    borderRadius: 15,
-    borderWidth: 2,
-    borderColor: '#420475',
-  },
-  button: {
-    marginTop: 20,
-    backgroundColor: 'black',
-    paddingVertical: 12,
-    borderRadius: 20,
-    alignItems: 'center',
-  },
+
+  buttonSmall: { padding: 10, backgroundColor: 'transparent', borderRadius: 15, borderWidth: 2, borderColor: '#420475' },
+
+  button: { marginTop: 20, backgroundColor: 'black', paddingVertical: 12, borderRadius: 20, alignItems: 'center' },
+
   buttonText: { color: 'white', fontWeight: 'bold' },
+
   buttonText2: { color: 'black', fontWeight: 'bold' },
 });

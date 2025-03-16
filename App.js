@@ -18,7 +18,6 @@ import FeedbackSubmitted from './SettingsPages/FeedbackSubmitted';
 import { LogBox } from 'react-native';
 import DeathCertificateForm from './OtherPages/DeathCertificateForm';
 import Selection from './StartUP/Selection';
-import GradientBackground from './Required/GradientBackground';
 
 const Stack = createStackNavigator();
 LogBox.ignoreLogs([
@@ -32,7 +31,6 @@ export default function App() {
   return (
     <>
       <StatusBar style='auto' />
-      <GradientBackground />
       <NavigationContainer>
 
         <Stack.Navigator initialRouteName="SplashScreen"

@@ -11,8 +11,10 @@ const { width, height } = Dimensions.get('window');
 export default function Screen({ navigation }) {
   return (
     
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Background />
+        <View style={styles.container}>
+        
         {/* Logo Section */}
         <View style={styles.logoContainer}>
           <Image 
@@ -42,6 +44,7 @@ export default function Screen({ navigation }) {
             <Text style={[styles.buttonText, styles.governmentButtonText]}>GOVERNMENT</Text>
           </TouchableOpacity>
         </View>
+        </View>
 
         <StatusBar style="auto" />
       </SafeAreaView>
@@ -52,17 +55,12 @@ export default function Screen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',  // Ensure full width
-    height: '100%', // Ensure full height
-    paddingHorizontal: width * 0.05,
-    position: 'relative', // Position the background absolutely
+    top: height * 0.1,
   },
   
   logoContainer: {
     alignItems: 'center',
-    marginBottom: height * 0.16,
+    marginBottom: height * 0.10,
   },
   logo: {
     width: width * 0.6,
@@ -71,13 +69,14 @@ const styles = StyleSheet.create({
   },
   headingText: {
     color: '#333333',
-    fontSize: width * 0.07,
+    fontSize: width * 0.09,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: height * 0.02,
-    lineHeight: width * 0.09,
+    marginBottom: height * 0.03,
+    lineHeight: width * 0.12,
   },
   buttonContainer: {
+    top: height * 0.1,
     width: '100%',
     alignItems: 'center',
     marginBottom: height * 0.02,
