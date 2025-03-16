@@ -117,7 +117,7 @@ const ProfilePage = () => {
 
         {/*Chat Button, Appoinment Button*/}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.appointmentButton}>
+          <TouchableOpacity style={styles.appointmentButton} onPress={() => alert("You have " + appointmentCount + " appointments today")}>
             <Text style={styles.buttonText}>Appoinment</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.liveChatButton}>
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   editButtonText: {
     color: "white",
@@ -275,16 +275,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#A63A2C",
     padding: 10,
     borderRadius: 5,
-    alignItems: "center",
-    marginBottom: 10,
+    marginTop: 20,
     width: "80%",
+    alignContent: "center",
   },
   liveChatButton: {
     backgroundColor: "#A63A2C",
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
-    marginBottom: 10,
+    marginTop: 20,
     width: "80%",
   },
   interOfficerChatButton: {
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
-    marginBottom: 10,
+    marginTop: 20,
     width: "80%",
   },
   buttonText: {
