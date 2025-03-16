@@ -1,4 +1,5 @@
 import React from 'react';
+import Background from "./GradientBackground";
 import { 
   View, 
   Text, 
@@ -6,19 +7,15 @@ import {
   StyleSheet, 
   ScrollView, 
   TouchableOpacity, 
-  Dimensions, 
-  ImageBackground 
+  Dimensions
 } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const AboutUs = () => {
   return (
-    <ImageBackground 
-      source={require('./assets/Background.jpg')} 
-      style={styles.background} 
-      resizeMode="cover"
-    >
+    <View style={{ flex: 1 }}>
+      <Background />
       <ScrollView contentContainerStyle={styles.container}>
         <Image source={require("./assets/Logo.png")} style={styles.image} />
         <Text style={styles.header}>Welcome to Niladariya!</Text>
@@ -78,16 +75,11 @@ const AboutUs = () => {
           </View>
         </View>
       </ScrollView>
-    </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
   container: {
     padding: 20,
     alignItems: 'center',
@@ -97,9 +89,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 10,
-    textShadowColor: '#8f8f8e',       // Color of the shadow
-    textShadowOffset: { width: 2, height: 2 },  // Position of the shadow
-    textShadowRadius: 5, // Blur intensity of the shadow
+    textShadowColor: '#8f8f8e',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 5,
   },
   sectionHeader: {
     fontSize: 20,
@@ -109,7 +101,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   textContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
     padding: 15,
     borderRadius: 10,
     marginVertical: 10,
@@ -123,9 +115,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   image: {
-    width: 400,
+    width: width * 0.9,
     height: 200,
     marginVertical: 10,
+    borderRadius: 10,
   },
   footer: {
     marginTop: 40,

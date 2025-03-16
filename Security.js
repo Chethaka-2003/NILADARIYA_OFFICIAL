@@ -1,18 +1,11 @@
 import React, { useState } from 'react';
-import { Image, ImageBackground } from 'react-native';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  TextInput,
-  SafeAreaView,
-  Dimensions,
-  Modal,
-} from 'react-native';
+import { ImageBackground, View, Text, TouchableOpacity, StyleSheet, TextInput, SafeAreaView, Dimensions, Modal } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import CustomLottieAlert from './screens/Alert';
+import successAnimation from './assets/done.json';
+import Background from "./GradientBackground";
 
 const { width, height } = Dimensions.get('window');
 
@@ -22,10 +15,15 @@ export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  
+
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [lottieAlertVisible, setLottieAlertVisible] = useState(false);
+
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -34,101 +32,116 @@ export default function ChangePassword() {
       alert("New passwords don't match!");
       return;
     }
-    setModalVisible(true);
+    setAlertTitle('Success');
+    setAlertMessage('Password changed successfully');
+    setLottieAlertVisible(true);
+
   };
 
-  const backgroundImage = require('./assets/Background.jpg'); 
 
   return (
-    <ImageBackground source={backgroundImage} style={styles.background} >
-      <SafeAreaView style={styles.background}>
-        <View style={styles.container2}>
-          {/* Close Button */}
-          <TouchableOpacity onPress={() => navigation.navigate('SettingsPg')} style={styles.closeButton}>
-            <FeatherIcon name="x-circle" size={30} color="black" />
-          </TouchableOpacity>
-
-          <Text style={styles.title}>Replace Password</Text>
-
-          {/* Current Password Input */}
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Current Password"
-              placeholderTextColor="#888"
-              secureTextEntry={!showCurrentPassword}
-              value={currentPassword}
-              onChangeText={setCurrentPassword}
-            />
-            <TouchableOpacity onPress={() => setShowCurrentPassword(!showCurrentPassword)} style={styles.eyeIcon}>
-              <MaterialIcons name={showCurrentPassword ? "visibility" : "visibility-off"} size={24} color="#888" />
-            </TouchableOpacity>
-          </View>
-
-          {/* New Password Input */}
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="New Password"
-              placeholderTextColor="#888"
-              secureTextEntry={!showNewPassword}
-              value={newPassword}
-              onChangeText={setNewPassword}
-            />
-            <TouchableOpacity onPress={() => setShowNewPassword(!showNewPassword)} style={styles.eyeIcon}>
-              <MaterialIcons name={showNewPassword ? "visibility" : "visibility-off"} size={24} color="#888" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Confirm New Password Input */}
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Confirm New Password"
-              placeholderTextColor="#888"
-              secureTextEntry={!showConfirmPassword}
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-            />
-            <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)} style={styles.eyeIcon}>
-              <MaterialIcons name={showConfirmPassword ? "visibility" : "visibility-off"} size={24} color="#888" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Submit Button */}
-          <TouchableOpacity style={styles.submitButton} onPress={handleChangePassword}>
-            <Text style={styles.submitText}>Change Password</Text>
-          </TouchableOpacity>
+    <View style={styles.container1}>
+      <Background />
+      <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.row}>
+        <View style={styles.box}>
+          <FeatherIcon name="shield" style={styles.icon} />
         </View>
+        <Text style={styles.rowLabel}>Security</Text>
+        <View style={styles.rowSpacer} />
+        <FeatherIcon color="black" name="chevron-right" size={30} />
+      </TouchableOpacity>
 
-        {/* Success Modal */}
-        <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <MaterialIcons name="check-circle" size={60} color="#4CAF50" />
-              <Text style={styles.modalText}>Password Changed Successfully!</Text>
-              <TouchableOpacity 
-                style={styles.okButton} 
-                onPress={() => {
-                  setModalVisible(false);
-                  navigation.navigate('SettingsPg');
-                }}
-              >
-                <Text style={styles.okText}>OK</Text>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {/* Close Button */}
+            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+              <FeatherIcon name="x-circle" size={30} color="black" />
+            </TouchableOpacity>
+
+            <Text style={styles.title}>Replace Password</Text>
+
+            {/* Current Password Input */}
+            <View style={styles.inputContainer}>
+
+              <TextInput
+                style={styles.input}
+                placeholder="Current Password"
+                placeholderTextColor="#888"
+                secureTextEntry={!showCurrentPassword}
+                value={currentPassword}
+                onChangeText={setCurrentPassword}
+              />
+              <TouchableOpacity onPress={() => setShowCurrentPassword(!showCurrentPassword)} style={styles.eyeIcon}>
+                <MaterialIcons name={showCurrentPassword ? "visibility" : "visibility-off"} size={24} color="#888" />
               </TouchableOpacity>
             </View>
+
+            {/* New Password Input */}
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="New Password"
+                placeholderTextColor="#888"
+                secureTextEntry={!showNewPassword}
+                value={newPassword}
+                onChangeText={setNewPassword}
+              />
+              <TouchableOpacity onPress={() => setShowNewPassword(!showNewPassword)} style={styles.eyeIcon}>
+                <MaterialIcons name={showNewPassword ? "visibility" : "visibility-off"} size={24} color="#888" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Confirm New Password Input */}
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Confirm New Password"
+                placeholderTextColor="#888"
+                secureTextEntry={!showConfirmPassword}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+              />
+              <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)} style={styles.eyeIcon}>
+                <MaterialIcons name={showConfirmPassword ? "visibility" : "visibility-off"} size={24} color="#888" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Submit Button */}
+            <TouchableOpacity style={styles.submitButton} onPress={handleChangePassword}>
+              <Text style={styles.submitText}>Change Password</Text>
+            </TouchableOpacity>
           </View>
-        </Modal>
-      </SafeAreaView>
-    </ImageBackground>
+        </View>
+        <CustomLottieAlert
+          visible={lottieAlertVisible}
+          title={alertTitle}
+          message={alertMessage}
+          onClose={() => setLottieAlertVisible(false)}
+          animationSource={successAnimation} // Pass the Lottie animation source here
+        />
+      </Modal>
+    </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  container1: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   container2: {
     backgroundColor: 'white',
@@ -138,6 +151,56 @@ const styles = StyleSheet.create({
     width: '80%',
     elevation: 5,
   },
+  icon: {
+    fontSize: 30,
+    borderRadius: 9999,
+    marginRight: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    width: '100%',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+  },
+  modalContent: {
+    width: '90%',
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    fontSize: 18,
+  },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    height: 55,
+    backgroundColor: '#f2f2f2',
+    borderRadius: 20,
+    marginBottom: 30,
+    paddingHorizontal: 12,
+  },
+
+  rowLabel: {
+    fontSize: width * 0.05,
+    paddingLeft: width * 0.02,
+    fontWeight: 'bold',
+    color: '#0c0c0c',
+  },
+  rowSpacer: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+  },
+
   title: {
     fontSize: 22,
     fontWeight: 'bold',
