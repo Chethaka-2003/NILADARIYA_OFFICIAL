@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import NavigationBar from '../Required/NavigationBar';
 import Background from '../Required/GradientBackground';
 import axios from 'axios';
-import CustomAlert from './CustomAlert';
+import CustomAlert from '../Alerts/CustomAlert';
 
 
 export default function LoginScreen() {

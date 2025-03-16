@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, ImageBackground, Modal, Dimensions, Animated, PanResponder, SafeAreaView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-//import Draggable from 'react-native-draggable';
-import NavigationBar from './NavigationBar';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Background from './Required/Background';
-import Under from './Welcom';
+import Background from './GradientBackground';
+
 
 const districts = [
   'Ampara', 'Anuradhapura', 'Badulla', 'Batticaloa', 'Colombo', 'Galle', 'Gampaha', 'Hambantota',
@@ -319,7 +317,7 @@ export default function MenuOptions({ navigation }) {
       <Background type="type1" />
 
       <View style={styles.logo}>
-        <Image source={require("./assets/Logo.png")} style={styles.logoImage} />
+        <Image source={require("../assets/Logo.png")} style={styles.logoImage} />
       </View>
 
       <View style={styles.pickerContainer}>
@@ -336,7 +334,7 @@ export default function MenuOptions({ navigation }) {
 
           <View style={styles.chatbotContainer}>
             <TouchableOpacity style={styles.pickerChatbot} onPress={handleChatbotPress}>
-              <Image source={require('./assets/UpdatedMenuOption/chatbotIcon.png')} style={styles.pickerChatbotImage} />
+              <Image source={require('../assets/UpdatedMenuOption/chatbotIcon.png')} style={styles.pickerChatbotImage} />
             </TouchableOpacity>
 
             {showTooltip && (
@@ -360,45 +358,45 @@ export default function MenuOptions({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollView}>
 
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(Under)} >
-            <ImageBackground source={require('./assets/UpdatedMenuOption/flag.png')} style={styles.buttonBackground} borderRadius={30}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")} >
+            <ImageBackground source={require('../assets/UpdatedMenuOption/flag.png')} style={styles.buttonBackground} borderRadius={30}>
               <Text style={styles.buttonText}> DIVISIONAL COUNCIL</Text>
             </ImageBackground>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
-            <ImageBackground source={require('./assets/UpdatedMenuOption/MunicipalCoun.jpg')} style={styles.buttonBackground} borderRadius={30}>
+            <ImageBackground source={require('../assets/UpdatedMenuOption/MunicipalCoun.jpg')} style={styles.buttonBackground} borderRadius={30}>
               <Text style={styles.buttonText}> MUNICIPAL COUNCIL</Text>
             </ImageBackground>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
-            <ImageBackground source={require('./assets/UpdatedMenuOption/CEB-1.jpg')} style={styles.buttonBackground} borderRadius={30}>
+            <ImageBackground source={require('../assets/UpdatedMenuOption/CEB-1.jpg')} style={styles.buttonBackground} borderRadius={30}>
               <Text style={styles.buttonText}>CEYLON ELECTRICITY BOARD</Text>
             </ImageBackground>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
-            <ImageBackground source={require('./assets/UpdatedMenuOption/Water.png')} style={styles.buttonBackground} borderRadius={30}>
+            <ImageBackground source={require('../assets/UpdatedMenuOption/Water.png')} style={styles.buttonBackground} borderRadius={30}>
               <Text style={styles.buttonText}>NATIONAL WATER SUPPLY & DRAINAGE BOARD</Text>
             </ImageBackground>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
-            <ImageBackground source={require('./assets/UpdatedMenuOption/law_court.jpeg')} style={styles.buttonBackground} borderRadius={30}>
+            <ImageBackground source={require('../assets/UpdatedMenuOption/law_court.jpeg')} style={styles.buttonBackground} borderRadius={30}>
               <Text style={styles.buttonText}>LAW COURT</Text>
             </ImageBackground>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
-            <ImageBackground source={require('./assets/UpdatedMenuOption/policeImg.jpg')} style={styles.buttonBackground} borderRadius={30}>
+            <ImageBackground source={require('../assets/UpdatedMenuOption/policeImg.jpg')} style={styles.buttonBackground} borderRadius={30}>
               <Text style={styles.buttonText}>SRI LANKA POLICE</Text>
             </ImageBackground>
           </TouchableOpacity>
 
           {/* New button for Death Certificate Form */}
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("DeathCertificateForm")}>
-            <ImageBackground source={require('./assets/UpdatedMenuOption/flag.png')} style={styles.buttonBackground} borderRadius={30}>
+            <ImageBackground source={require('../assets/UpdatedMenuOption/flag.png')} style={styles.buttonBackground} borderRadius={30}>
               <Text style={styles.buttonText}>DEATH CERTIFICATE FORM</Text>
             </ImageBackground>
           </TouchableOpacity>
@@ -418,7 +416,7 @@ export default function MenuOptions({ navigation }) {
                   <Icon name="expand-outline" size={12} color="black" />
                 </TouchableOpacity>
               </View>
-              <Image source={require('./assets/UpdatedMenuOption/chatbotIcon.png')} style={styles.modalImage} />
+              <Image source={require('../assets/UpdatedMenuOption/chatbotIcon.png')} style={styles.modalImage} />
               <View style={styles.textContainer}>
                 <Text style={styles.title}> HIII THERE!!!! </Text>
                 <Text style={styles.subTitle}>Connect with me.. Save your time.. </Text>

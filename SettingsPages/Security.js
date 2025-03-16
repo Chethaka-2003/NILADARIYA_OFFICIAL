@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { ImageBackground, View, Text, TouchableOpacity, StyleSheet, TextInput, SafeAreaView, Dimensions, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Dimensions, Modal } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import CustomLottieAlert from './Alerts/Alert';
-import successAnimation from './assets/done.json';
+import CustomLottieAlert from '../Alerts/CustomLottieAlert';
+import successAnimation from '../assets/done.json';
 
 const { width, height } = Dimensions.get('window');
 

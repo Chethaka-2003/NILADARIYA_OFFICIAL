@@ -3,8 +3,8 @@ import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, TextInput 
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import CustomLottieAlert from './Alerts/Alert';
-import successAnimation from './assets/Done1.json';
+import CustomLottieAlert from '../Alerts/CustomLottieAlert';
+import successAnimation from '../assets/Done1.json';
 
 const App = () => {
   const navigation = useNavigation();

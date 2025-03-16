@@ -4,8 +4,8 @@ import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import Background from '../Required/GradientBackground';
-import CustomAlert from './CustomAlert';
-import CustomLottieAlert from './CustomLottieAlert';
+import CustomAlert from '../Alerts/CustomAlert';
+import CustomLottieAlert from '../Alerts/CustomLottieAlert';
 import successAnimation from '../assets/done.json';
 
 export default function SignupScreen() {

@@ -1,9 +1,10 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image, Dimensions,} from 'react-native';
-import LoginScreen from './screens/LoginScreen';
-import SignupScreen from './screens/SignupScreen';
+import LoginScreen from './LoginScreen';
+import SignupScreen from './SignupScreen';
 import Background from '../Required/GradientBackground';
+
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
 
@@ -15,7 +16,7 @@ export default function Screen({ navigation }) {
         {/* Logo Section */}
         <View style={styles.logoContainer}>
           <Image 
-            source={require('./assets/ABE.png')} 
+            source={require('../assets/Logo.png')} 
             style={styles.logo}
           />
         </View>

@@ -26,7 +26,7 @@ const ProfilePage = () => {
 
   return (
     <ImageBackground 
-      source={require('./assets/Selection.jpg')} 
+      source={require('../assets/Selection.jpg')} 
       style={styles.backgroundImage}
     >
       <View style={styles.container}>
@@ -45,7 +45,7 @@ const ProfilePage = () => {
             ]}
           />
           <Image
-            source={require("./assets/officer.png")}
+            source={require("../assets/officer.png")}
             style={styles.profilePicture}
           />
         </View>

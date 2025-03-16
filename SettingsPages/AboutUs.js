@@ -6,16 +6,16 @@ const { width, height } = Dimensions.get('window');
 const AboutUs = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Image source={require("./assets/Logo.png")} style={styles.image} />
+      <Image source={require("../assets/Logo.png")} style={styles.image} />
       <Text style={styles.header}>Welcome to Niladariya!</Text>
       <Text style={styles.text}>
       <Text style={styles.boldText}>Our Vision:</Text>{"\n"}The vision of the "Niladariya" app is to empower citizens with quick, transparent, and efficient access to government services and consultations. By leveraging advanced technology, it aims to streamline communication between government officers and citizens, fostering a more responsive and accountable public sector.{"\n"}{"\n"}
       </Text>
-      <Image source={require("./assets/colombo 2.jpg")} style={styles.image} />
+      <Image source={require("../assets/colombo 2.jpg")} style={styles.image} />
       <Text style={styles.text}>
       <Text style={styles.boldText}>Our Mission:</Text> {"\n"}The mission of "Niladariya" is to provide an intuitive platform that connects individuals with the right government officers for expert advice and consultation, ensuring ease of access to services. It focuses on improving transparency, increasing efficiency in government procedures, and enhancing the user experience in navigating governmental processes.{"\n"}{"\n"}
       </Text>
-      <Image source={require("./assets/UpdatedMenuOption/flag.png")} style={styles.image} />
+      <Image source={require("../assets/UpdatedMenuOption/flag.png")} style={styles.image} />
       <Text style={styles.text}>
       <Text style={[styles.text, styles.boldText]}>Key Features:</Text>{"\n"}
       <Text style={styles.text}>• Officer Consultation Services: Users can directly interact with government officers for guidance on various services, policies, and regulations.</Text>{"\n"}{"\n"}
@@ -27,7 +27,7 @@ const AboutUs = () => {
       <Text style={styles.text}>• Service Tracking: Users can track the status of their applications or consultations, ensuring they are informed of progress.</Text>{"\n"}{"\n"}
       <Text style={styles.text}>• Multilingual Support: The app is available in multiple languages, ensuring inclusivity for all citizens regardless of their language preferences.</Text>{"\n"}{"\n"}
       </Text>
-      <Image source={require("./assets/gov.jpg")} style={styles.image} />
+      <Image source={require("../assets/gov.jpg")} style={styles.image} />
       <View style={styles.footer}>
         <Text style={styles.footerText}>Contact Us:</Text>
         <Text style={styles.footerText}>Email: support@niladariya.com</Text>
@@ -35,13 +35,13 @@ const AboutUs = () => {
         
         <View style={styles.socialMediaContainer}>
           <TouchableOpacity>
-            <Image source={require('./assets/facebook.png')} style={styles.socialIcon} />
+            <Image source={require('../assets/facebook.png')} style={styles.socialIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
-            <Image source={require('./assets/whatsapp.png')} style={styles.socialIcon} />
+            <Image source={require('../assets/whatsapp.png')} style={styles.socialIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
-            <Image source={require('./assets/instagram.png')} style={styles.socialIcon} />
+            <Image source={require('../assets/instagram.png')} style={styles.socialIcon} />
           </TouchableOpacity>
         </View>
     </View>

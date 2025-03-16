@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, View, TouchableOpacity, Image, Text, ScrollView, Switch, navigation, Dimensions } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Background from './Background';
-import RateUsModal from '../Rate';
-import PasswordChange from '../Security';
-import Language from './Language';
+import Background from './GradientBackground';
+import RateUsModal from '../SettingsPages/Rate';
+import PasswordChange from '../SettingsPages/Security';
+import Language from '../SettingsPages/Language';
 import LogOut from '../SettingsPages/LogOut';
 
 
@@ -19,7 +19,7 @@ export default function SettingsPg({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Background type="type2" />
+      <Background/>
 
       <View style={styles.container}>
         <Text style={styles.headerText}>APP Settings</Text>
