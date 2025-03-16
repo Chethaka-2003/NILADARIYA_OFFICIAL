@@ -71,6 +71,7 @@ const ProfilePage = () => {
     const getPosition = async () => {
       const savedPosition = await AsyncStorage.getItem("chatPosition");
       console.log("Saved Position", savedPosition);
+      console.log(navigation.getState());
       if (savedPosition) {
         const { x, y } = JSON.parse(savedPosition);
         pan.setValue({ x, y });
@@ -91,13 +92,21 @@ const ProfilePage = () => {
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder  : () => true,
+    onPanResponderGrant: () => {
+      pan.setOffset({x: pan.x._value, y: pan.y._value,});
+      pan.setValue({ x: 20, y: 400 });
+    },
     onPanResponderMove : Animated.event(
       [null, { dx: pan.x, dy: pan.y }],
-      {useNativeDriver: true}
+      {useNativeDriver: false}
     ),
     onPanResponderRelease: (_, gestureState) => {
-      setPosition({ x:gestureState.moveX , y: gestureState.moveY });
-      storePosition(gestureState.moveX, gestureState.moveY);
+      const newX = position.x + gestureState.dx;
+      const newY = position.y + gestureState.dy;
+
+      setPosition({ x: newX, y: newY });
+      pan.flattenOffset(); // Flattens offset so movement is accurate
+      storePosition(newX, newY);
     },
   });  
   
@@ -174,8 +183,8 @@ const ProfilePage = () => {
           </TouchableOpacity>
         </View> 
 
-        <Animated.View style={[styles.liveChatButtonchatButton, { left: pan.x, top: pan.y }]} {...panResponder.panHandlers}>
-          <TouchableOpacity onPress={() => { Vibration.vibrate(50); navigation.navigate("ChatScreen"); }}>
+        <Animated.View style={[styles.liveChatButton, pan.getLayout()]} {...panResponder.panHandlers}>
+          <TouchableOpacity onPress={() => { Vibration.vibrate(50); navigation.navigate("ChatScreen", {}); }}>
             <Text style={styles.chatText}>💬</Text>
           </TouchableOpacity>
         </Animated.View>
