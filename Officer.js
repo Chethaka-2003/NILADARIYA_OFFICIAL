@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, Switch, TouchableOpacity, ImageBackground, Modal, TextInput, Dimensions } from "react-native";
+import React, { useState, useEffect,useRef } from "react";
+import { View, Text, Image, StyleSheet, Switch, TouchableOpacity, ImageBackground, Modal, TextInput, Dimensions, Animated, PanResponder, Vibration } from "react-native";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 //import e from "cors"; 
 
 const { width, height } = Dimensions.get("window");
+const position = { x: width - 80, y: height - 120 };
 
 const ProfilePage = () => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -18,6 +21,7 @@ const ProfilePage = () => {
   const [appointmentCount, setAppointmentCount] = useState(0);
   const [chatCount, setChatCount] = useState(0);
   const [interOfficerChatCount, setInterOfficerChatCount] = useState(0);
+  const navigation = useNavigation();
 
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
@@ -58,6 +62,44 @@ const ProfilePage = () => {
       [key]: value, // Ensures the new text is appended properly
     }));
   };
+
+  //Floating chat button
+  const [position, setPosition] = useState(new Animated.ValueXY({ x: 20, y: 400 }));
+  const pan = useRef(new Animated.ValueXY(position)).current;
+
+  useEffect(() => {
+    const getPosition = async () => {
+      const savedPosition = await AsyncStorage.getItem("chatPosition");
+      console.log("Saved Position", savedPosition);
+      if (savedPosition) {
+        const { x, y } = JSON.parse(savedPosition);
+        pan.setValue({ x, y });
+        setPosition({ x, y });
+      } else {
+        // Set default position if no saved position is found
+        const defaultPosition = { x: 20, y: 400 }; 
+        pan.setValue(defaultPosition);
+        setPosition(defaultPosition);
+      }
+    };
+    getPosition();
+  }, []);
+
+  const storePosition = async (x, y) => {
+    await AsyncStorage.setItem("chatPosition", JSON.stringify({ x, y }));
+  };
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder  : () => true,
+    onPanResponderMove : Animated.event(
+      [null, { dx: pan.x, dy: pan.y }],
+      {useNativeDriver: true}
+    ),
+    onPanResponderRelease: (_, gestureState) => {
+      setPosition({ x:gestureState.moveX , y: gestureState.moveY });
+      storePosition(gestureState.moveX, gestureState.moveY);
+    },
+  });  
   
   return (
     <ImageBackground 
@@ -117,16 +159,26 @@ const ProfilePage = () => {
 
         {/*Chat Button, Appoinment Button*/}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.appointmentButton} onPress={() => alert("You have " + appointmentCount + " appointments today")}>
-            <Text style={styles.buttonText}>Appoinment</Text>
+
+          <TouchableOpacity style={styles.appointmentButton} onPress={() => alert("You have " + appointmentCount + " appointments today") <console.log("You have " + appointmentCount + " appointments today")}>
+            <Text style={styles.buttonText}>📅 Appointment</Text>
+            {appointmentCount > 0 && (
+              <View style={styles.notificationBadge}>
+                <Text style={styles.notificationText}>{appointmentCount}</Text>
+              </View>
+            )}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.liveChatButton}>
-            <Text style={styles.buttonText}>Live Chat with Public</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.interOfficerChatButton}>
+
+          <TouchableOpacity style={styles.interOfficerChatButton}onPress={() => console.log("Officer Chat clicked!")}>
             <Text style={styles.buttonText}>Chat with Officers</Text>
           </TouchableOpacity>
-        </View>  
+        </View> 
+
+        <Animated.View style={[styles.liveChatButtonchatButton, { left: pan.x, top: pan.y }]} {...panResponder.panHandlers}>
+          <TouchableOpacity onPress={() => { Vibration.vibrate(50); navigation.navigate("ChatScreen"); }}>
+            <Text style={styles.chatText}>💬</Text>
+          </TouchableOpacity>
+        </Animated.View>
 
         {/* Footer Section */}
         <View style={styles.footer}>
@@ -167,6 +219,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "black",
     left: 100,
+    textAlign: "center",
   },
   profilePictureContainer: {
     marginVertical: 20,
@@ -197,7 +250,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
-    marginTop: 10,
+    marginBottom: 15,
   },
   editButtonText: {
     color: "white",
@@ -272,32 +325,50 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   appointmentButton: {
-    backgroundColor: "#A63A2C",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-    width: "80%",
-    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#60100B",
+    paddingVertical: 15,
+    paddingHorizontal: 100,
+    borderRadius: 25,
+    width: "250%",
+    elevation: 5,
+    position: "relative",
+    marginBottom: 15,
   },
   liveChatButton: {
-    backgroundColor: "#A63A2C",
-    padding: 10,
-    borderRadius: 5,
     alignItems: "center",
-    marginTop: 20,
-    width: "80%",
+    justifyContent: "center",
+    backgroundColor: "#900603",
+    paddingVertical: 15,
+    paddingHorizontal: 100,
+    borderRadius: 25,
+    width: "250%",
+    elevation: 5, 
+    marginBottom: 15,
+    position: "absolute",
+    zIndex: 1000,
   },
   interOfficerChatButton: {
-    backgroundColor: "#A63A2C",
-    padding: 10,
-    borderRadius: 5,
     alignItems: "center",
-    marginTop: 20,
-    width: "80%",
+    justifyContent: "center",
+    backgroundColor: "#A91B0D",
+    paddingVertical: 15,
+    paddingHorizontal: 100,
+    borderRadius: 25,
+    width: "250%",
+    elevation: 5, 
+    marginBottom: 15,
   },
   buttonText: {
     color: "white",
+    fontSize: 14,
     fontWeight: "bold",
+    textAlign: "center",
+  },
+  chatText: { 
+    fontSize: 24, 
+    color: "white" 
   },
   notificationBadge: {
     position: "absolute",
@@ -305,7 +376,8 @@ const styles = StyleSheet.create({
     right: -5,
     backgroundColor: "red",
     borderRadius: 10,
-    padding: 5,
+    paddingVertical: 2,
+    paddingHorizontal: 6,
     minWidth: 20,
     alignItems: "center",
     justifyContent: "center",
