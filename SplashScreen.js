@@ -1,17 +1,41 @@
-import React from "react";
-import { Image,StyleSheet,View,ImageBackground, SafeAreaView } from "react-native";
-import Icon from "../CHIPS_CODE/assets/icon.png";
+import React, { useEffect , useRef} from 'react';
+import { StyleSheet,View, SafeAreaView, Animated } from "react-native";
 import LottieView from "lottie-react-native"
-import Background from "./Background";
+import Background from "./GradientBackground";
+import { useNavigation } from "@react-navigation/native";
 
 export default function SplashScreen(){
+    const navigation = useNavigation();
+    const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+        navigation.navigate('Screen');
+        }, 4000);
+        return () => clearTimeout(timer);
+    }, [navigation]);
+
+    useEffect(() => {
+        Animated.timing(
+            fadeAnim,
+            {
+                toValue: 1,
+                duration: 5000,
+                useNativeDriver: true,
+            }
+        ).start();
+    }, [fadeAnim]);
+
     return (
         <SafeAreaView style = {{flex:1}}>
-            <Background type = "type1"/>
+            <Background/>
                 <View style = {styles.container}>
                     <View>
-                    <Image source={Icon} style={styles.image}/>
-                    <LottieView source={require('./assets/Animation - 1735760151144.json')} autoPlay loop style = {styles.animation}/>
+                    <Animated.Image
+                        source={require('../assets/Logo.png')}
+                        style={[styles.image, { opacity: fadeAnim }]}
+                    />
+                        <LottieView source={require('../assets/Animation - 1735760151144.json')} autoPlay loop style = {styles.animation}/>
                     </View>
                 </View>
         </SafeAreaView>
@@ -35,7 +59,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain', 
         },
     animation:{
-        marginTop: -145,
+        marginTop: -50,
         width: 250,
         height: 250,
     }

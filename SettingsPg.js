@@ -1,122 +1,108 @@
-import React, {useState} from 'react';
-import {StyleSheet, SafeAreaView, View, TouchableOpacity, Image, Text, ScrollView, Switch, navigation, Dimensions} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, SafeAreaView, View, TouchableOpacity, Image, Text, ScrollView, Switch, navigation, Dimensions } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Background from './Background';
+import Background from './GradientBackground';
+import RateUsModal from '../SettingsPages/Rate';
+import PasswordChange from '../SettingsPages/Security';
+import Language from '../SettingsPages/Language';
+import LogOut from '../SettingsPages/LogOut';
 
 
-export default function SettingsPg() {
 
+
+export default function SettingsPg({ navigation }) {
+
+  const [modalVisible, setModalVisible] = useState(false);
   const [form, setForm] = useState({
     notifications: true,
   });
 
-  return(
-    <SafeAreaView style = {{flex:1}}>
-      <Background type = "type2"/>
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <Background/>
 
-        <View style = {styles.container}> 
-          <Text style = {styles.headerText}>APP Settings</Text>
-          <FeatherIcon name="settings" style = {styles.mainIcon} />
-        </View>
+      <View style={styles.container}>
+        <Text style={styles.headerText}>APP Settings</Text>
+        <FeatherIcon name="settings" style={styles.mainIcon} />
+      </View>
 
-        <ScrollView>
-          <View style = {styles.section}>
+      <ScrollView>
+        <View style={styles.section}>
 
-            {/* Language changer */}
-            <TouchableOpacity onPress={() => alert('You have selected the first option') } style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="globe" style = {styles.icon}/>
-              </View>
-              <Text style = {styles.rowLabel}>Language</Text>
-              <View style = {styles.rowSpacer}/>
 
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
-            </TouchableOpacity>
+          <Language visible={modalVisible} onClose={() => setModalVisible(false)} />
+          <PasswordChange visible={modalVisible} onClose={() => setModalVisible(false)} />
 
-            {/* Security button */}
-            <TouchableOpacity onPress={() => alert('You have selected the first option')} style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="shield" style = {styles.icon}/>
-              </View>
+          {/* Notification changer */}
 
-              <Text style = {styles.rowLabel}>Security</Text>
-              <View style = {styles.rowSpacer}/>
-
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>              
-            </TouchableOpacity>
-
-            {/* Notification changer */}
-            
-            <View style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="bell" style = {styles.icon}/>
-              </View>
-              
-
-              <Text style = {styles.rowLabel}>Notifications</Text>
-              <View style = {styles.rowSpacer}/>
-
-              <Switch onValueChange={notifications => setForm ({...form, notifications})} value = {form.notifications}/>
+          <View style={styles.row}>
+            <View style={styles.box}>
+              <FeatherIcon name="bell" style={styles.icon} />
             </View>
-            
 
-            {/* About App */}
-            <TouchableOpacity onPress={() => alert('You have selected the first option')} style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="info" style = {styles.icon}/>
-              </View>
-            
-              <Text style = {styles.rowLabel}>About App</Text>
-              <View style = {styles.rowSpacer}/>
 
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
-            </TouchableOpacity>
+            <Text style={styles.rowLabel}>Notifications</Text>
+            <View style={styles.rowSpacer} />
 
-            {/* RateUs */}
-            <TouchableOpacity onPress={() => alert('You have selected the first option')} style = {styles.row}>
-              <View style = {styles.box}>
-                <FeatherIcon name="thumbs-up" style = {styles.icon}/>
-              </View>
-            
-              <Text style = {styles.rowLabel}>Rate Us</Text>
-              <View style = {styles.rowSpacer}/>
-
-              <FeatherIcon color = 'black' name='chevron-right' size={30}/>
-            </TouchableOpacity>
+            <Switch onValueChange={notifications => setForm({ ...form, notifications })} value={form.notifications} />
           </View>
-        </ScrollView>
+
+
+          {/* About App */}
+          <TouchableOpacity onPress={() => navigation.navigate('AboutUs')} style={styles.row}>
+            <View style={styles.box}>
+              <FeatherIcon name="info" style={styles.icon} />
+            </View>
+
+            <Text style={styles.rowLabel}>About App</Text>
+            <View style={styles.rowSpacer} />
+
+            <FeatherIcon color='black' name='chevron-right' size={30} />
+          </TouchableOpacity>
+
+          <RateUsModal visible={modalVisible} onClose={() => setModalVisible(false)} />
         
+
+        {/* White Container */}
+        <View style={styles.whiteContainer}>
+          
+        <LogOut visible={modalVisible} onClose={() => setModalVisible(false)} />
+        </View>
+      </View>
+
+      </ScrollView>
+
     </SafeAreaView>
   )
 }
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  container:{ 
-    alignItems: 'center', 
-    marginTop: height * 0.05, 
+  container: {
+    alignItems: 'center',
+    marginTop: height * 0.05,
   },
-  
-  headerText:{
+
+  headerText: {
     fontSize: width * 0.08,
     fontWeight: 'bold',
     fontFamily: 'Cochin',
   },
 
-  mainIcon:{
+  mainIcon: {
     fontSize: 60,
     color: 'black',
     marginTop: height * 0.02,
   },
 
-  section:{
+  section: {
     paddingHorizontal: width * 0.1,
     paddingTop: height * 0.1,
   },
 
-  icon:{
-    fontSize:30,
+  icon: {
+    fontSize: 30,
     borderRadius: 9999,
     marginRight: 12,
     flexDirection: 'row',
@@ -124,7 +110,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  row:{
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -135,16 +121,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
 
-  rowLabel:{
+  rowLabel: {
     fontSize: width * 0.05,
     paddingLeft: width * 0.02,
     fontWeight: 'bold',
     color: '#0c0c0c',
   },
 
-  rowSpacer:{
+  rowSpacer: {
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
   },
+  whiteContainer: {
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 15,
+    width: "100%",
+    
+    
+  },
+  managePrivacyButton: {
+    backgroundColor: "#d9d9d9",
+    padding: 15,
+    borderRadius: 20,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  managePrivacyText: {
+    fontSize: 16,
+    color: "#000",
+  },
+  
 });
