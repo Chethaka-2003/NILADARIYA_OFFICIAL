@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView,
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Background from './GradientBackground';
+import DeathCertificateForm from '../OtherPages/DeathCertificateForm';
 
 
 const districts = [
@@ -358,7 +359,7 @@ export default function MenuOptions({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollView}>
 
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")} >
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("DeathCertificateForm")} >
             <ImageBackground source={require('../assets/UpdatedMenuOption/flag.png')} style={styles.buttonBackground} borderRadius={30}>
               <Text style={styles.buttonText}> DIVISIONAL COUNCIL</Text>
             </ImageBackground>

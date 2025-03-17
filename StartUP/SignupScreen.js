@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert,
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+
 import Background from '../Required/GradientBackground';
 import CustomAlert from '../Alerts/CustomAlert';
 import CustomLottieAlert from '../Alerts/CustomLottieAlert';
@@ -102,14 +103,14 @@ export default function SignupScreen() {
 
 
   const handleSendVerification = () => {   // Verification Part
-    if (!email || !mobile) {
+    if (!email) {
       setAlertTitle('Error');
-      setAlertMessage('Please enter your email and phone number to receive a verification code.');
+      setAlertMessage('Please enter your email to receive a verification code.');
       setAlertVisible(true);
       return;
     }
 
-    axios.post('http://192.168.1.136:4000/send-verification', { email , mobile })
+    axios.post('http://192.168.1.136:4000/auth/send-verification', { email })
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Verification Code Sent');
@@ -133,7 +134,7 @@ export default function SignupScreen() {
 
     const userData = { name, email, mobile, password, code: verificationCode };
 
-    axios.post('http://192.168.1.136:4000/register', userData)
+    axios.post('http://192.168.1.136:4000/auth/register', userData)
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Success');
@@ -172,8 +173,9 @@ export default function SignupScreen() {
                 <Feather name="x-circle" color="red" size={20} style={styles.icon} />
               )}
             </View>
+            {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
           </View>
-          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
+          
 
 
           <View style={styles.contBox}>
@@ -191,8 +193,9 @@ export default function SignupScreen() {
                 <Feather name="x-circle" color="red" size={20} style={styles.icon} />
               )}
             </View>
+            {mobileError ? <Text style={styles.errorText}>{mobileError}</Text> : null}
           </View>
-          {mobileError ? <Text style={styles.errorText}>{mobileError}</Text> : null}
+          
 
 
           <View style={styles.contBox}>
@@ -217,8 +220,9 @@ export default function SignupScreen() {
                 </TouchableOpacity>
               </View>
             </View>
+            {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
           </View>
-          {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+         
 
           <View style={styles.contBox}>
             <Text style={styles.label}>EMAIL</Text>
@@ -237,9 +241,9 @@ export default function SignupScreen() {
               )}
           
             </View>
-            
+            {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
           </View>
-          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+          
 
 
           <View style={styles.container3}>
@@ -297,11 +301,11 @@ const styles = StyleSheet.create({
 
   loginText: { fontSize: width * 0.035, color: 'black', textDecorationLine: 'underline' },
 
-  inputContainer: { width: '85%', marginTop: height * 0.065},
+  inputContainer: { width: '85%', marginTop: height * 0.05},
 
-  contBox: { marginBottom: height * 0.04 },
+  contBox: { marginBottom: height * 0.03, position: 'relative' },
 
-  errorText: { color: 'red', marginTop: height * 0.005, marginBottom: height * 0.005, },
+  errorText: { color: 'red',  },
 
   action: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, borderWidth: 1, borderColor: '#420475', backgroundColor: '#d3d3d3', borderRadius: 15, position: 'relative' },
 
@@ -314,4 +318,9 @@ const styles = StyleSheet.create({
   buttonText: { color: 'white', fontWeight: 'bold' },
 
   buttonText2: { color: 'black', fontWeight: 'bold' },
+
+  icon: {
+    position: 'absolute',
+    right: width * 0.02,
+  },
 });

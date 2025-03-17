@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import NavigationBar from '../Required/NavigationBar';
 import Background from '../Required/GradientBackground';
 import axios from 'axios';
 import CustomAlert from '../Alerts/CustomAlert';
+import ForgetPassword from '../OtherPages/FogetPassword';
 
+
+// Get screen dimensions
+const { width, height } = Dimensions.get('window');
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -16,6 +20,8 @@ export default function LoginScreen() {
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+
+  const [modalVisible, setModalVisible] = useState(false);
 
 
   const navigation = useNavigation();
@@ -31,7 +37,7 @@ export default function LoginScreen() {
       return;
     }
 
-    axios.post('http://192.168.1.136:4000/login', { email, password })
+    axios.post('http://192.168.1.136:4000/auth/login', { email, password })
       .then(res => {
         console.log('Response:', res.data);
         if (res.data.status === 'OK') {
@@ -55,8 +61,10 @@ export default function LoginScreen() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Background />
-      <View style={styles.container}>
+      <View style={styles.container}>.
         <Text style={styles.title}>Log In</Text>
+
+
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -76,7 +84,7 @@ export default function LoginScreen() {
             />
             <TouchableOpacity
               onPress={() => setShowPassword(!showPassword)}
-              style={styles.showPasswordIcon}
+              style={styles.eyeIcon}
             >
               <MaterialIcons
                 name={showPassword ? 'visibility' : 'visibility-off'}
@@ -85,13 +93,20 @@ export default function LoginScreen() {
               />
             </TouchableOpacity>
           </View>
+          <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.forgotPassword}>
+            <Text style={styles.forgotPasswordText}>Forget Password?</Text>
+          </TouchableOpacity>
+
+          {/* Call ForgetPassword component and pass modalVisible and setModalVisible */}
+          <ForgetPassword visible={modalVisible} onClose={() => setModalVisible(false)} />
         </View>
-        <TouchableOpacity onPress={() => alert('Forgot Password functionality')}>
-          <Text style={styles.forgotPassword}>Forgot Password?</Text>
-        </TouchableOpacity>
+
+
+
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.loginButtonText}>Log In</Text>
         </TouchableOpacity>
+
       </View>
       <CustomAlert
         visible={alertVisible}
@@ -108,22 +123,29 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: height * 0.3,
+    paddingBottom: height * 0.095,
   },
-  backgroundImage: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
+
+  title: { fontSize: width * 0.12, fontWeight: 'bold', },
+
+  titleContainer: {
+    alignItems: 'center',
+
   },
-  title: { fontSize: 30, fontWeight: 'bold' },
+
   text: {
-    fontSize: 24,
+    fontSize: width * 0.12,
     color: '#fff',
     fontWeight: 'bold',
   },
+
   inputContainer: {
     width: '80%',
-    marginTop: 50,
+    marginBottom: height * 0.18,
+    paddingTop: height * 0.05,
   },
+
   input: {
     height: 50,
     backgroundColor: '#d3d3d3',
@@ -133,29 +155,41 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-  forgotPassword: {
-    marginTop: 30,
-    color: 'black',
-    fontSize: 14,
-    textAlign: 'center',
-    textDecorationLine: 'underline',
+
+  eyeIcon: {
+    position: 'absolute',
+    right: 10,
+    top: 15,
   },
+
   loginButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
   },
+
   loginButton: {
-    marginTop: 50,
     backgroundColor: 'black',
     paddingVertical: 15,
-    paddingHorizontal: 50,
     borderRadius: 410,
     width: 200,
+
   },
+
   showPasswordIcon: {
-    marginLeft: 280,
-    marginTop: -65,
+    marginLeft: width * 0.7,
+
   },
+
+  passwordContainer: {
+    position: 'relative',
+  },
+
+  forgotPasswordText: {
+    fontStyle: 'italic',
+    textDecorationLine: 'underline',
+  }
+
+
 });

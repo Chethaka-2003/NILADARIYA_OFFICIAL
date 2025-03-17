@@ -14,14 +14,14 @@ const GradientBackground = () => (
   </Svg>
 );
 
-const styles = StyleSheet.create({
-  background: {
-    position: 'absolute', // Position the background absolutely
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-});
+// const styles = StyleSheet.create({
+//   background: {
+//     position: 'absolute', // Position the background absolutely
+//     top: 0,
+//     left: 0,
+//     right: 0,
+//     bottom: 0,
+//   },
+// });
 
 export default GradientBackground;

@@ -1,23 +1,24 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
+import { LogBox } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
 import SplashScreen from './Required/SplashScreen';
 import Screen from './StartUP/Screen';
 import SignupScreen from './StartUP/SignupScreen';
 import LoginScreen from './StartUP/LoginScreen';
 import SettingsPg from './Required/SettingsPg';
 import NavigationBar from './Required/NavigationBar';
-import { StatusBar } from 'expo-status-bar';
 import Language from './SettingsPages/Language';
 import Security from './SettingsPages/Security';
 import AboutUs from './SettingsPages/AboutUs';
 import Rate from './SettingsPages/Rate';
 import CustomAlert from './Alerts/CustomAlert';
 import FeedbackSubmitted from './SettingsPages/FeedbackSubmitted';
-import { LogBox } from 'react-native';
 import DeathCertificateForm from './OtherPages/DeathCertificateForm';
-import Selection from './StartUP/Selection';
+
 
 const Stack = createStackNavigator();
 LogBox.ignoreLogs([
@@ -26,8 +27,6 @@ LogBox.ignoreLogs([
 
 export default function App() {
 
-
-  // return (< Loading/>);
   return (
     <>
       <StatusBar style='auto' />
@@ -61,21 +60,6 @@ export default function App() {
       </NavigationContainer>;
     </>
 
-    // const [isSplashVisible, setIsSplashVisible] = useState(true);
-
-    // useEffect(() => {
-    //   const timer = setTimeout(() => {
-    //     setIsSplashVisible(false);
-    //   }, 4000); // 3 seconds
-
-    //   return () => clearTimeout(timer);
-    // }, []);
-
-    // return (
-    //   <View style={{ flex: 1 }}>
-    //     {isSplashVisible ? <SplashScreen /> : <Screen />}
-    //   </View>
-    // );
   );
 }
 
