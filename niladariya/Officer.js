@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
   },
   editButton: {
-    backgroundColor: "#195b8c",
+    backgroundColor: "#4B9CD3",
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   saveButton: {
-    backgroundColor: "#195b8c",
+    backgroundColor: "#4B9CD3",
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
   appointmentButton: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#195b8c",
+    backgroundColor: "#233C67",
     paddingVertical: 15,
     paddingHorizontal: 100,
     borderRadius: 25,
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   interOfficerChatButton: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#195b8c",
+    backgroundColor: "#233C67",
     paddingVertical: 15,
     paddingHorizontal: 100,
     borderRadius: 25,

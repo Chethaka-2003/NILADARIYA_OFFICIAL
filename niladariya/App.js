@@ -2,6 +2,10 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Officer from "./Officer"; 
+import PublicProfile from "./PublicProfile";
+//import AppointmentScreen from "./AppointmentScreen";
+//import ChatScreen from "./ChatScreen";
+//import InterOfficerChatScreen from "./InterOfficerChatScreen"; 
 //import LiveChatScreen from "./LiveChatScreen";
 
 const Stack = createStackNavigator();
@@ -10,7 +14,8 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Officer" component={Officer} />
+        <Stack.Screen name="Officer" component={Officer} options={{ headerShown: false }} />
+        <Stack.Screen name="PublicProfile" component={PublicProfile} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
