@@ -1,701 +1,787 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView, SafeAreaView, Switch, Platform, Pressable } from 'react-native';
-import { useState } from 'react';
-import { printToFileAsync } from 'expo-print';
-import { shareAsync } from 'expo-sharing';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import React, { useEffect, useState } from "react";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, ImageBackground, Modal, Dimensions, Animated, PanResponder,SafeAreaView,Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Background from "./GradientBackground";
 
-export default function App() {
-  // Form state
-  const [formData, setFormData] = useState({
-    applicantName: "",
-    applicantAddress: "",
-    fullName: "",
-    sex: "",
-    copies: "1",
-    birthDate: new Date(),
-    birthPlace: "",
-    registrarDivision: "",
-    revenueDistrict: "",
-    registrationNo: "",
-    registrationDate: new Date(),
-    searchFrom: new Date(),
-    searchTo: new Date(),
-    fatherName: "",
-    motherName: "",
-    feeType: "120",
-    applicationDate: new Date(),
-    signature: ""
-  });
 
-  // Date picker visibility state
-  const [showDatePicker, setShowDatePicker] = useState({
-    birthDate: false,
-    registrationDate: false,
-    searchFrom: false,
-    searchTo: false,
-    applicationDate: false
-  });
 
-  // Update form data
-  const updateFormData = (field, value) => {
-    setFormData(prevState => ({
-      ...prevState,
-      [field]: value
-    }));
-  };
+const districts = [
+  'Ampara', 'Anuradhapura', 'Badulla', 'Batticaloa', 'Colombo', 'Galle', 'Gampaha', 'Hambantota',
+  'Jaffna', 'Kalutara', 'Kandy', 'Kegalle', 'Kilinochchi', 'Kurunegala', 'Mannar', 'Matale',
+  'Matara', 'Monaragala', 'Mullaitivu', 'Nuwara Eliya', 'Polonnaruwa', 'Puttalam', 'Ratnapura', 'Trincomalee', 'Vavuniya'
+];
 
-  // Calculate fee
-  const calculateFee = () => {
-    const fee = parseInt(formData.feeType) * parseInt(formData.copies || 1);
-    return 'Rs. ${fee}/-';
-  };
+// Multilingual services data
+const services = {
+  English: [
+    "Civil Registrations",
+    "Issuance of Permits",
+    "Issuing of Certicates",
+    "Payment of Pensions",
+    "Land Administration",
+    "Social Welfare and Benefits",
+    "Development Program"
+  ],
+  Sinhala: [
+    "සිවිල් ලියාපදිංචි කිරීම්",
+    "බලපත්‍ර නිකුත් කිරීම",
+    "සහතිකපත් නිකුත් කිරීම",
+    "විශ්‍රාම වැටුප් ගෙවීම",
+    "ඉඩම් පරිපාලනය",
+    "සමාජ සුභසාධන හා ප්‍රතිලාභ",
+    "සංවර්ධන වැඩසටහන"
+  ],
+  Tamil: [
+    "சிவில் பதிவுகள்",
+    "அனுமதிப்பத்திரங்கள் வழங்குதல்",
+    "சான்றிதழ்கள் வழங்குதல்",
+    "ஓய்வூதியம் செலுத்துதல்",
+    "நில நிர்வாகம்",
+    "சமூக நலன் மற்றும் நன்மைகள்",
+    "அபிவிருத்தி திட்டம்"
+  ]
+};
 
-  // Show date picker
-  const showPicker = (pickerName) => {
-    setShowDatePicker(prevState => {
-      // First close all pickers
-      const newState = Object.keys(prevState).reduce((acc, key) => {
-        acc[key] = false;
-        return acc;
-      }, {});
-      
-      // Then open the selected one
-      newState[pickerName] = true;
-      return newState;
-    });
-  };
+// Civil registration services in multiple languages
+const civilRegistrationServices = {
+  English: [
+    "Details of father, grandfather and informant in a birth certificate",
+    "Copies of Birth Certificates",
+    "Name change statement by the bearer of the name",
+    "Name change application by mother, father or guardian",
+    "Copies of death certificates",
+    "Copies of marriage certificates",
+    "Delayed birth registration",
+    "Section 32 of the Muslim Marriage and Divorce Registration Act"
+  ],
+  Sinhala: [
+    "උප්පැන්න සහතිකයක පියා, සීයා සහ දැනුම්දෙන්නාගේ විස්තර",
+    "උප්පැන්න සහතිකවල පිටපත්",
+    "නම දරන්නා විසින් නම වෙනස් කිරීමේ ප්‍රකාශය",
+    "මව, පියා හෝ භාරකරු විසින් නම වෙනස් කිරීමේ අයදුම්පත",
+    "මරණ සහතිකවල පිටපත්",
+    "විවාහ සහතිකවල පිටපත්",
+    "ප්‍රමාද වූ උපත් ලියාපදිංචිය",
+    "මුස්ලිම් විවාහ හා දික්කසාද ලියාපදිංචි කිරීමේ පනතේ 32 වන වගන්තිය"
+  ],
+  Tamil: [
+    "பிறப்புச் சான்றிதழில் தந்தை, பாட்டனார் மற்றும் தகவல் அளிப்பவரின் விவரங்கள்",
+    "பிறப்புச் சான்றிதழ்களின் நகல்கள்",
+    "பெயர் தாங்கியால் பெயர் மாற்ற அறிக்கை",
+    "தாய், தந்தை அல்லது பாதுகாவலரால் பெயர் மாற்ற விண்ணப்பம்",
+    "இறப்புச் சான்றிதழ்களின் நகல்கள்",
+    "திருமணச் சான்றிதழ்களின் நகல்கள்",
+    "தாமதமான பிறப்புப் பதிவு",
+    "முஸ்லிம் திருமணம் மற்றும் விவாகரத்து பதிவுச் சட்டத்தின் 32வது பிரிவு"
+  ]
+};
 
-  // Handle date change
-  const onDateChange = (event, selectedDate, pickerName) => {
-    // Hide the date picker regardless of platform
-    setShowDatePicker(prevState => ({
-      ...prevState,
-      [pickerName]: false
-    }));
+//Permit issuance services in multiple languages
+const permitServices = {
+  English: [
+    "Registration of a Business name (individual/partnership)",
+    "Change of Business name registration certificate",
+    "Cancellation of business registration certificate",
+    "Permit for felling trees",
+    "Permit for timber transport (new/extended)",
+    "Issuing soil transport permits",
+    "Permits for the transportation of animals",
+    "Presidential Fund",
+    "Liquor sale license(New/Renewal)",
+    "Licenses for Mortgage centers (New/Renewal)",
+    "Changing the names of electricity inspection and electricity bills",
+    "Disaster loans and real esrare loans",
+    "Agrahara insurance",
+    "Land leasing and transfer of lands, issuance of government land deeds"
     
-    // Update the date only if a date was selected
-    if (selectedDate) {
-      updateFormData(pickerName, selectedDate);
-    }
-  };
+  ],
+  Sinhala: [
+    "ව්‍යාපාර නාමයක් ලියාපදිංචි කිරීම (පුද්ගලික/හවුල්)",
+    "ව්‍යාපාර නාම ලියාපදිංචි සහතිකය වෙනස් කිරීම",
+    "ව්‍යාපාර ලියාපදිංචි සහතිකය අවලංගු කිරීම",
+    "ගස් කැපීම සඳහා අවසර පත්‍රය",
+    "දැව ප්‍රවාහන අවසර පත්‍රය (නව/දීර්ඝ කරන ලද)",
+    "පස් ප්‍රවාහන අවසර පත්‍ර නිකුත් කිරීම",
+    "සතුන් ප්‍රවාහනය සඳහා අවසර පත්‍ර",
+    "ජනාධිපති අරමුදල",
+    "මද්‍යසාර විකුණුම් බලපත්‍ර (නව/නවීකරණ)",
+    "බැංකු මධ්‍යස්ථාන බලපත්‍ර (නව/නවීකරණ)",
+    "විදුලි පරීක්ෂණ සහ විදුලි බිල් නම් වෙනස් කිරීම",
+    "ව්‍යසන ණය සහ අසල්වැසි ණය",
+    "අගහාර ක්‍රමය",
+    "බදු ඉඩම් සහ ඉඩම් මාරු කිරීම, රාජ්‍ය ඉඩම් සificහික නිකුත් කිරීම"
+  ],
+  Tamil: [
+    "வணிகப் பெயரைப் பதிவு செய்தல் (தனிநபர்/கூட்டு)",
+    "வணிகப் பெயர் பதிவுச் சான்றிதழை மாற்றுதல்",
+    "வணிகப் பதிவுச் சான்றிதழை ரத்து செய்தல்",
+    "மரங்களை வெட்டுவதற்கான அனுமதி",
+    "மரக்கட்டை போக்குவரத்து அனுமதி (புதிய/நீட்டிக்கப்பட்ட)",
+    "மண் போக்குவரத்து அனுமதிகளை வழங்குதல்",
+    "விலங்குகளின் போக்குவரத்துக்கு அனுமதி",
+    "சனாதிபதி நிதி",
+    "மது விற்பனை உரிமம் (புதிய/மீள்புதுப்பிப்பு)",
+    "சொத்து மத்திய நிலைய உரிமங்கள் (புதிய/மீள்புதுப்பிப்பு)",
+    "மின்சார பரிசோதனை மற்றும் மின் கட்டண பெயர்கள் மாற்றம்",
+    "பேரிடர் கடன்கள் மற்றும் வீட்டுச் சொத்துக் கடன்கள்",
+    "அகாரா காப்பீடு",
+    "நிலம் வாடகைக்கு வழங்குதல் மற்றும் நிலம் மாற்றம், அரசாங்க நில சான்றிதழ் வழங்குதல்"
 
-  // Format date for display
-  const formatDate = (date) => {
-    return date.toLocaleDateString();
-  };
+  ]
+};
 
-  // Render date picker based on platform
-  const renderDatePicker = (field) => {
-    return (
-      <>
-        <Pressable 
-          onPress={() => showPicker(field)} 
-          style={styles.datePickerButton}
-        >
-          <Text style={styles.dateText}>
-            {formatDate(formData[field])}
-          </Text>
-        </Pressable>
-        
-        {showDatePicker[field] && (
-          <DateTimePicker
-            testID={'${field}Picker'}
-            value={formData[field]}
-            mode="date"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={(event, date) => onDateChange(event, date, field)}
-          />
-        )}
-      </>
-    );
-  };
+// certificates services in multiple languages
+const certificateServices = {
+  English: [
+    "Vehicle Revenue License Online System",
+    "Birth / Marriage / Death / Registration",
+    "Income Certificate"
+  ],
+  Sinhala: [
+    "වාහන භාණ්ඩාගාර බලපත්‍ර මාර්ගගත පද්ධතිය",
+    "උප්පැදි / විවාහ / මරණ / ලියාපදිංචිය",
+    "ආදායම් සහතිකය"
+  ],
+  Tamil: [
+    "வாகன வருமான உரிமம் ஆன்லைன் அமைப்பு",
+    "பிறப்பு / திருமணம் / இறப்பு / பதிவு",
+    "வருமான சான்றிதழ்"
+  ]
+};
 
-  // Generate HTML with form data
-  const generateHtml = () => {
-    // HTML generation code unchanged...
-    return `<!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Application for Birth Certificate and/or Search of Registers</title>
-    <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .logo {
-      width: 80px;
-      height: 80px;
-      background-color: #f0f0f0;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 20px;
-    }
-    .title {
-      flex: 1;
-      text-align: center;
-    }
-    .form-instruction {
-      font-style: italic;
-      margin-bottom: 20px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    th, td {
-      border: 1px solid #333;
-      padding: 8px;
-      vertical-align: top;
-    }
-    .office-use {
-      float: right;
-      border: 1px solid #333;
-      padding: 10px;
-      width: 200px;
-      text-align: center;
-      margin-left: 10px;
-    }
-    .multilingual {
-      font-size: 0.8em;
-      color: #666;
-    }
-    .fees {
-      font-size: 0.9em;
-    }
-    input[type="text"],
-    input[type="date"],
-    input[type="number"],
-    select {
-      width: 95%;
-      padding: 8px;
-      margin: 5px 0;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    .input-field {
-      min-height: 40px;
-    }
-    .date-input {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .submit-btn {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-    .submit-btn:hover {
-      background-color: #45a049;
-    }
-    </style>
-    </head>
-    <body>
-    <div class="header">
-    <div class="logo">
-      <img src="/api/placeholder/80/80" alt="Government Emblem" />
-    </div>
-    <div class="title">
-      <h2>APPLICATION FOR BIRTH CERTIFICATE AND/OR SEARCH OF REGISTERS</h2>
-      <p class="multilingual">ජනනපත්‍ර සහතිකයක් ලබාගැනීම සඳහා / තොරතුරාන්</p>
-      <p class="multilingual">பிறப்பு சான்றிதழுக்கும் அல்லது பதிவேடுகளைத் தேடுவதற்குமான விண்ணப்பம்</p>
-    </div>
-    <div class="office-use">
-      <p>FOR OFFICE USE ONLY</p>
-      <p class="multilingual">කාර්යාලයේ ප්‍රයෝජනය සඳහා පමණි</p>
-      <p class="multilingual">அலுவலக உபயோகத்திற்கு மட்டும்</p>
-      <hr>
-      <p>Application No. and Date</p>
-      <p>................................</p>
-    </div>
-    </div>
+const { width, height } = Dimensions.get('window');
+
+export default function MenuOptions({ navigation }) {
+  
+
+
+  const [selectedDistrict, setSelectedDistrict] = useState(districts[0]);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [scale, setScale] = useState(new Animated.Value(1));
+  const [selectedLanguage, setSelectedLanguage] = useState(null); // To track selected language
+  const [question, setQuestion] = useState(null); // To track the current question
+  const [questionHistory, setQuestionHistory] = useState([]);
+  const [showTooltip, setShowTooltip] = useState(true);
+  const tooltipOpacity = new Animated.Value(0);
+  const [selectedService, setSelectedService] = useState(null);
+  const [selectedCertificateService, setSelectedCertificateService] = useState(null);
+
+  useEffect(() => {
+    // Fade in the tooltip
+    Animated.sequence([
+      Animated.timing(tooltipOpacity, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+      // Wait for 5 seconds
+      Animated.delay(9000),
+      // Fade out the tooltip
+      Animated.timing(tooltipOpacity, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setShowTooltip(false));
+  }, []);
+
  
-  <div class="form-instruction">
-    <p>To be sent to the Office of the District Registrar of the Divisional Secretariat in which the birth occurred.</p>
-    <p class="multilingual">මෙය මිය යූ ලංකාවේ තිබෙන අමාත්‍යාංශයේ දිස්ත්‍රික් ලේකම්වරයා වෙත යැවිය යුතුය.</p>
-    <p class="multilingual">பிறப்பு நிகழ்ந்த இடத்தில் உள்ள பிரதேச செயலகத்தின் மாவட்டப் பதிவாளரின் அலுவலகத்திற்கு அனுப்ப வேண்டும்.</p>
-  </div>
- 
-  <form id="birthCertificateForm">
-    <table>
-      <tr>
-        <td width="40%">
-          1. <strong>Name of Applicant and Address</strong>
-          <p class="multilingual">අයදුම්කරුගේ නම සහ ලිපිනය</p>
-          <p class="multilingual">விண்ணப்பதாரரின் பெயரும் முகவரியும்</p>
-        </td>
-        <td colspan="2" class="input-field">
-          <input type="text" value="${formData.applicantName}" disabled>
-          <textarea disabled>${formData.applicantAddress}</textarea>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          2. <strong>Full name of person respecting whose birth application is made?</strong>
-          <p class="multilingual">අයදුම්කරුගේ නම්වල දක්වාතිබෙන පැණය? දින අංකය ලිපිනය</p>
-          <p class="multilingual">யாருடைய பிறப்புக்கான விண்ணப்பம் செய்யப்படுகிறது அவரது பெயர்</p>
-        </td>
-        <td>
-          <strong>Sex</strong>
-          <p class="multilingual">ස්ත්‍රී පුරුෂ භාවය</p>
-          <p class="multilingual">பால்</p>
-          <select id="sex" name="sex" disabled>
-            <option value="${formData.sex}">${formData.sex}</option>
-          </select>
-        </td>
-        <td>
-          <strong>No. of Copies required</strong>
-          <p class="multilingual">අවශ්‍ය පිටපත් ගණන</p>
-          <p class="multilingual">தேவைப்படும் பிரதிகளின் எண்ணிக்கை</p>
-          <input type="number" id="copies" name="copies" value="${formData.copies}" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <input type="text" id="fullName" name="fullName" value="${formData.fullName}" disabled>
-        </td>
-        <td colspan="2"></td>
-      </tr>
-      <tr>
-        <td>
-          3. <strong>Date of Birth</strong>
-          <p class="multilingual">උපන්දිනය</p>
-          <p class="multilingual">பிறந்த திகதி</p>
-          <input type="date" id="birthDate" name="birthDate" value="${formatDate(formData.birthDate)}" disabled>
-        </td>
-        <td colspan="2">
-          <strong>Place of occurrence (Hospital, House No. and Street, Town or Village of Name of Estate)</strong>
-          <p class="multilingual">උපන් ස්ථානය (රෝහල, ගෘහ අංකය සහ වීදිය කොටඨාශය, ගම)</p>
-          <p class="multilingual">பிறந்த இடம் (வைத்தியசாலை, வீட்டு இலக்கம், தெரு, நகர், கிராமம் அல்லது தோட்டப்பெயர்)</p>
-          <textarea id="birthPlace" name="birthPlace" disabled>${formData.birthPlace}</textarea>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          4. <strong>Registrar's Division</strong>
-          <p class="multilingual">රෙජිස්ට්‍රාර්ගේ කොට්ඨාශය</p>
-          <p class="multilingual">பதிவாளர் பிரிவு</p>
-          <input type="text" id="registrarDivision" name="registrarDivision" value="${formData.registrarDivision}" disabled>
-        </td>
-        <td colspan="2">
-          <strong>Revenue District</strong>
-          <p class="multilingual">ආදායම් දිස්ත්‍රික්කය</p>
-          <p class="multilingual">இறைவரி மாவட்டம்</p>
-          <input type="text" id="revenueDistrict" name="revenueDistrict" value="${formData.revenueDistrict}" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          5. <strong>No. and date of Registration Entry (If known)</strong>
-          <p class="multilingual">ලියාපදිංචි අංකය සහ දිනය(දැන් තිබේ නම්)</p>
-          <p class="multilingual">பதிவு இலக்கமும் திகதியும் (தெரிந்திருப்பின்)</p>
-          <div style="display: flex; gap: 10px;">
-            <input type="text" id="registrationNo" name="registrationNo" value="${formData.registrationNo}" disabled style="width: 45%;">
-            <input type="date" id="registrationDate" name="registrationDate" value="${formatDate(formData.registrationDate)}" disabled style="width: 45%;">
-          </div>
-        </td>
-        <td colspan="2">
-          <strong>Period of search desired, if any. (The maximum period of search is limited to 2 years.)</strong>
-          <p class="multilingual">සොයා බැලීම අවශ්‍ය කාල කොපමණ කාලයක් ද?(උපරිම කාලය වසර 2 දක්වා සීමා කර ඇත.)</p>
-          <p class="multilingual">தேடல் தேவைப்படும் காலம் ஏதேனும் (அதிகபட்ச தேடல் காலம் 2 வருடங்களுக்கு மட்டுப்படுத்தப்பட்டுள்ளது.)</p>
-          <div style="display: flex; gap: 10px;">
-            <div style="width: 45%;">
-              <label for="searchFrom">From:</label>
-              <input type="date" id="searchFrom" name="searchFrom" value="${formatDate(formData.searchFrom)}" disabled>
-            </div>
-            <div style="width: 45%;">
-              <label for="searchTo">To:</label>
-              <input type="date" id="searchTo" name="searchTo" value="${formatDate(formData.searchTo)}" disabled>
-            </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          6. <strong>Father's Full Name</strong>
-          <p class="multilingual">පියාගේ සම්පූර්ණ නම</p>
-          <p class="multilingual">தந்தையின் முழுப்பெயர்</p>
-        </td>
-        <td colspan="2">
-          <input type="text" id="fatherName" name="fatherName" value="${formData.fatherName}" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          7. <strong>Mother's Full Name (maiden name)</strong>
-          <p class="multilingual">මවගේ සම්පූර්ණ නම (විවාහයට පෙර)</p>
-          <p class="multilingual">தாயாரின் முழுப்பெயர் (கன்னிப் பெயர்)</p>
-        </td>
-        <td colspan="2">
-          <input type="text" id="motherName" name="motherName" value="${formData.motherName}" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          8. <strong>Amount of money paid for charges</strong>
-          <p class="multilingual">ගාස්තුව වශයෙන් ගෙවන ලද මුදල</p>
-          <p class="multilingual">கட்டணங்களுக்காக கொடுப்பனவாக செலுத்தப்பட்ட பணத்தொகை</p>
-          <input type="text" id="amountPaid" name="amountPaid" value="${calculateFee()}" disabled>
-        </td>
-        <td>
-          <strong>Where the date of registration or the No. of the entry is given the fee for one copy of the certificate is Rs. 120/-</strong>
-          <p class="multilingual">ලියාපදිංචි කිරීමේ දිනය හෝ අංකය දී ඇති විට සහතික එක පිටපතක ගාස්තුව රු. 120/-</p>
-          <p class="multilingual">பதிவு திகதி அல்லது பதிவுப் பதிவின் இல. தரப்பட்டிருந்தால் ஒரு பிரதிக்கான கட்டணம் ரூபா 120/-</p>
-          <div>
-            <input type="radio" id="fee120" name="feeType" value="120" ${formData.feeType === "120" ? "checked" : ""} disabled>
-            <label for="fee120">Rs. 120/- per copy</label>
-          </div>
-        </td>
-        <td>
-          <strong>Where the date of registration or the No. of the entry is not given and a search of registers not exceeding two years is involved fee for one copy of the certificate is Rs. 250/-</strong>
-          <p class="multilingual">ලියාපදිංචි කල දිනය හෝ අංකය දී නැති විට වසර 2 කට නොවැඩි කාලයක් සඳහා ලේඛන පරීක්ෂා කර සහතිකයක එක පිටපතකට රු. 250/-</p>
-          <p class="multilingual">பதிவுத் திகதி அல்லது பதிவின் இல. தரப்படாமல் 2 வருடங்களை விஞ்சாத காலப்பகுதிக்குரிய பதிவேடுகளைத் தேடவேண்டியிருந்தால் ஒரு பிரதிக்கான கட்டணம் ரூபா 250/-</p>
-          <div>
-            <input type="radio" id="fee250" name="feeType" value="250" ${formData.feeType === "250" ? "checked" : ""} disabled>
-            <label for="fee250">Rs. 250/- per copy</label>
-          </div>
-        </td>
-      </tr>
-    </table>
+
+  const handleChatbotPress = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setSelectedLanguage(null); // Reset language selection
+    setQuestion(null); // Reset question
+  };
+
+  const handleZoom = () => {
+    Animated.spring(scale, {
+      toValue: scale._value === 1 ? 1.5 : 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleLanguageSelect = (language) => {
+    setSelectedLanguage(language);
+    // Set the next question based on the selected language
+    const nextQuestion = {
+      English: "Please select the service you need.",
+      Sinhala: "ඔබට අවශ්‍ය සේවාව තෝරාගන්න.",
+      Tamil: "நீங்கள் தேவைப்படும் சேவையைத் தேர்ந்தெடுக்கவும்."
+    };
+    const newQuestion = nextQuestion[language];
+    setQuestion(newQuestion); // Set the current question
+    setQuestionHistory((prev) => [...prev, { language, question: nextQuestion[language] }]);
+    setSelectedService(null);
+  };
+  
+  const handleServiceSelect = (serviceIndex) => {
+    if (!selectedLanguage) return;
    
-    <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
-      <div>
-        <label for="applicationDate">දිනය/திகதி/Date:</label>
-        <input type="date" id="applicationDate" name="applicationDate" value="${formatDate(formData.applicationDate)}" disabled style="width: 150px;">
-      </div>
-      <div>
-        <label for="signature">Signature:</label>
-        <input type="text" id="signature" name="signature" value="${formData.signature}" disabled style="width: 250px;">
-      </div>
-    </div>
-  </form>
- 
-  <div style="margin-top: 80px; font-size: 0.7em; color: #666; text-align: center;">
-    <p>H.04/2024 - 500,000 (2022/01) © කොළඹ රජයේ මුද්‍රණ දෙපාර්තමේන්තුව</p>
-  </div>
-</body>
-</html> // Same HTML as before, truncated for brevity
-  `};
+    // For civil registrations (index 0), show sub-services
+    if (serviceIndex === 0) {
+      const serviceQuestions = {
+        English: "Please select the specific civil registration service you need:",
+        Sinhala: "ඔබට අවශ්‍ය විශේෂිත සිවිල් ලියාපදිංචි සේවාව තෝරාගන්න:",
+        Tamil: "நீங்கள் தேவைப்படும் குறிப்பிட்ட சிவில் பதிவு சேவையைத் தேர்ந்தெடுக்கவும்:"
+      };
+      setQuestion(serviceQuestions[selectedLanguage]);
+      setQuestionHistory((prev) => [...prev, { 
+        language: selectedLanguage, 
+        question: serviceQuestions[selectedLanguage],
+        serviceType: "civil"
+      }]);
+      setSelectedService("civil");
+    } // NEW: For permits issuance (index 1), show sub-services
+    else if (serviceIndex === 1) {
+      const serviceQuestions = {
+        English: "Please select the specific permit you need:",
+        Sinhala: "ඔබට අවශ්‍ය විශේෂිත බලපත්‍රය තෝරාගන්න:",
+        Tamil: "நீங்கள் தேவைப்படும் குறிப்பிட்ட அனுமதியைத் தேர்ந்தெடுக்கவும்:"
+      };
+      setQuestion(serviceQuestions[selectedLanguage]);
+      setQuestionHistory((prev) => [...prev, { 
+        language: selectedLanguage, 
+        question: serviceQuestions[selectedLanguage],
+        serviceType: "permit"
+      }]);
+      setSelectedService("permit");
+    }
+    // For certificates (index 2), show sub-services
+    else if (serviceIndex === 2) {
+      const serviceQuestions = {
+        English: "Please select the specific certificate service you need:",
+        Sinhala: "ඔබට අවශ්‍ය විශේෂිත සහතික සේවාව තෝරාගන්න:",
+        Tamil: "நீங்கள் தேவைப்படும் குறிப்பிட்ட சான்றிதழ் சேவையைத் தேர்ந்தெடுக்கவும்:"
+      };
+      setQuestion(serviceQuestions[selectedLanguage]);
+      setQuestionHistory((prev) => [...prev, { 
+        language: selectedLanguage, 
+        question: serviceQuestions[selectedLanguage],
+        serviceType: "certificates"
+      }]);
+      setSelectedService("certificates");
+    }
 
-  // Generate PDF
-  let generatePdf = async () => {
-    const file = await printToFileAsync({
-      html: generateHtml(),
-      base64: false
+    else {
+      // For other services, we could expand this in the future
+      setSelectedService(services[selectedLanguage][serviceIndex]);
+    }
+  };
+
+  
+  const handleBack = () => {
+    if (questionHistory.length > 0) { 
+    setQuestionHistory((prev) => {
+      const newHistory = [...prev];
+      newHistory.pop(); // Remove the last question
+      const previousQuestion = newHistory[newHistory.length - 1]?.question ?? null;
+      setQuestion(previousQuestion); // Update question
+    
+    // Update selected service based on history
+    if (newHistory.length > 0) {
+      const lastItem = newHistory[newHistory.length - 1];
+      setSelectedService(lastItem.serviceType || null);
+    } else {
+      setSelectedService(null);
+    }  
+
+      return newHistory;
     });
+  }
+  };
 
-    await shareAsync(file.uri);
+  const currentQuestion = question || (questionHistory[questionHistory.length - 1]?.question ?? null);
+
+  // Get the current language services based on the selected language
+  const getCurrentServices = () => {
+    if (!selectedLanguage) return services.English;
+    return services[selectedLanguage];
+  };
+
+  // Get civil registration services based on selected language
+  const getCivilRegistrationServices = () => {
+    if (!selectedLanguage) return civilRegistrationServices.English;
+    return civilRegistrationServices[selectedLanguage];
+  };
+  
+  // Get permit services based on selected language
+  const getPermitServices = () => {
+    if (!selectedLanguage) return permitServices.English;
+    return permitServices[selectedLanguage];
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.container}>
-          <Text style={styles.header}>Birth Certificate Application</Text>
-          
-          <View style={styles.formSection}>
-            <Text style={styles.sectionTitle}>1. Applicant Details</Text>
-            <Text style={styles.label}>Name of Applicant</Text>
-            <TextInput
-              value={formData.applicantName}
-              placeholder="Full Name"
-              style={styles.textInput}
-              onChangeText={(value) => updateFormData('applicantName', value)}
-            />
-            
-            <Text style={styles.label}>Address</Text>
-            <TextInput
-              value={formData.applicantAddress}
-              placeholder="Full Address"
-              style={styles.textArea}
-              multiline={true}
-              numberOfLines={3}
-              onChangeText={(value) => updateFormData('applicantAddress', value)}
-            />
-          </View>
-          
-          <View style={styles.formSection}>
-            <Text style={styles.sectionTitle}>2. Birth Details</Text>
-            <Text style={styles.label}>Full Name</Text>
-            <TextInput
-              value={formData.fullName}
-              placeholder="Full Name"
-              style={styles.textInput}
-              onChangeText={(value) => updateFormData('fullName', value)}
-            />
-            
-            <Text style={styles.label}>Sex</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={formData.sex}
-                style={styles.picker}
-                onValueChange={(itemValue) => updateFormData('sex', itemValue)}
-              >
-                <Picker.Item label="Select" value="" />
-                <Picker.Item label="Male" value="Male" />
-                <Picker.Item label="Female" value="Female" />
-                <Picker.Item label="Other" value="Other" />
-              </Picker>
-            </View>
-            
-            <Text style={styles.label}>No. of Copies Required</Text>
-            <TextInput
-              value={formData.copies}
-              placeholder="1"
-              style={styles.textInput}
-              keyboardType="numeric"
-              onChangeText={(value) => updateFormData('copies', value)}
-            />
-            
-            <Text style={styles.label}>Date of Birth</Text>
-            {renderDatePicker('birthDate')}
-            
-            <Text style={styles.label}>Place of Birth</Text>
-            <TextInput
-              value={formData.birthPlace}
-              placeholder="Hospital, Address, etc."
-              style={styles.textArea}
-              multiline={true}
-              numberOfLines={3}
-              onChangeText={(value) => updateFormData('birthPlace', value)}
-            />
-          </View>
-          
-          <View style={styles.formSection}>
-            <Text style={styles.sectionTitle}>3. Registration Details</Text>
-            <Text style={styles.label}>Registrar's Division</Text>
-            <TextInput
-              value={formData.registrarDivision}
-              placeholder="Division"
-              style={styles.textInput}
-              onChangeText={(value) => updateFormData('registrarDivision', value)}
-            />
-            
-            <Text style={styles.label}>Revenue District</Text>
-            <TextInput
-              value={formData.revenueDistrict}
-              placeholder="District"
-              style={styles.textInput}
-              onChangeText={(value) => updateFormData('revenueDistrict', value)}
-            />
-            
-            <Text style={styles.label}>Registration No. (if known)</Text>
-            <TextInput
-              value={formData.registrationNo}
-              placeholder="Registration Number"
-              style={styles.textInput}
-              onChangeText={(value) => updateFormData('registrationNo', value)}
-            />
-            
-            <Text style={styles.label}>Registration Date (if known)</Text>
-            {renderDatePicker('registrationDate')}
-            
-            <Text style={styles.label}>Search Period - From</Text>
-            {renderDatePicker('searchFrom')}
-            
-            <Text style={styles.label}>Search Period - To</Text>
-            {renderDatePicker('searchTo')}
-          </View>
-          
-          <View style={styles.formSection}>
-            <Text style={styles.sectionTitle}>4. Parents Details</Text>
-            <Text style={styles.label}>Father's Full Name</Text>
-            <TextInput
-              value={formData.fatherName}
-              placeholder="Father's Name"
-              style={styles.textInput}
-              onChangeText={(value) => updateFormData('fatherName', value)}
-            />
-            
-            <Text style={styles.label}>Mother's Full Name (maiden name)</Text>
-            <TextInput
-              value={formData.motherName}
-              placeholder="Mother's Name"
-              style={styles.textInput}
-              onChangeText={(value) => updateFormData('motherName', value)}
-            />
-          </View>
-          
-          <View style={styles.formSection}>
-            <Text style={styles.sectionTitle}>5. Fee Details</Text>
-            <View style={styles.radioContainer}>
-              <View style={styles.radioOption}>
-                <Switch
-                  value={formData.feeType === "120"}
-                  onValueChange={(value) => 
-                    updateFormData('feeType', value ? "120" : "250")
-                  }
-                />
-                <Text style={styles.radioLabel}>Rs. 120/- (Registration details known)</Text>
-              </View>
-              
-              <View style={styles.radioOption}>
-                <Switch
-                  value={formData.feeType === "250"}
-                  onValueChange={(value) => 
-                    updateFormData('feeType', value ? "250" : "120")
-                  }
-                />
-                <Text style={styles.radioLabel}>Rs. 250/- (Search required)</Text>
-              </View>
-            </View>
-            
-            <Text style={styles.label}>Amount to Pay</Text>
-            <Text style={styles.amount}>{calculateFee()}</Text>
-          </View>
-          
-          <View style={styles.formSection}>
-            <Text style={styles.sectionTitle}>6. Signature</Text>
-            <Text style={styles.label}>Application Date</Text>
-            {renderDatePicker('applicationDate')}
-            
-            <Text style={styles.label}>Signature (Type your name)</Text>
-            <TextInput
-              value={formData.signature}
-              placeholder="Type your name as signature"
-              style={styles.textInput}
-              onChangeText={(value) => updateFormData('signature', value)}
-            />
-          </View>
-          
-          <View style={styles.buttonContainer}>
-            <Button title="Generate PDF" onPress={generatePdf} />
-          </View>
-          
-          <StatusBar style="auto" />
+    <SafeAreaView style={{ flex: 1 }}>
+     <Background />
+        
+        <View style={styles.logo}>
+          <Image source={require("./assets/Logo.png")} style={styles.logoImage} />
         </View>
+        
+        <View style={styles.pickerContainer}>
+         <View style={styles.pickerWrapper}>  
+          <Picker
+            selectedValue={selectedDistrict}
+            style={styles.picker}
+            onValueChange={(itemValue) => setSelectedDistrict(itemValue)}
+          >
+            {districts.map((district, index) => (
+              <Picker.Item key={index} label={district} value={district} />
+            ))}
+          </Picker>
+
+          <View style={styles.chatbotContainer}>   
+          <TouchableOpacity style={styles.pickerChatbot} onPress={handleChatbotPress}>
+          <Image source={require('./assets/ChatBot_Icon.png')} style={styles.pickerChatbotImage} />
+          </TouchableOpacity>
+
+          {showTooltip && (
+              <Animated.View 
+                style={[
+                  styles.tooltip,
+                  {
+                    opacity: tooltipOpacity,
+                  }
+                ]}
+              >
+                <View style={styles.tooltipTriangle} />
+                <Text style={styles.tooltipText}>Hi! I'm here to help you!</Text>
+              </Animated.View>
+            )}
+
+        </View>
+        </View>
+        </View>
+
+        <ScrollView contentContainerStyle={styles.scrollView}>
+        
+        <View style={styles.buttonsContainer }textAlign='center'>
+        {/* <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("DivisionalCouncil")}>
+            <View style={styles.transparentBackground}>
+              <Text style={styles.buttonText}>DIVISIONAL COUNCIL</Text>
+            </View>
+          </TouchableOpacity> */}
+
+          {/* <TouchableOpacity style={styles.button} onPress={() => router.push("MunicipalCouncil")}>
+            <View style={styles.transparentBackground}>
+              <Text style={styles.buttonText}>MUNICIPAL COUNCIL</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => router.push("MunicipalCouncil")}>
+            <View style={styles.transparentBackground}>
+              <Text style={styles.buttonText}>CEYLON ELECTRICITY BOARD</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => router.push("MunicipalCouncil")}>
+            <View style={styles.transparentBackground}>
+              <Text style={styles.buttonText}>NATIONAL WATER SUPPLY & DRAINAGE BOARD</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => router.push("MunicipalCouncil")}>
+            <View style={styles.transparentBackground}>
+               <Text style={styles.buttonText}>LAW COURT</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => router.push("Municipal Council")}>
+             <View style={styles.transparentBackground}>
+               <Text style={styles.buttonText}>SRI LANKA POLICE</Text>
+             </View>
+          </TouchableOpacity> */}
+        </View>
+  
+        <Modal visible={isModalVisible} transparent={true} animationType="slide">
+          <View style={styles.modalContainer}>
+
+            <Animated.View style={[styles.modalContent, { transform: [{ scale }] }]}>
+              <View style={styles.Icons}>
+                <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
+                  <Icon name="close" size={12} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleZoom} style={styles.zoomIcon}>
+                  <Icon name="expand-outline" size={12} color="black" />
+                </TouchableOpacity>
+              </View>  
+              <Image source={require('./assets/ChatBot_Icon.png')} style={styles.modalImage} />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}> HIII THERE!!!! </Text>
+                <Text style={styles.subTitle}>Connect with me.. Save your time.. </Text>
+              </View>
+
+              {currentQuestion === null ? (
+                <View style={styles.Questions}>
+                  <Text style={styles.QEnglish}>Choose the language you want.</Text>
+                  <Text style={styles.QSinhala}>ඔබට අවශ්‍ය භාෂාව තෝරාගන්න.</Text>
+                  <Text style={styles.QTamil}>நீங்கள் விரும்பும் மொழியைத் தேர்ந்தெடுக்கவும்.</Text>
+
+                  <View style={styles.languageButtonsContainer}>
+                    <TouchableOpacity style={styles.languageButton} onPress={() => handleLanguageSelect('English')}>
+                      <Text style={styles.languageButtonText}>English</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.languageButton} onPress={() => handleLanguageSelect('Sinhala')}>
+                      <Text style={styles.languageButtonText}>සිංහල</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.languageButton} onPress={() => handleLanguageSelect('Tamil')}>
+                      <Text style={styles.languageButtonText}>தமிழ்</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ) : (
+                currentQuestion && (
+                 <ScrollView style={styles.scrollContainer}> 
+                  <View style={styles.Questions}>
+                    <Text style={styles.selectedQuestion}>{currentQuestion}</Text>
+                    
+                    {/* Display main services if no specific service is selected */}
+                    {!selectedService && 
+                    (currentQuestion === "Please select the service you need." || 
+                      currentQuestion === "ඔබට අවශ්‍ය සේවාව තෝරාගන්න." || 
+                      currentQuestion === "நீங்கள் தேவைப்படும் சேவையைத் தேர்ந்தெடுக்கவும்.") && (
+                      <View style={styles.servicesContainer}>
+                        {getCurrentServices().map((service, index) => (
+                            <TouchableOpacity 
+                              key={index} 
+                              style={styles.serviceButton}
+                              onPress={() => handleServiceSelect(index)}
+                            >
+                              <Text style={styles.serviceButtonText}>{service}</Text>
+                            </TouchableOpacity>
+                          ))}
+                      </View>
+                    )}
+
+                    {/* Display civil registration services based on the selected language  */}
+                    {selectedService === "civil" && (
+                        <View style={styles.servicesContainer}>
+                          {getCivilRegistrationServices().map((service, index) => (
+                            <TouchableOpacity 
+                              key={index} 
+                              style={styles.serviceButton}
+                            >
+                              <Text style={styles.serviceButtonText}>{service}</Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      )}
+
+                    {/* NEW: Display permit services based on the selected language */}
+                    {selectedService === "permit" && (
+                        <View style={styles.servicesContainer}>
+                          {getPermitServices().map((service, index) => (
+                            <TouchableOpacity 
+                              key={index} 
+                              style={styles.serviceButton}
+                            >
+                              <Text style={styles.serviceButtonText}>{service}</Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                    )}  
+
+
+                  </View>
+                 </ScrollView> 
+                )
+              )}
+              
+
+              {questionHistory.length > 0 && (
+                <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+                  <Icon name="arrow-back" size={12} color="white" />
+                </TouchableOpacity>
+              )}
+            </Animated.View>
+          </View>
+        </Modal>
       </ScrollView>
+     
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  background: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
   },
   scrollView: {
-    flex: 1,
+    flexGrow: 1,
+    justifyContent: 'space-between',
   },
-  container: {
-    flex: 1,
-    padding: 20,
+  logo: {
+    alignItems: 'center',
   },
-  header: {
-    fontSize: 24,
+  logoImage: {
+    width: width * 0.5,
+    height: height * 0.2,
+    resizeMode: 'contain',
+    marginTop: height * 0.03,
+    marginBottom: height * 0.01,
+    alignItems: 'center',
+  },
+  picker: {
+    height: 50,
+    width: width * 0.6,
+    backgroundColor: '#ffffff',
+    borderColor: '#000000',
+    borderWidth: 1,
+    borderRadius: 30,
+    marginTop: -25,
+    marginLeft: 45,
+  },
+  pickerContainer: {
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  pickerWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: width * 0.8,
+  },
+  pickerChatbot: {
+    marginLeft: 28,
+  },
+  pickerChatbotImage: {
+    width: 48,
+    height: 48,
+    resizeMode: 'contain',
+  },
+  buttonsContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    marginBottom: height * 0.01,
+    marginTop: height * 0.01,
+    borderRadius: 50,
+    alignItems: 'center',
+  },
+  button: {
+    height: height * 0.20,
+    margin: 10,
+    borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
+    flex: 1,
+    marginHorizontal: 5,
+    marginBottom: 10,
+    marginTop: 10,
+    borderRadius: 50,
+    width: 360,
+    justifyContent: 'center', 
+  },
+  buttonBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: width * 0.8,
+    borderRadius: 50,
+    textAlign:'center',
+  },
+  buttonText: {
+    fontSize: width * 0.05,
+    color: '#283747',
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 20,
-    color: '#333',
+    textAlignVertical: 'center',
+    alignItems: 'center',
+  
   },
-  formSection: {
-    backgroundColor: '#fff',
+  transparentBackground: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)', // Adjust the transparency as needed
+    borderRadius: 30,
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    width: '100%',
+  },
+  Chatbot: {
+    resizeMode: 'contain',
+    height: height * 0.1,
+    width: width * 0.5,
+  },
+  chatbotImage: {
+    height: height * 0.1,
+    width: width * 0.5,
+    resizeMode: 'contain',
+    marginTop: 5,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
     borderRadius: 10,
-    padding: 15,
-    marginBottom: 20,
-    shadowColor: "#000",
+    alignItems: 'center',
+    height: height * 0.67,
+    width: width * 0.68,
+  },
+  modalImage: {
+    width: width * 0.15,
+    height: height * 0.1,
+    resizeMode: 'contain',
+    marginTop: 1,
+  },
+ 
+  title: {
+    fontSize: width * 0.06,
+    textAlign: 'center',
+    fontStyle: 'normal',
+    color: 'orange',
+    fontWeight: "bold",
+  },
+  subTitle: {
+    fontSize: width * 0.03,
+    color: 'grey',
+    fontStyle: 'italic',
+    fontWeight: "bold",
+  },
+  Questions: {
+    alignItems: 'center',
+    marginTop: 22,
+    marginBottom: 4,
+  },
+  QEnglish: {
+    fontSize: 11,
+    marginRight: 19,
+  },
+  QSinhala: {
+    marginTop: 4,
+    fontSize: 11,
+  },
+  QTamil: {
+    marginTop: 4,
+    fontSize: 11,
+  },   
+  selectedQuestion: {
+    fontSize: 11, 
+    marginTop: 4,  
+  }, 
+  languageButtonsContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginTop: 10,
+    alignItems: 'center', // Add this
+  width: '100%', // Add this
+  },
+  languageButton: {
+    backgroundColor: 'black',
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 60,
+    marginHorizontal: 100,
+    width:'80%',
+    marginTop: 7,
+  },
+  languageButtonText: {
+    color: 'white',
+    fontSize: width * 0.04,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  closeButton: {
+    backgroundColor: '#FF4D4F', // Red close button
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 28,
+    height: 28,
+    marginRight: 30,
+  },
+  zoomIcon: {
+    backgroundColor: '#4CAF50', // Green expand button
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 28,
+    height: 28,
+  },
+  Icons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#4CAF50',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 50,
+    marginTop: 2,
+  },
+  serviceButtonText: {
+    color: 'white',
+    fontSize: 9.5,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  }, 
+  serviceButton: {
+    backgroundColor: 'black',
+    borderRadius: 5,
+     paddingVertical: 9,
+
+    width: width * 0.5,
+    marginTop: 4,
+    
+    
+  },
+  chatbotContainer: {
+    position: 'relative',
+    marginLeft: 2,
+  },
+  tooltip: {
+    position: 'absolute',
+    backgroundColor: '#00004B',
+    padding: 10,
+    borderRadius: 8,
+    width: width * 0.4,
+    right: width * 0.05,
+    top: -height * 0.06,
+    zIndex: 1000,
+    elevation: 5,
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
   },
-  sectionTitle: {
-    fontSize: 18,
+  tooltipText: {
+    color: 'white',
+    fontSize: width * 0.035,
     fontWeight: 'bold',
-    marginBottom: 15,
-    color: '#333',
+    textAlign: 'center',
   },
-  label: {
-    fontSize: 16,
-    marginBottom: 5,
-    color: '#555',
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 15,
-    backgroundColor: '#f9f9f9',
-  },
-  textArea: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 15,
-    backgroundColor: '#f9f9f9',
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    marginBottom: 15,
-    backgroundColor: '#f9f9f9',
-  },
-  picker: {
-    height: 50,
-    width: '100%',
-  },
-  datePickerButton: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 12,
-    marginBottom: 15,
-    backgroundColor: '#f9f9f9',
-  },
-  dateText: {
-    color: '#333',
-  },
-  radioContainer: {
-    marginBottom: 15,
-  },
-  radioOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  radioLabel: {
-    marginLeft: 10,
-    fontSize: 16,
-    color: '#333',
-  },
-  amount: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 15,
-  },
-  buttonContainer: {
-    marginTop: 20,
-    marginBottom: 40,
+  tooltipTriangle: {
+    position: 'absolute',
+    bottom: -10,
+    right: 20,
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderBottomWidth: 0,
+    borderTopWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#00004B',
+    transform: [{ rotate: '180deg' }],
   },
 });

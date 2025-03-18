@@ -1,20 +1,18 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+
 import { createStackNavigator } from '@react-navigation/stack';
-import NavigationBar from './NavigationBar';
-import MenuOptions from './UpdatedMenuOptions';
-import BirthCertificate from './BirthCertificate'
+import { NavigationContainer } from '@react-navigation/native';
+import DivisionalCouncil from './DivisionalCouncil'; // Import the DivisionalCouncil component
 
 const Stack = createStackNavigator();
 
-export default function App() {
-  return(
+function App() {
+  return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="MenuOptions">
-        <Stack.Screen name="MenuOptions" component={MenuOptions} />
-        <Stack.Screen name="Municipal Council" component={MunicipalCouncil} />
-        <Stack.Screen name="Birth Certificate" component={BirthCertificate} />
+      <Stack.Navigator initialRouteName="DivisionalCouncil">
+        <Stack.Screen name="DivisionalCouncil" component={DivisionalCouncil} /> {/* Register the DivisionalCouncil screen */}
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+export default App;
