@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Animated, Image, Vibration } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { 
+  View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity, 
+  Animated, Vibration 
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Lock = () => {
-  const [username, setUsername] = useState(''); // Example username
   const [passcode, setPasscode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [fadeAnim] = useState(new Animated.Value(0)); // Fade effect for card
+  const [fadeAnim] = useState(new Animated.Value(0));
 
-  // Fade in effect on component mount
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
@@ -19,79 +21,50 @@ const Lock = () => {
   const handleNumberPress = (number) => {
     if (passcode.length < 6) {
       setPasscode((prev) => prev + number);
-      setErrorMessage(''); // Clear error message if any
+      setErrorMessage('');
     } else {
       setErrorMessage('Passcode cannot be more than 6 digits');
-      Vibration.vibrate(); // Vibrate on error
-      //setPasscode(''); // Clear passcode
+      Vibration.vibrate();
     }
   };
 
   const handleDeletePress = () => {
     setPasscode((prev) => prev.slice(0, -1));
-    setErrorMessage(''); // Clear error message if any
+    setErrorMessage('');
   };
 
-  const handleLogin = () => {
-    // Example passcode for demonstration
-    const correctPasscode = '123456';
+  const handleLogin = async () => {
+    const correctPasscode = await AsyncStorage.getItem('userPin') || '123456';
     if (passcode === correctPasscode) {
       console.log('Passcode:', passcode);
       setPasscode('');
-      setErrorMessage(''); // Clear error message on successful login
+      setErrorMessage('');
     } else {
       setErrorMessage('Incorrect passcode');
-      Vibration.vibrate(); // Vibrate on incorrect passcode
-      setPasscode(''); // Clear passcode
+      Vibration.vibrate();
+      setPasscode('');
     }
   };
 
-  var Lock = {
-    showLockScreen: function(message) {
-        return new Promise((resolve, reject) => {
-            const pin = prompt(message); // Replace with actual lock screen implementation
-            if (pin) {
-                resolve(pin);
-            } else {
-                reject(new Error("No pin entered"));
-            }
-        });
-    },
-
-    setPin: function(pin) {
-        return new Promise((resolve, reject) => {
-            // Simulate saving the pin
-            localStorage.setItem('userPin', pin);
-            resolve();
-        });
-    }
-};
-
   const renderPasscodeDots = () => {
-    const dots = [];
-    for (let i = 0; i < 6; i++) {
-      dots.push(
-        <View
-          key={i}
-          style={[
-            styles.passcodeDot,
-            { backgroundColor: i < passcode.length ? '#FFD700' : 'transparent' },
-          ]}
-        />
-      );
-    }
-    return dots;
+    return Array.from({ length: 6 }).map((_, i) => (
+      <View
+        key={i}
+        style={[
+          styles.passcodeDot,
+          { backgroundColor: i < passcode.length ? '#FFD700' : 'transparent' },
+        ]}
+      />
+    ));
   };
 
   return (
-    <ImageBackground
-      source={require('./assets/ABC.jpg')}
-      style={styles.backgroundImage}
-      resizeMode="cover"
-    >
+    <ImageBackground source={require('./assets/ABC.jpg')} style={styles.backgroundImage} resizeMode="cover">
       <View style={styles.container}>
-        <Image source={require('./assets/Logo.png')} style={styles.logo} />
-        <Text style={styles.username}>{username}</Text>
+        
+        {/* Logo at the top */}
+        <Image source={require('./assets/logo.png')} style={styles.logo} />
+        
         <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
           <Text style={styles.title}>Enter Passcode</Text>
           <View style={styles.passcodeContainer}>{renderPasscodeDots()}</View>
@@ -117,101 +90,22 @@ const Lock = () => {
 };
 
 const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    padding: 20,
-  },
-  logo: {
-    width: 200,
-    height: 100,
-    
-  },
-  welcome: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  username: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 20,
-  },
-  card: {
-    backgroundColor: 'transparent',
-    padding: 25,
-    borderRadius: 15,
-    elevation: 6,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 20,
-  },
-  passcodeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '80%',
-    marginBottom: 20,
-  },
-  passcodeDot: {
-    width: 15,
-    height: 15,
-    borderRadius: 7.5,
-    borderWidth: 1,
-    borderColor: '#FFD700',
-  },
-  errorText: {
-    color: 'red',
-    marginTop: 10,
-  },
-  numberPad: {
-    marginTop: 20,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  numberButton: {
-    width: 80,
-    height: 80,
-    margin: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  numberButtonText: {
-    fontSize: 20,
-    color: '#FFD700',
-    fontWeight: 'bold',
-  },
-  button: {
-    backgroundColor: '#FFD700',
-    borderRadius: 50, 
-    paddingVertical: 20,
-    marginTop: 20,
-    width: 300,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 5,
-  },
-  buttonText: {
-    fontSize: 20,
-    color: '#000',
-    fontWeight: 'bold',
-  },
+  backgroundImage: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', padding: 20 },
+
+  // Logo style
+  logo: { width: 100, height: 100, marginBottom: 20 },
+
+  card: { backgroundColor: 'transparent', padding: 25, borderRadius: 15, elevation: 6, alignItems: 'center' },
+  title: { fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 20 },
+  passcodeContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '80%', marginBottom: 20 },
+  passcodeDot: { width: 15, height: 15, borderRadius: 7.5, borderWidth: 1, borderColor: '#FFD700' },
+  errorText: { color: 'red', marginTop: 10 },
+  numberPad: { marginTop: 20, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' },
+  numberButton: { width: 80, height: 80, margin: 10, backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: 50, alignItems: 'center', justifyContent: 'center' },
+  numberButtonText: { fontSize: 20, color: '#FFD700', fontWeight: 'bold' },
+  button: { backgroundColor: '#FFD700', borderRadius: 50, paddingVertical: 20, marginTop: 20, width: 300, alignItems: 'center', justifyContent: 'center', elevation: 5 },
+  buttonText: { fontSize: 20, color: '#000', fontWeight: 'bold' },
 });
 
 export default Lock;

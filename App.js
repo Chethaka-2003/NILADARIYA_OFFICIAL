@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, Switch, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
+import Lock from './Lock';
 
 export default function App() {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -16,6 +17,7 @@ export default function App() {
       resizeMode="cover"
     >
       <View style={styles.container}>
+        <Lock />
         {/* Government Logo */}
         <Image
           style={styles.logo}
@@ -134,4 +136,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff', // White text
   },
+  container: { flex: 1 },
 });
