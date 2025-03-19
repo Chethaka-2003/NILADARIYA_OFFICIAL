@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import ChangePassword from './Security';
+import Password from './Security';
 
 const ChangePassword = ({ navigation }) => {
   useEffect(() => {
@@ -14,7 +14,9 @@ const ChangePassword = ({ navigation }) => {
     return () => clearTimeout(timer);
   }, [navigation]);
 
+    
   return (
+    
     <View style={styles.container}>
       <View style={styles.whiteContainer}>
         <Icon name="check-circle" size={100} color="#4CAF50" />
@@ -51,4 +53,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChangePassword;
+export default Password;

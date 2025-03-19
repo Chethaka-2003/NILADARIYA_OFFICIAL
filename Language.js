@@ -3,10 +3,10 @@ import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, TextInput 
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import CustomLottieAlert from './screens/Alert';
-import successAnimation from './assets/Done1.json';
+import CustomLottieAlert from '../Alerts/CustomLottieAlert';
+
 import axios from 'axios';
-import Background from "./GradientBackground";
+import Background from "../Required/GradientBackground";
 const Language = ({ navigation, userId }) => {
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [error, setError] = useState(null);
@@ -15,7 +15,7 @@ const Language = ({ navigation, userId }) => {
     // Fetch the current language when the component loads
     const fetchLanguage = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/user/${userId}/language`);
+        const response = await axios.get(`http://localhost:5001/api/user/${userId}/language`);
         setSelectedLanguage(response.data.language || 'English'); // Default to 'English' if no data
       } catch (error) {
         console.error("Error fetching language:", error);
@@ -31,7 +31,7 @@ const Language = ({ navigation, userId }) => {
       setSelectedLanguage(language); // Update UI immediately
 
       // Send the selected language to the backend
-      await axios.put(`http://localhost:4000/api/user/${userId}/language`, {
+      await axios.put(`http://localhost:5001/api/user/${userId}/language`, {
         language,
       });
 

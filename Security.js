@@ -3,9 +3,9 @@ import { ImageBackground, View, Text, TouchableOpacity, StyleSheet, TextInput, S
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import CustomLottieAlert from './screens/Alert';
-import successAnimation from './assets/done.json';
-import Background from "./GradientBackground";
+import CustomLottieAlert from '../Alerts/CustomLottieAlert';
+import Background from "../Required/GradientBackground";
+import axios from 'axios'; // Import axios
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,20 +24,36 @@ export default function ChangePassword() {
   const [alertMessage, setAlertMessage] = useState('');
   const [lottieAlertVisible, setLottieAlertVisible] = useState(false);
 
-
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
       alert("New passwords don't match!");
       return;
     }
-    setAlertTitle('Success');
-    setAlertMessage('Password changed successfully');
-    setLottieAlertVisible(true);
-
+  
+    // Get the current email (ensure you have it from the user context or input)
+    const email = "user_email"; 
+    // Make a request to your backend
+    try {
+      const response = await axios.post('http://your-backend-url.com/verify-password-otp', {
+        email, // Email of the user
+        otp: 'otp_from_user', // OTP received from the user, this should be stored somewhere in your app
+        newPassword, // New password entered by the user
+      });
+  
+      if (response.data.status === 'OK') {
+        setAlertTitle('Success');
+        setAlertMessage('Password changed successfully');
+        setLottieAlertVisible(true);
+      } else {
+        alert('Error: ' + response.data.error);
+      }
+    } catch (error) {
+      console.error("Error changing password:", error);
+      alert("Something went wrong. Please try again.");
+    }
   };
-
 
   return (
     <View style={styles.container1}>
@@ -68,7 +84,6 @@ export default function ChangePassword() {
 
             {/* Current Password Input */}
             <View style={styles.inputContainer}>
-
               <TextInput
                 style={styles.input}
                 placeholder="Current Password"
@@ -129,7 +144,6 @@ export default function ChangePassword() {
     </View>
   );
 }
-
 
 
 const styles = StyleSheet.create({

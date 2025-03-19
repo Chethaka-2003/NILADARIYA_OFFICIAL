@@ -3,10 +3,9 @@ import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, TextInput 
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import CustomLottieAlert from './screens/Alert';
-import successAnimation from './assets/Done1.json';
+import CustomLottieAlert from '../Alerts/CustomLottieAlert';
 import axios from 'axios';
-import Background from "./GradientBackground";
+import Background from "../Required/GradientBackground";
 
 const RateUs = ({ navigation }) => {
   const [rating, setRating] = useState(0);
@@ -17,7 +16,7 @@ const RateUs = ({ navigation }) => {
   const handleSubmit = async () => {
     try {
       // Replace '12345' with the actual user ID
-      const response = await axios.post('http://localhost:4000/api/feedback/submit', {
+      const response = await axios.post('http://localhost:5001/api/feedback/submit', {
         userId: '12345', // replace with actual user ID
         rating: rating,
         feedbackText: feedback,

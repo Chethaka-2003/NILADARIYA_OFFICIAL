@@ -23,7 +23,7 @@ export default function SettingsPg({ navigation }) {
     const fetchNotificationSetting = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/user/${userId}` // Replace USER_ID dynamically
+          `http://localhost:5001/api/user/${userId}` // Replace USER_ID dynamically
         );
         setIsNotificationsEnabled(response.data.notificationsEnabled);
       } catch (error) {
