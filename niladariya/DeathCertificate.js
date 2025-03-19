@@ -1,9 +1,8 @@
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView, SafeAreaView, Switch, Platform } from 'react-native';
-import { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, ScrollView, SafeAreaView, Switch, Button } from 'react-native';
 import { printToFileAsync } from 'expo-print';
 import { shareAsync } from 'expo-sharing';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 
 export default function App() {
@@ -14,28 +13,19 @@ export default function App() {
     fullName: "",
     sex: "",
     copies: "1",
-    birthDate: new Date(),
+    birthDate: "",
     birthPlace: "",
     registrarDivision: "",
     revenueDistrict: "",
     registrationNo: "",
-    registrationDate: new Date(),
-    searchFrom: new Date(),
-    searchTo: new Date(),
+    registrationDate: "",
+    searchFrom: "",
+    searchTo: "",
     fatherName: "",
     motherName: "",
     feeType: "120",
-    applicationDate: new Date(),
+    applicationDate: "",
     signature: ""
-  });
-
-  // Date picker visibility state
-  const [showDatePicker, setShowDatePicker] = useState({
-    birthDate: false,
-    registrationDate: false,
-    searchFrom: false,
-    searchTo: false,
-    applicationDate: false
   });
 
   // Update form data
@@ -52,349 +42,232 @@ export default function App() {
     return `Rs. ${fee}/-`;
   };
 
-  // Show date picker
-  const showPicker = (pickerName) => {
-    setShowDatePicker(prevState => ({
-      ...prevState,
-      [pickerName]: true
-    }));
-  };
-
-  // Handle date change
-  const onDateChange = (event, selectedDate, pickerName) => {
-    if (Platform.OS === 'android') {
-      setShowDatePicker(prevState => ({
-        ...prevState,
-        [pickerName]: false
-      }));
-    }
-    
-    if (selectedDate) {
-      updateFormData(pickerName, selectedDate);
-    }
-  };
-
-  // Format date for display
-  const formatDate = (date) => {
-    return date.toISOString().split('T')[0];
-  };
-
   // Generate HTML with form data
   const generateHtml = () => {
-    return `
-    <!DOCTYPE html>
+    return `<!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Application for Birth Certificate and/or Search of Registers</title>
-    <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .logo {
-      width: 80px;
-      height: 80px;
-      background-color: #f0f0f0;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 20px;
-    }
-    .title {
-      flex: 1;
-      text-align: center;
-    }
-    .form-instruction {
-      font-style: italic;
-      margin-bottom: 20px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    th, td {
-      border: 1px solid #333;
-      padding: 8px;
-      vertical-align: top;
-    }
-    .office-use {
-      float: right;
-      border: 1px solid #333;
-      padding: 10px;
-      width: 200px;
-      text-align: center;
-      margin-left: 10px;
-    }
-    .multilingual {
-      font-size: 0.8em;
-      color: #666;
-    }
-    .fees {
-      font-size: 0.9em;
-    }
-    input[type="text"],
-    input[type="date"],
-    input[type="number"],
-    select {
-      width: 95%;
-      padding: 8px;
-      margin: 5px 0;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    .input-field {
-      min-height: 40px;
-    }
-    .date-input {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .submit-btn {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-    .submit-btn:hover {
-      background-color: #45a049;
-    }
-    </style>
+      <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { display: flex; align-items: center; margin-bottom: 20px; }
+        .logo { width: 80px; height: 80px; background-color: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; }
+        .title { flex: 1; text-align: center; }
+        .form-instruction { font-style: italic; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #333; padding: 8px; vertical-align: top; }
+        .office-use { float: right; border: 1px solid #333; padding: 10px; width: 200px; text-align: center; margin-left: 10px; }
+        .multilingual { font-size: 0.8em; color: #666; }
+        .fees { font-size: 0.9em; }
+        input[type="text"], input[type="date"], input[type="number"], select { width: 95%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; }
+        .input-field { min-height: 40px; }
+        .date-input { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; }
+        .submit-btn { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 20px; }
+        .submit-btn:hover { background-color: #45a049; }
+      </style>
     </head>
     <body>
-    <div class="header">
-    <div class="logo">
-      <img src="/api/placeholder/80/80" alt="Government Emblem" />
-    </div>
-    <div class="title">
-      <h2>APPLICATION FOR BIRTH CERTIFICATE AND/OR SEARCH OF REGISTERS</h2>
-      <p class="multilingual">ජනනපත්‍ර සහතිකයක් ලබාගැනීම සඳහා / තොරතුරාන්</p>
-      <p class="multilingual">பிறப்பு சான்றிதழுக்கும் அல்லது பதிவேடுகளைத் தேடுவதற்குமான விண்ணப்பம்</p>
-    </div>
-    <div class="office-use">
-      <p>FOR OFFICE USE ONLY</p>
-      <p class="multilingual">කාර්යාලයේ ප්‍රයෝජනය සඳහා පමණි</p>
-      <p class="multilingual">அலுவலக உபயோகத்திற்கு மட்டும்</p>
-      <hr>
-      <p>Application No. and Date</p>
-      <p>................................</p>
-    </div>
-    </div>
- 
-  <div class="form-instruction">
-    <p>To be sent to the Office of the District Registrar of the Divisional Secretariat in which the birth occurred.</p>
-    <p class="multilingual">මෙය මිය යූ ලංකාවේ තිබෙන අමාත්‍යාංශයේ දිස්ත්‍රික් ලේකම්වරයා වෙත යැවිය යුතුය.</p>
-    <p class="multilingual">பிறப்பு நிகழ்ந்த இடத்தில் உள்ள பிரதேச செயலகத்தின் மாவட்டப் பதிவாளரின் அலுவலகத்திற்கு அனுப்ப வேண்டும்.</p>
-  </div>
- 
-  <form id="birthCertificateForm">
-    <table>
-      <tr>
-        <td width="40%">
-          1. <strong>Name of Applicant and Address</strong>
-          <p class="multilingual">අයදුම්කරුගේ නම සහ ලිපිනය</p>
-          <p class="multilingual">விண்ணப்பதாரரின் பெயரும் முகவரியும்</p>
-        </td>
-        <td colspan="2" class="input-field">
-          <input type="text" value="${formData.applicantName}" disabled>
-          <textarea disabled>${formData.applicantAddress}</textarea>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          2. <strong>Full name of person respecting whose birth application is made?</strong>
-          <p class="multilingual">අයදුම්කරුගේ නම්වල දක්වාතිබෙන පැණය? දින අංකය ලිපිනය</p>
-          <p class="multilingual">யாருடைய பிறப்புக்கான விண்ணப்பம் செய்யப்படுகிறது அவரது பெயர்</p>
-        </td>
-        <td>
-          <strong>Sex</strong>
-          <p class="multilingual">ස්ත්‍රී පුරුෂ භාවය</p>
-          <p class="multilingual">பால்</p>
-          <select id="sex" name="sex" disabled>
-            <option value="${formData.sex}">${formData.sex}</option>
-          </select>
-        </td>
-        <td>
-          <strong>No. of Copies required</strong>
-          <p class="multilingual">අවශ්‍ය පිටපත් ගණන</p>
-          <p class="multilingual">தேவைப்படும் பிரதிகளின் எண்ணிக்கை</p>
-          <input type="number" id="copies" name="copies" value="${formData.copies}" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <input type="text" id="fullName" name="fullName" value="${formData.fullName}" disabled>
-        </td>
-        <td colspan="2"></td>
-      </tr>
-      <tr>
-        <td>
-          3. <strong>Date of Birth</strong>
-          <p class="multilingual">උපන්දිනය</p>
-          <p class="multilingual">பிறந்த திகதி</p>
-          <input type="date" id="birthDate" name="birthDate" value="${formatDate(formData.birthDate)}" disabled>
-        </td>
-        <td colspan="2">
-          <strong>Place of occurrence (Hospital, House No. and Street, Town or Village of Name of Estate)</strong>
-          <p class="multilingual">උපන් ස්ථානය (රෝහල, ගෘහ අංකය සහ වීදිය කොටඨාශය, ගම)</p>
-          <p class="multilingual">பிறந்த இடம் (வைத்தியசாலை, வீட்டு இலக்கம், தெரு, நகர், கிராமம் அல்லது தோட்டப்பெயர்)</p>
-          <textarea id="birthPlace" name="birthPlace" disabled>${formData.birthPlace}</textarea>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          4. <strong>Registrar's Division</strong>
-          <p class="multilingual">රෙජිස්ට්‍රාර්ගේ කොට්ඨාශය</p>
-          <p class="multilingual">பதிவாளர் பிரிவு</p>
-          <input type="text" id="registrarDivision" name="registrarDivision" value="${formData.registrarDivision}" disabled>
-        </td>
-        <td colspan="2">
-          <strong>Revenue District</strong>
-          <p class="multilingual">ආදායම් දිස්ත්‍රික්කය</p>
-          <p class="multilingual">இறைவரி மாவட்டம்</p>
-          <input type="text" id="revenueDistrict" name="revenueDistrict" value="${formData.revenueDistrict}" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          5. <strong>No. and date of Registration Entry (If known)</strong>
-          <p class="multilingual">ලියාපදිංචි අංකය සහ දිනය(දැන් තිබේ නම්)</p>
-          <p class="multilingual">பதிவு இலக்கமும் திகதியும் (தெரிந்திருப்பின்)</p>
-          <div style="display: flex; gap: 10px;">
-            <input type="text" id="registrationNo" name="registrationNo" value="${formData.registrationNo}" disabled style="width: 45%;">
-            <input type="date" id="registrationDate" name="registrationDate" value="${formatDate(formData.registrationDate)}" disabled style="width: 45%;">
-          </div>
-        </td>
-        <td colspan="2">
-          <strong>Period of search desired, if any. (The maximum period of search is limited to 2 years.)</strong>
-          <p class="multilingual">සොයා බැලීම අවශ්‍ය කාල කොපමණ කාලයක් ද?(උපරිම කාලය වසර 2 දක්වා සීමා කර ඇත.)</p>
-          <p class="multilingual">தேடல் தேவைப்படும் காலம் ஏதேனும் (அதிகபட்ச தேடல் காலம் 2 வருடங்களுக்கு மட்டுப்படுத்தப்பட்டுள்ளது.)</p>
-          <div style="display: flex; gap: 10px;">
-            <div style="width: 45%;">
-              <label for="searchFrom">From:</label>
-              <input type="date" id="searchFrom" name="searchFrom" value="${formatDate(formData.searchFrom)}" disabled>
-            </div>
-            <div style="width: 45%;">
-              <label for="searchTo">To:</label>
-              <input type="date" id="searchTo" name="searchTo" value="${formatDate(formData.searchTo)}" disabled>
-            </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          6. <strong>Father's Full Name</strong>
-          <p class="multilingual">පියාගේ සම්පූර්ණ නම</p>
-          <p class="multilingual">தந்தையின் முழுப்பெயர்</p>
-        </td>
-        <td colspan="2">
-          <input type="text" id="fatherName" name="fatherName" value="${formData.fatherName}" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          7. <strong>Mother's Full Name (maiden name)</strong>
-          <p class="multilingual">මවගේ සම්පූර්ණ නම (විවාහයට පෙර)</p>
-          <p class="multilingual">தாயாரின் முழுப்பெயர் (கன்னிப் பெயர்)</p>
-        </td>
-        <td colspan="2">
-          <input type="text" id="motherName" name="motherName" value="${formData.motherName}" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          8. <strong>Amount of money paid for charges</strong>
-          <p class="multilingual">ගාස්තුව වශයෙන් ගෙවන ලද මුදල</p>
-          <p class="multilingual">கட்டணங்களுக்காக கொடுப்பனவாக செலுத்தப்பட்ட பணத்தொகை</p>
-          <input type="text" id="amountPaid" name="amountPaid" value="${calculateFee()}" disabled>
-        </td>
-        <td>
-          <strong>Where the date of registration or the No. of the entry is given the fee for one copy of the certificate is Rs. 120/-</strong>
-          <p class="multilingual">ලියාපදිංචි කිරීමේ දිනය හෝ අංකය දී ඇති විට සහතික එක පිටපතක ගාස්තුව රු. 120/-</p>
-          <p class="multilingual">பதிவு திகதி அல்லது பதிவுப் பதிவின் இல. தரப்பட்டிருந்தால் ஒரு பிரதிக்கான கட்டணம் ரூபா 120/-</p>
-          <div>
-            <input type="radio" id="fee120" name="feeType" value="120" ${formData.feeType === "120" ? "checked" : ""} disabled>
-            <label for="fee120">Rs. 120/- per copy</label>
-          </div>
-        </td>
-        <td>
-          <strong>Where the date of registration or the No. of the entry is not given and a search of registers not exceeding two years is involved fee for one copy of the certificate is Rs. 250/-</strong>
-          <p class="multilingual">ලියාපදිංචි කල දිනය හෝ අංකය දී නැති විට වසර 2 කට නොවැඩි කාලයක් සඳහා ලේඛන පරීක්ෂා කර සහතිකයක එක පිටපතකට රු. 250/-</p>
-          <p class="multilingual">பதிவுத் திகதி அல்லது பதிவின் இல. தரப்படாமல் 2 வருடங்களை விஞ்சாத காலப்பகுதிக்குரிய பதிவேடுகளைத் தேடவேண்டியிருந்தால் ஒரு பிரதிக்கான கட்டணம் ரூபா 250/-</p>
-          <div>
-            <input type="radio" id="fee250" name="feeType" value="250" ${formData.feeType === "250" ? "checked" : ""} disabled>
-            <label for="fee250">Rs. 250/- per copy</label>
-          </div>
-        </td>
-      </tr>
-    </table>
-   
-    <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
-      <div>
-        <label for="applicationDate">දිනය/திகதி/Date:</label>
-        <input type="date" id="applicationDate" name="applicationDate" value="${formatDate(formData.applicationDate)}" disabled style="width: 150px;">
+      <div class="header">
+        <div class="logo">
+          <img src="/api/placeholder/80/80" alt="Government Emblem" />
+        </div>
+        <div class="title">
+          <h2>APPLICATION FOR BIRTH CERTIFICATE AND/OR SEARCH OF REGISTERS</h2>
+          <p class="multilingual">උප්පැන්න සහතිකයක් ගැනීමේ සහ / නොහොත් ලේකම් පොත් සොයා බැලීමේ </p>
+          <p class="multilingual">பிறப்பு சான்றிதழுக்கும் அல்லது பதிவேடுகளைத் தேடுவதற்குமான விண்ணப்பம்</p>
+        </div>
+        <div class="office-use">
+          <p>FOR OFFICE USE ONLY</p>
+          <p class="multilingual">කාර්යාලයේ ප්‍රයෝජනය සඳහා පමණි</p>
+          <p class="multilingual">அலுவலக உபயோகத்திற்கு மட்டும்</p>
+          <hr>
+          <p>Application No. and Date</p>
+          <p>................................</p>
+        </div>
       </div>
-      <div>
-        <label for="signature">Signature:</label>
-        <input type="text" id="signature" name="signature" value="${formData.signature}" disabled style="width: 250px;">
+      <div class="form-instruction">
+        <p>To be sent to the Office of the District Registrar of the Divisional Secretariat in which the birth occurred.</p>
+        <p class="multilingual">මෙය මිය යූ ලංකාවේ තිබෙන අමාත්‍යාංශයේ දිස්ත්‍රික් ලේකම්වරයා වෙත යැවිය යුතුය.</p>
+        <p class="multilingual">பிறப்பு நிகழ்ந்த இடத்தில் உள்ள பிரதேச செயலகத்தின் மாவட்டப் பதிவாளரின் அலுவலகத்திற்கு அனுப்ப வேண்டும்.</p>
       </div>
-    </div>
-  </form>
- 
-  <div style="margin-top: 80px; font-size: 0.7em; color: #666; text-align: center;">
-    <p>H.04/2024 - 500,000 (2022/01) ©️ කොළඹ රජයේ මුද්‍රණ දෙපාර්තමේන්තුව</p>
-  </div>
-</body>
-</html>
-    `;
+      <form id="birthCertificateForm">
+        <table>
+          <tr>
+            <td width="40%">
+              1. <strong>Name of Applicant and Address</strong>
+              <p class="multilingual">අයදුම්කරුගේ නම සහ ලිපිනය</p>
+              <p class="multilingual">விண்ணப்பதாரரின் பெயரும் முகவரியும்</p>
+            </td>
+            <td colspan="2" class="input-field">
+              <input type="text" value="${formData.applicantName}" disabled>
+              <textarea disabled>${formData.applicantAddress}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              2. <strong>Full name of person respecting whose birth application is made?</strong>
+              <p class="multilingual">අයදුම්කරුගේ නම්වල දක්වාතිබෙන පැණය? දින අංකය ලිපිනය</p>
+              <p class="multilingual">யாருடைய பிறப்புக்கான விண்ணப்பம் செய்யப்படுகிறது அவரது பெயர்</p>
+            </td>
+            <td>
+              <strong>Sex</strong>
+              <p class="multilingual">ස්ත්‍රී පුරුෂ භාවය</p>
+              <p class="multilingual">பால்</p>
+              <select id="sex" name="sex" disabled>
+                <option value="${formData.sex}">${formData.sex}</option>
+              </select>
+            </td>
+            <td>
+              <strong>No. of Copies required</strong>
+              <p class="multilingual">අවශ්‍ය පිටපත් ගණන</p>
+              <p class="multilingual">தேவைப்படும் பிரதிகளின் எண்ணிக்கை</p>
+              <input type="number" id="copies" name="copies" value="${formData.copies}" disabled>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="text" id="fullName" name="fullName" value="${formData.fullName}" disabled>
+            </td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td>
+              3. <strong>Date of Birth</strong>
+              <p class="multilingual">උපන්දිනය</p>
+              <p class="multilingual">பிறந்த திகதி</p>
+              <input type="text" id="birthDate" name="birthDate" value="${formData.birthDate}" disabled>
+            </td>
+            <td colspan="2">
+              <strong>Place of occurrence (Hospital, House No. and Street, Town or Village of Name of Estate)</strong>
+              <p class="multilingual">උපන් ස්ථානය (රෝහල, ගෘහ අංකය සහ වීදිය කොටඨාශය, ගම)</p>
+              <p class="multilingual">பிறந்த இடம் (வைத்தியசாலை, வீட்டு இலக்கம், தெரு, நகர், கிராமம் அல்லது தோட்டப்பெயர்)</p>
+              <textarea id="birthPlace" name="birthPlace" disabled>${formData.birthPlace}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              4. <strong>Registrar's Division</strong>
+              <p class="multilingual">රෙජිස්ට්‍රාර්ගේ කොට්ඨාශය</p>
+              <p class="multilingual">பதிவாளர் பிரிவு</p>
+              <input type="text" id="registrarDivision" name="registrarDivision" value="${formData.registrarDivision}" disabled>
+            </td>
+            <td colspan="2">
+              <strong>Revenue District</strong>
+              <p class="multilingual">ආදායම් දිස්ත්‍රික්කය</p>
+              <p class="multilingual">இறைவரி மாவட்டம்</p>
+              <input type="text" id="revenueDistrict" name="revenueDistrict" value="${formData.revenueDistrict}" disabled>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              5. <strong>No. and date of Registration Entry (If known)</strong>
+              <p class="multilingual">ලියාපදිංචි අංකය සහ දිනය(දැන් තිබේ නම්)</p>
+              <p class="multilingual">பதிவு இலக்கமும் திகதியும் (தெரிந்திருப்பின்)</p>
+              <div style="display: flex; gap: 10px;">
+                <input type="text" id="registrationNo" name="registrationNo" value="${formData.registrationNo}" disabled style="width: 45%;">
+                <input type="text" id="registrationDate" name="registrationDate" value="${formData.registrationDate}" disabled style="width: 45%;">
+              </div>
+            </td>
+            <td colspan="2">
+              <strong>Period of search desired, if any. (The maximum period of search is limited to 2 years.)</strong>
+              <p class="multilingual">සොයා බැලීම අවශ්‍ය කාල කොපමණ කාලයක් ද?(උපරිම කාලය වසර 2 දක්වා සීමා කර ඇත.)</p>
+              <p class="multilingual">தேடல் தேவைப்படும் காலம் ஏதேனும் (அதிகபட்ச தேடல் காலம் 2 வருடங்களுக்கு மட்டup்படுத்தப்பட்டுள்ளது.)</p>
+              <div style="display: flex; gap: 10px;">
+                <div style="width: 45%;">
+                  <label for="searchFrom">From:</label>
+                  <input type="text" id="searchFrom" name="searchFrom" value="${formData.searchFrom}" disabled>
+                </div>
+                <div style="width: 45%;">
+                  <label for="searchTo">To:</label>
+                  <input type="text" id="searchTo" name="searchTo" value="${formData.searchTo}" disabled>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              6. <strong>Father's Full Name</strong>
+              <p class="multilingual">පියාගේ සම්පූර්ණ නම</p>
+              <p class="multilingual">தந்தையின் முழுப்பெயர்</p>
+            </td>
+            <td colspan="2">
+              <input type="text" id="fatherName" name="fatherName" value="${formData.fatherName}" disabled>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              7. <strong>Mother's Full Name (maiden name)</strong>
+              <p class="multilingual">මවගේ සම්පූර්ණ නම (විවාහයට පෙර)</p>
+              <p class="multilingual">தாயாரின் முழுப்பெயர் (கன்னிப் பெயர்)</p>
+            </td>
+            <td colspan="2">
+              <input type="text" id="motherName" name="motherName" value="${formData.motherName}" disabled>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              8. <strong>Amount of money paid for charges</strong>
+              <p class="multilingual">ගාස්තුව වශයෙන් ගෙවන ලද මුදල</p>
+              <p class="multilingual">கட்டணங்களுக்காக கொடுப்பனவாக செலுத்தப்பட்ட பணத்தொகை</p>
+              <input type="text" id="amountPaid" name="amountPaid" value="${calculateFee()}" disabled>
+            </td>
+            <td>
+              <strong>Where the date of registration or the No. of the entry is given the fee for one copy of the certificate is Rs. 120/-</strong>
+              <p class="multilingual">ලියාපදිංචි කිරීමේ දිනය හෝ අංකය දී ඇති විට සහතික එක පිටපතක ගාස්තුව රු. 120/-</p>
+              <p class="multilingual">பதிவு திகதி அல்லது பதிவுப் பதிவின் இல. தரப்பட்டிருந்தால் ஒரு பிரதிக்கான கட்டணம் ரூபா 120/-</p>
+              <div>
+                <input type="radio" id="fee120" name="feeType" value="120" ${formData.feeType === "120" ? "checked" : ""} disabled>
+                <label for="fee120">Rs. 120/- per copy</label>
+              </div>
+            </td>
+            <td>
+              <strong>Where the date of registration or the No. of the entry is not given and a search of registers not exceeding two years is involved fee for one copy of the certificate is Rs. 250/-</strong>
+              <p class="multilingual">ලියාපදිංචි කල දිනය හෝ අංකය දී නැති විට වසර 2 කට නොවැඩි කාලයක් සඳහා ලේඛන පරීක්ෂා කර සහතිකයක එක පිටපතකට රු. 250/-</p>
+              <p class="multilingual">பதிவுத் திகதி அல்லது பதிவின் இல. தரப்படாமல் 2 வருடங்களை விஞ்சாத காலப்பகுதிக்குரிய பதிவேடுகளைத் தேடவேண்டியிருந்தால் ஒரு பிரதிக்கான கட்டணம் ரூபா 250/-</p>
+              <div>
+                <input type="radio" id="fee250" name="feeType" value="250" ${formData.feeType === "250" ? "checked" : ""} disabled>
+                <label for="fee250">Rs. 250/- per copy</label>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <label for="applicationDate">දිනය/திகதி/Date:</label>
+            <input type="date" id="applicationDate" name="applicationDate" value="${formData.applicationDate}" disabled style="width: 150px;">
+          </div>
+          <div>
+            <label for="signature">Signature:</label>
+            <input type="text" id="signature" name="signature" value="${formData.signature}" disabled style="width: 250px;">
+          </div>
+        </div>
+      </form>
+      <div style="margin-top: 80px; font-size: 0.7em; color: #666; text-align: center;">
+        <p>H.04/2024 - 500,000 (2022/01) ©️ කොළඹ රජයේ මුද්‍රණ දෙපාර්තමේන්තුව</p>
+      </div>
+    </body>
+    </html>`;
   };
 
   // Generate PDF
-  let generatePdf = async () => {
-    const file = await printToFileAsync({
-      html: generateHtml(),
-      base64: false
-    });
+  const generatePdf = async () => {
+    try {
+      const htmlContent = generateHtml();
+      console.log("Generated HTML:", htmlContent); // Log the generated HTML
 
-    await shareAsync(file.uri);
-  };
+      const file = await printToFileAsync({
+        html: htmlContent,
+        base64: false
+      });
 
-  // Render date picker based on platform
-  const renderDatePicker = (field) => {
-    return (
-      <>
-        <Text onPress={() => showPicker(field)} style={styles.dateText}>
-          {formatDate(formData[field])}
-        </Text>
-        
-        {showDatePicker[field] && (
-          <DateTimePicker
-            value={formData[field]}
-            mode="date"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={(event, date) => onDateChange(event, date, field)}
-          />
-        )}
-      </>
-    );
+      console.log("Generated PDF URI:", file.uri); // Log the file URI
+
+      await shareAsync(file.uri);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
   };
 
   return (
@@ -402,7 +275,7 @@ export default function App() {
       <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
           <Text style={styles.header}>Birth Certificate Application</Text>
-          
+             
           <View style={styles.formSection}>
             <Text style={styles.sectionTitle}>1. Applicant Details</Text>
             <Text style={styles.label}>Name of Applicant</Text>
@@ -457,10 +330,13 @@ export default function App() {
               onChangeText={(value) => updateFormData('copies', value)}
             />
             
-            <Text style={styles.label}>Date of Birth</Text>
-            <View style={styles.datePickerButton}>
-              {renderDatePicker('birthDate')}
-            </View>
+            <Text style={styles.label}>Date of Birth (YYYY-MM-DD)</Text>
+            <TextInput
+              value={formData.birthDate}
+              placeholder="YYYY-MM-DD"
+              style={styles.textInput}
+              onChangeText={(value) => updateFormData('birthDate', value)}
+            />
             
             <Text style={styles.label}>Place of Birth</Text>
             <TextInput
@@ -499,20 +375,29 @@ export default function App() {
               onChangeText={(value) => updateFormData('registrationNo', value)}
             />
             
-            <Text style={styles.label}>Registration Date (if known)</Text>
-            <View style={styles.datePickerButton}>
-              {renderDatePicker('registrationDate')}
-            </View>
+            <Text style={styles.label}>Registration Date (YYYY-MM-DD)</Text>
+            <TextInput
+              value={formData.registrationDate}
+              placeholder="YYYY-MM-DD"
+              style={styles.textInput}
+              onChangeText={(value) => updateFormData('registrationDate', value)}
+            />
             
-            <Text style={styles.label}>Search Period - From</Text>
-            <View style={styles.datePickerButton}>
-              {renderDatePicker('searchFrom')}
-            </View>
+            <Text style={styles.label}>Search Period - From (YYYY-MM-DD)</Text>
+            <TextInput
+              value={formData.searchFrom}
+              placeholder="YYYY-MM-DD"
+              style={styles.textInput}
+              onChangeText={(value) => updateFormData('searchFrom', value)}
+            />
             
-            <Text style={styles.label}>Search Period - To</Text>
-            <View style={styles.datePickerButton}>
-              {renderDatePicker('searchTo')}
-            </View>
+            <Text style={styles.label}>Search Period - To (YYYY-MM-DD)</Text>
+            <TextInput
+              value={formData.searchTo}
+              placeholder="YYYY-MM-DD"
+              style={styles.textInput}
+              onChangeText={(value) => updateFormData('searchTo', value)}
+            />
           </View>
           
           <View style={styles.formSection}>
@@ -564,10 +449,13 @@ export default function App() {
           
           <View style={styles.formSection}>
             <Text style={styles.sectionTitle}>6. Signature</Text>
-            <Text style={styles.label}>Application Date</Text>
-            <View style={styles.datePickerButton}>
-              {renderDatePicker('applicationDate')}
-            </View>
+            <Text style={styles.label}>Application Date (YYYY-MM-DD)</Text>
+            <TextInput
+              value={formData.applicationDate}
+              placeholder="YYYY-MM-DD"
+              style={styles.textInput}
+              onChangeText={(value) => updateFormData('applicationDate', value)}
+            />
             
             <Text style={styles.label}>Signature (Type your name)</Text>
             <TextInput
@@ -576,8 +464,8 @@ export default function App() {
               style={styles.textInput}
               onChangeText={(value) => updateFormData('signature', value)}
             />
-          </View>
-          
+          </View>   
+         
           <View style={styles.buttonContainer}>
             <Button title="Generate PDF" onPress={generatePdf} />
           </View>
@@ -661,17 +549,6 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     width: '100%',
-  },
-  datePickerButton: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 15,
-    backgroundColor: '#f9f9f9',
-  },
-  dateText: {
-    color: '#333',
   },
   radioContainer: {
     marginBottom: 15,

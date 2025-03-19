@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, Switch, TouchableOpacity, SafeAreaView, Modal, TextInput, Dimensions } from "react-native";
 import axios from "axios";
 import Background from './GradientBackground';
+import { useNavigation } from '@react-navigation/native';
 //import e from "cors"; 
 
 const { width, height } = Dimensions.get("window");
 
 const ProfilePage = () => {
+  const navigation = useNavigation();
   const [isEnabled, setIsEnabled] = useState(false);
   const [modalVisible, setModalVisible] = useState (false);
   const [profile, setProfile] = useState ({
@@ -22,8 +24,7 @@ const ProfilePage = () => {
 
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
-  const API_BASE_URL = "mongodb+srv://niladariya:8QnJRJmLNSc3pJaA@niladariya.fnv7s.mongodb.net/?retryWrites=true&w=majority&appName=NILADARIYA"; // Replace with actual backend URL
-
+  const API_BASE_URL = "http://YOUR_NODE_SERVER_IP:3000/OFFICER_API";
   //Fetch profile details from the backend
   useEffect(() => {
     const fetchProfile = async () => {
@@ -107,7 +108,7 @@ const ProfilePage = () => {
               {/* <TextInput style={styles.input} placeholder="Enter Name" value={profile.name} onChangeText={(text) => handleProfileUpdate("name", text)} /> */}
               <TextInput style={styles.input} placeholder="Enter Position" value={profile.position} onChangeText={(text) => handleProfileUpdate("position", text)} />
               <TextInput style={styles.input} placeholder="Enter Service" value={profile.service} onChangeText={(text) => handleProfileUpdate("service", text)} />
-              {/* <TextInput style={styles.input} placeholder="Enter Contact" value={profile.contact} onChangeText={(text) => handleProfileUpdate("contact", text)} /> */}
+              <TextInput style={styles.input} placeholder="Enter Contact" value={profile.contact} onChangeText={(text) => handleProfileUpdate("contact", text)} />
 
               <TouchableOpacity style={styles.saveButton} onPress={() => setModalVisible(false)}>
                 <Text style={styles.saveButtonText}>Save</Text>
@@ -126,6 +127,10 @@ const ProfilePage = () => {
                 <Text style={styles.notificationText}>{appointmentCount}</Text>
               </View>
             )}
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.liveChatButton} onPress={() => navigation.navigate('ChatScreen') <console.log("Live Chat clicked!")}>
+            <Text style={styles.buttonText}>Live Chat</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.interOfficerChatButton}onPress={() => console.log("Officer Chat clicked!")}>
@@ -238,6 +243,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: "100%",
     alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
   },
   appointmentButtonContainer: {
     position: "relative",
@@ -259,15 +266,14 @@ const styles = StyleSheet.create({
   liveChatButton: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#195b8c",
+    backgroundColor: "#233C67",
     paddingVertical: 15,
     paddingHorizontal: 100,
     borderRadius: 25,
     width: "250%",
     elevation: 5, 
-    marginBottom: 15,
-    position: "absolute",
-    zIndex: 1000,
+    marginTop: 25,
+    position: "relative",
   },
   interOfficerChatButton: {
     alignItems: "center",
