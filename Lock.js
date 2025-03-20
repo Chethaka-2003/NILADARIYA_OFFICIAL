@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, Vibration } from 'react-native';
+import { 
+  View, Text, StyleSheet, Image, TouchableOpacity, 
+  Animated, Vibration, SafeAreaView 
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Background from '../GradientBackground';
 
 const Lock = () => {
   const [passcode, setPasscode] = useState('');
@@ -47,24 +51,19 @@ const Lock = () => {
     return Array.from({ length: 6 }).map((_, i) => (
       <View
         key={i}
-        style={[
-          styles.passcodeDot,
-          { backgroundColor: i < passcode.length ? '#FFD700' : 'transparent' },
+        style={[ 
+          styles.passcodeDot, 
+          { backgroundColor: i < passcode.length ? '#FFD700' : 'transparent' } 
         ]}
       />
     ));
   };
 
   return (
-    <View style={styles.backgroundContainer}>
-      {/* Gradient background applied here */}
-      <View style={styles.gradientBackground} />
-
+    <SafeAreaView>
+      <Background/>
       <View style={styles.container}>
-        
-        {/* Logo at the top */}
         <Image source={require('./assets/logo.png')} style={styles.logo} />
-        
         <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
           <Text style={styles.title}>Enter Passcode</Text>
           <View style={styles.passcodeContainer}>{renderPasscodeDots()}</View>
@@ -85,27 +84,17 @@ const Lock = () => {
           </TouchableOpacity>
         </Animated.View>
       </View>
-    </View>
+      </SafeAreaView>
+    
   );
 };
 
 const styles = StyleSheet.create({
   backgroundContainer: {
-    flex: 1,
+    flex: 1,  // Make sure the gradient fills the entire screen
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  // Gradient background styles
-  gradientBackground: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'linear-gradient(to top, #6fc3f7 0%, #c2fdff 100%)', // Gradient from blue to cyan
-  },
-
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -113,14 +102,11 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 20,
   },
-
-  // Logo style
   logo: {
     width: 100,
     height: 100,
     marginBottom: 10,
   },
-
   card: {
     backgroundColor: 'transparent',
     padding: 25,
