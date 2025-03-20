@@ -96,7 +96,7 @@ export default function App() {
         <table>
           <tr>
             <td width="40%">
-              1. <p>ඉල්ලුම්කරුගේ නම සහ ලිපිනය</p>
+              1. <p class="multilingual">ඉල්ලුම්කරුගේ නම සහ ලිපිනය</p>
               <p class="multilingual">விண்ணப்பதாரரின் பெயரும் முகவரியும்</p>
               <p class="multilingual">Name of Applicant and Address</p>
             </td>
@@ -107,12 +107,13 @@ export default function App() {
           </tr>
           <tr>
             <td>
-              2. <p>ඉල්ලුම්කරන්නේ කාගේ උප්පැන්නය ගැනද? එම අයගේ සම්පූර්ණ නම</p>  
+              2. <p class="multilingual">ඉල්ලුම්කරන්නේ කාගේ උප්පැන්නය ගැනද? එම අයගේ සම්පූර්ණ නම</p>  
               <p class="multilingual">யாருடைய பிறப்புக்கான விண்ணப்பம் செய்யப்படுகிறது அவரது பெயர்</p>
               <p class="multilingual">Full name of person respecting whose birth application is made?</p>
+              <input type="text" id="fullName" name="fullName" value="${formData.fullName}" disabled>
             </td>
             <td>
-              <p>ස්ත්‍රී පුරුෂ භාවය</p>
+              <p class="multilingual">ස්ත්‍රී පුරුෂ භාවය</p>
               <p class="multilingual">பால்</p>
               <p class="multilingual">sex</p>
               <select id="sex" name="sex" disabled>
@@ -120,27 +121,22 @@ export default function App() {
               </select>
             </td>
             <td>
-              <p>අවශ්‍ය පිටපත් ගණන</p>
+              <p class="multilingual">අවශ්‍ය පිටපත් ගණන</p>
               <p class="multilingual">தேவைப்படும் பிரதிகளின் எண்ணிக்கை</p>
               <p class="multilingual">No. of Copies required</p>
               <input type="number" id="copies" name="copies" value="${formData.copies}" disabled>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input type="text" id="fullName" name="fullName" value="${formData.fullName}" disabled>
             </td>
             <td colspan="2"></td>
           </tr>
           <tr>
             <td>
-              3. <p>උපන්දිනය</p>
+              3. <p class="multilingual">උපන්දිනය</p>
               <p class="multilingual">பிறந்த திகதி</p>
               <p class="multilingual">Date of Birth</p>
               <input type="text" id="birthDate" name="birthDate" value="${formData.birthDate}" disabled>
             </td>
             <td colspan="2">
-              <p>උපන් ස්ථානය (රෝහල, ගෙයි අංකය සහ වීදිය, නගරය, ගම හෝ වත්තේ නම )</p>
+              <p class="multilingual">උපන් ස්ථානය (රෝහල, ගෙයි අංකය සහ වීදිය, නගරය, ගම හෝ වත්තේ නම )</p>
               <p class="multilingual">பிறந்த இடம் (வைத்தியசாலை, வீட்டு இலக்கம், தெரு, நகர், கிராமம் அல்லது தோட்டப்பெயர்)</p>
               <p class="multilingual">Place of occurrence (Hospital, House No. and Street, Town or Village of Name of Estate)</p>
               <textarea id="birthPlace" name="birthPlace" disabled>${formData.birthPlace}</textarea>
@@ -148,13 +144,13 @@ export default function App() {
           </tr>
           <tr>
             <td>
-              4. <p>රෙජිස්ට්‍රාර්ගේ කොට්ඨාශය</p>
+              4. <p class="multilingual">රෙජිස්ට්‍රාර්ගේ කොට්ඨාශය</p>
               <p class="multilingual">பதிவாளர் பிரிவு</p>
               <p class="multilingual">Registrar's Division</p>
               <input type="text" id="registrarDivision" name="registrarDivision" value="${formData.registrarDivision}" disabled>
             </td>
             <td colspan="2">
-              <p>ආදායම් දිස්ත්‍රික්කය<</p>
+              <p class="multilingual">ආදායම් දිස්ත්‍රික්කය</p>
               <p class="multilingual">இறைவரி மாவட்டம்/p>
               <p class="multilingual">Revenue District</p>
               <input type="text" id="revenueDistrict" name="revenueDistrict" value="${formData.revenueDistrict}" disabled>
@@ -162,7 +158,7 @@ export default function App() {
           </tr>
           <tr>
             <td>
-              5. <p>ලේකනයේ අංකය සහ ලියාපදිංචි කල දිනය(දන්නවා නම්)</p>
+              5. <p class="multilingual">ලේකනයේ අංකය සහ ලියාපදිංචි කල දිනය(දන්නවා නම්)</p>
               <p class="multilingual">பதிவு இலக்கமும் திகதியும் (தெரிந்திருப்பின்)</p> 
               <p class="multilingual">No. and date of Registration Entry (If known)</p>
               <div style="display: flex; gap: 10px;">
@@ -171,7 +167,7 @@ export default function App() {
               </div>
             </td>
             <td colspan="2">
-              <p>සොයා බැලීම අවශ්‍ය නම් කොතරම් ලේකන සෙවිය යුතුද? (සොයා බැලීමේ උපරිම කාල සීමාව වසර 2 දක්වා සීමා කර ඇත.)</p>
+              <p class="multilingual">සොයා බැලීම අවශ්‍ය නම් කොතරම් ලේකන සෙවිය යුතුද? (සොයා බැලීමේ උපරිම කාල සීමාව වසර 2 දක්වා සීමා කර ඇත.)</p>
               <p class="multilingual">தேடல் தேவைப்படும் காலம் ஏதேனும் (அதிகபட்ச தேடல் காலம் 2 வருடங்களுக்கு மட்டup்படுத்தப்பட்டுள்ளது.)</p>
               <p class="multilingual">Period of search desired, if any. (The maximum period of search is limited to 2 years.)</p>
               <div style="display: flex; gap: 10px;"> 
@@ -188,7 +184,7 @@ export default function App() {
           </tr>
           <tr>
             <td>
-              6. <p>පියාගේ සම්පූර්ණ නම</p>  
+              6. <p class="multilingual">පියාගේ සම්පූර්ණ නම</p>  
               <p class="multilingual">தந்தையின் முழுப்பெயர்</p> 
               <p class="multilingual">Father's Full Name</p>
             </td>
@@ -198,7 +194,7 @@ export default function App() {
           </tr>
           <tr>
             <td>
-              7. <p>මවගේ සම්පූර්ණ නම (විවාහයට පෙර)</p> 
+              7. <p class="multilingual">මවගේ සම්පූර්ණ නම (විවාහයට පෙර)</p> 
               <p class="multilingual">தாயாரின் முழுப்பெயர் (கன்னிப் பெயர்)</p>
               <p class="multilingual">Mother's Full Name (maiden name)</p>
             </td>
@@ -208,13 +204,13 @@ export default function App() {
           </tr>
           <tr>
             <td>
-              8. <p>ගාස්තුව වශයෙන් ගෙවන ලද මුදල</p> 
+              8. <p class="multilingual">ගාස්තුව වශයෙන් ගෙවන ලද මුදල</p> 
               <p class="multilingual">கட்டணங்களுக்காக கொடுப்பனவாக செலுத்தப்பட்ட பணத்தொகை</p>
               <p class="multilingual">Amount of money paid for charges</p>
               <input type="text" id="amountPaid" name="amountPaid" value="${calculateFee()}" disabled>
             </td>  
             <td>
-              <p>ලියාපදිංචි කිරීමේ දිනය හෝ අංකය දී ඇති විට ගාස්තුව එක පිටපතකට රු. 120/-</p>
+              <p class="multilingual">ලියාපදිංචි කිරීමේ දිනය හෝ අංකය දී ඇති විට ගාස්තුව එක පිටපතකට රු. 120/-</p>
               <p class="multilingual">பதிவு திகதி அல்லது பதிவுப் பதிவின் இல. தரப்பட்டிருந்தால் ஒரு பிரதிக்கான கட்டணம் ரூபா 120/-</p>
               <p class="multilingual">Where the date of registration or the No. of the entry is given the fee for one copy of the certificate is Rs. 120/-<</p>
               <div>
@@ -223,7 +219,7 @@ export default function App() {
               </div>
             </td>
             <td>
-              <p>ලියාපදිංචි කල දිනය හෝ අංකය දී නැති විට වසර 2 කට නොවැඩි කාලයක ලේකන සෙවීමක් අවශ්‍ය වන අවස්ථාවක එක පිටපතකට රු. 250/-</p>
+              <p class="multilingual">ලියාපදිංචි කල දිනය හෝ අංකය දී නැති විට වසර 2 කට නොවැඩි කාලයක ලේකන සෙවීමක් අවශ්‍ය වන අවස්ථාවක එක පිටපතකට රු. 250/-</p>
               <p class="multilingual">பதிவுத் திகதி அல்லது பதிவின் இல. தரப்படாமல் 2 வருடங்களை விஞ்சாத காலப்பகுதிக்குரிய பதிவேடுகளைத் தேடவேண்டியிருந்தால் ஒரு பிரதிக்கான கட்டணம் ரூபா 250/-</p>
               <p class="multilingual">Where the date of registration or the No. of the entry is not given and a search of registers not exceeding two years is involved fee for one copy of the certificate is Rs. 250/-</p>
               <div>
@@ -233,20 +229,61 @@ export default function App() {
             </td>
           </tr>
         </table>
-        <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <label for="applicationDate">දිනය/திகதி/Date:</label>
-            <input type="date" id="applicationDate" name="applicationDate" value="${formData.applicationDate}" disabled style="width: 150px;">
-          </div>
-          <div>
-            <label for="signature">Signature:</label>
-            <input type="text" id="signature" name="signature" value="${formData.signature}" disabled style="width: 250px;">
-          </div>
-        </div>
+        // <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
+        //   <div>
+        //     <label for="applicationDate">දිනය/திகதி/Date:</label>
+        //     <input type="date" id="applicationDate" name="applicationDate" value="${formData.applicationDate}" disabled style="width: 150px;">
+        //   </div>
+        //   <div>
+        //     <label for="signature">Signature:</label>
+        //     <input type="text" id="signature" name="signature" value="${formData.signature}" disabled style="width: 250px;">
+        //   </div>
+        // </div>
       </form>
       <div style="margin-top: 80px; font-size: 0.7em; color: #666; text-align: center;">
         <p>H.04/2024 - 500,000 (2022/01) © කොළඹ රජයේ මුද්‍රණ දෙපාර්තමේන්තුව</p>
       </div>
+      <div style="max-width: 800px; margin: 0 auto; "> 
+          <div style ="padding: 10px; border-bottom: 1px solid #ccc;">
+           <p>*මෙම ඉල්ලුම් පත්‍රයෙහි සදහන් ලේකනය සෙවීමට රෙජිස්ට්‍රාර් ජනරාල් සහ එම දෙපාර්තමේන්තුවේ සේවයෙහි නියුක්ත නිලදාරීන්ට මෙයින් අවසරය සහ බලය දෙමි. තවද එසේ ලේකන සෙවීමේදී හෝ මා වෙත තොරතුරු සැපයීමේදී හෝ යම් අඩුපාඩුවක් හෝ දොසක් සිදු වුවහොත් ඉහත කී රෙජිස්ට්‍රාර් ජනරාල් ද, එම දෙපාර්තමේන්තුවේ සේවයේ නියුක්ත සියලුම නිලදාරීන් ද යථෝක්ත අඩුපාඩුකම හෝ දෝෂය පිළිබදව වගකීමෙන් නිදහස් kකරන අවද වැඩිදුරටත් ප්‍රකාශ කරමි. </p>
+           <p>*</p>
+           <p>* I authorise the Rejistrar-General and officers of the Rejistrar-General's Department to make search on my behalf for the relevant registration entry and I hereby expressly declare that I absolve the Registrar-General and every officer of his Department from all responsibility and liability in respect of any act, error or Omission in connection with such search or any information that may be suppleid or omitted to be supplied to me.</p>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ccc;">
+            <div style="width: 45%;">
+                <p>දිනය<br>திகதி<br>Date</p>
+                <p>.....................................</p>
+            </div>
+            <div style="width: 45%;">
+                <p>අයදුම්කරුගේ අත්සන<br>விண்ணப்பதாரரின் கையொப்பம்<br>Signature of Applicant</p>
+                <p>.....................................</p>
+            </div>
+      </div>         
+            <p>*අයදුම්කරු විසින්ම සොයා බැලීම් කිරීමේදී මෙම ඡේදය කපා හරින්න. </p>
+            <p>*விண்ணப்பதாரர் தானாகவே தேடலை மேற்கொள்ளும் போது இந்த பகுதியை வெட்டி விடவும்.</p>
+            <p>*To be struck off if applicant makes the search</p>
+
+            <hr>
+                <div style="font-weight: normal; text-align: center; padding: 5px; border-bottom: 1px solid #333;">
+                <p>කාර්යාලයේ ප්‍රයෝජනය සඳහා පමණි<br>அலுவலக உபயோகத்திற்கு மாத்திரம்<br>FOR OFFICE USE ONLY</p>
+                </div>
+             
+              <table>
+                <tr>
+                   <td style="border: 1px solid black; padding: 8px;">1.ලැබුනු මුදල්වල වටිනාකම <br> பெறப்பட்ட கட்டணத்தின் தொகை <br> Amount of fees recieved </td>
+                   <td style="border: 1px solid black; padding: 8px;">.......................</td>
+                   <td style="border: 1px solid black; padding: 8px;">6. පිටපත් කළේ <br>நகலெடுக்கப்பட்டது <br> Copied by</td>
+                   <td style="border: 1px solid black; padding: 8px;">.......................</td>
+                </tr>
+
+                <tr>
+                   <td style="border: 1px solid black; padding: 8px;">2.සොයන ලද කොට්ඨාසය <br> தேடப்பட்ட பிரிவு <br> Division searched </td>
+                   <td style="border: 1px solid black; padding: 8px;">........................</td>
+                   <td style="border: 1px solid black; padding: 5px; ">7. සහතිකය නිකුත් කළ පෝරමයේ මුද්‍රිත අනු අංකය හෝ ඡායා පිටපත් යන්ත්‍ර ක්‍රියාකරුගේ අත්සන <br> சான்றிதழ் படிவத்தின் வரிசை எண் அல்லது நகலெடுக்கும் இயந்திர இயக்குபரின் கையெழுத்து <br> Serial No.oof certificate form or copying machine operator's signature </td>
+                   <td style="border: 1px solid black; padding: 8px;">........................</td>
+                </tr>
+              </table>  
+          
     </body>
     </html>`;
   };
@@ -447,7 +484,7 @@ export default function App() {
             <Text style={styles.amount}>{calculateFee()}</Text>
           </View>
           
-          <View style={styles.formSection}>
+          {/* <View style={styles.formSection}>
             <Text style={styles.sectionTitle}>6. Signature</Text>
             <Text style={styles.label}>Application Date (YYYY-MM-DD)</Text>
             <TextInput
@@ -464,7 +501,7 @@ export default function App() {
               style={styles.textInput}
               onChangeText={(value) => updateFormData('signature', value)}
             />
-          </View>   
+          </View>    */}
          
           <View style={styles.buttonContainer}>
             <Button title="Generate PDF" onPress={generatePdf} />
