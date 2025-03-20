@@ -4,7 +4,7 @@ import {
   Animated, Vibration, SafeAreaView 
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Background from '../GradientBackground';
+import Background from './GradientBackground';
 
 const Lock = () => {
   const [passcode, setPasscode] = useState('');
@@ -60,11 +60,12 @@ const Lock = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView flex={1}>
       <Background/>
       <View style={styles.container}>
-        <Image source={require('./assets/logo.png')} style={styles.logo} />
-        <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
+      {/* <Background/> */}
+        <Image source={require('../assets/LOGO.png')} style={styles.logo} />
+        <Animated.View style={[styles.card]}>
           <Text style={styles.title}>Enter Passcode</Text>
           <View style={styles.passcodeContainer}>{renderPasscodeDots()}</View>
           {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
@@ -90,11 +91,11 @@ const Lock = () => {
 };
 
 const styles = StyleSheet.create({
-  backgroundContainer: {
-    flex: 1,  // Make sure the gradient fills the entire screen
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  // backgroundContainer: {
+  //   flex: 1,  // Make sure the gradient fills the entire screen
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -103,12 +104,12 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
     marginBottom: 10,
   },
   card: {
-    backgroundColor: 'transparent',
+    // backgroundColor: 'transparent',
     padding: 25,
     borderRadius: 15,
     elevation: 6,
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     height: 15,
     borderRadius: 7.5,
     borderWidth: 1,
-    borderColor: '#FFD700',
+    borderColor: 'white',
   },
   errorText: {
     color: 'red',
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   },
   numberButtonText: {
     fontSize: 20,
-    color: '#FFD700',
+    color: 'black',
     fontWeight: 'bold',
   },
   button: {
