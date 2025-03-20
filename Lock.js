@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity, 
-  Animated, Vibration 
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, Vibration } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Lock = () => {
@@ -59,7 +56,10 @@ const Lock = () => {
   };
 
   return (
-    <ImageBackground source={require('./assets/ABC.jpg')} style={styles.backgroundImage} resizeMode="cover">
+    <View style={styles.backgroundContainer}>
+      {/* Gradient background applied here */}
+      <View style={styles.gradientBackground} />
+
       <View style={styles.container}>
         
         {/* Logo at the top */}
@@ -85,27 +85,107 @@ const Lock = () => {
           </TouchableOpacity>
         </Animated.View>
       </View>
-    </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  backgroundImage: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', padding: 20 },
+  backgroundContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  // Gradient background styles
+  gradientBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'linear-gradient(to top, #6fc3f7 0%, #c2fdff 100%)', // Gradient from blue to cyan
+  },
+
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    padding: 20,
+  },
 
   // Logo style
-  logo: { width: 100, height: 100, marginBottom: 20 },
+  logo: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+  },
 
-  card: { backgroundColor: 'transparent', padding: 25, borderRadius: 15, elevation: 6, alignItems: 'center' },
-  title: { fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 20 },
-  passcodeContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '80%', marginBottom: 20 },
-  passcodeDot: { width: 15, height: 15, borderRadius: 7.5, borderWidth: 1, borderColor: '#FFD700' },
-  errorText: { color: 'red', marginTop: 10 },
-  numberPad: { marginTop: 20, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' },
-  numberButton: { width: 80, height: 80, margin: 10, backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: 50, alignItems: 'center', justifyContent: 'center' },
-  numberButtonText: { fontSize: 20, color: '#FFD700', fontWeight: 'bold' },
-  button: { backgroundColor: '#FFD700', borderRadius: 50, paddingVertical: 20, marginTop: 20, width: 300, alignItems: 'center', justifyContent: 'center', elevation: 5 },
-  buttonText: { fontSize: 20, color: '#000', fontWeight: 'bold' },
+  card: {
+    backgroundColor: 'transparent',
+    padding: 25,
+    borderRadius: 15,
+    elevation: 6,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 20,
+  },
+  passcodeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+    marginBottom: 20,
+  },
+  passcodeDot: {
+    width: 15,
+    height: 15,
+    borderRadius: 7.5,
+    borderWidth: 1,
+    borderColor: '#FFD700',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 10,
+  },
+  numberPad: {
+    marginTop: 20,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  numberButton: {
+    width: 80,
+    height: 80,
+    margin: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  numberButtonText: {
+    fontSize: 20,
+    color: '#FFD700',
+    fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: '#FFD700',
+    borderRadius: 50,
+    paddingVertical: 20,
+    marginTop: 20,
+    width: 300,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: '#000',
+    fontWeight: 'bold',
+  },
 });
 
 export default Lock;

@@ -13,7 +13,6 @@
     "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-native-picker/picker": "^2.11.0",
     "body-parser": "^1.20.3",
-    "expo": "~52.0.23",
     "expo-status-bar": "~2.0.0",
     "express": "^4.21.2",
     "mongoose": "^8.12.0",
@@ -24,7 +23,8 @@
     "react-native-linear-gradient": "^2.8.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "expo": "^52.0.39"
   },
   "private": true,
   "description": "Smart Government Officer consulting System (NILADHARIYA)",
