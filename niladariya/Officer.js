@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, Switch, TouchableOpacity, SafeAreaView, Modal, TextInput, Dimensions } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import Background from './GradientBackground';
 import { useNavigation } from '@react-navigation/native';
 import {Ionicons} from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 //import e from "cors"; 
 
 const { width, height } = Dimensions.get("window");
 
 const Officer = () => {
   const navigation = useNavigation();
-  //const [isEnabled, setIsEnabled] = useState(false);
   const [modalVisible, setModalVisible] = useState (false);
   const [profile, setProfile] = useState ({
     name: "Savini Perera",
@@ -20,13 +21,8 @@ const Officer = () => {
     mobile: "1234-123-9874",
     telephone: "1234-123-9874",
     address:"",
+    profilePicture: null,
   });
-
-  //const [appointmentCount, setAppointmentCount] = useState(0);
-  //const [chatCount, setChatCount] = useState(0);
-  //const [interOfficerChatCount, setInterOfficerChatCount] = useState(0);
-
-  //const toggleSwitch = () => setIsEnabled(!isEnabled);
 
   const API_BASE_URL = "http://YOUR_NODE_SERVER_IP:3000/OFFICER_API";
 
@@ -44,12 +40,53 @@ const Officer = () => {
     fetchProfile();
   }, []);
 
-  // Handle profile updates
-  const handleProfileUpdate = (key, value) => {
-    setProfile((prev) => ({
-      ...prev,
-      [key]: value, // Ensures the new text is appended properly
-    }));
+  // // Handle profile updates
+  // const handleProfileUpdate = (key, value) => {
+  //   setProfile((prev) => ({
+  //     ...prev,
+  //     [key]: value, // Ensures the new text is appended properly
+  //   }));
+  // };
+
+  // Pick an Image
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      const selectedImage = result.assets[0].uri;
+      setProfile((prev) => ({
+        ...prev,
+        profilePicture: selectedImage,
+      }));
+
+      uploadProfilePicture(selectedImage); // Upload the selected image to the server
+    }
+  };
+
+  // Upload the selected image to the server
+  const uploadProfilePicture = async (imageUri) => {
+    let formData = new FormData();
+    formData.append("profilePicture", {
+      uri: imageUri,
+      name: "profile.jpg",
+      type: "image/jpg",
+    });
+
+    try {
+      await axios.post(`${API_BASE_URL}/profilePicture`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("Profile picture uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+    }
   };
   
   return (
@@ -61,7 +98,13 @@ const Officer = () => {
 
         {/* Header Section */}
         <View style={styles.header}>
-          <Image source={require("./assets/logo.png")} style={styles.profilePicture} />
+          <TouchableOpacity onPress={pickImage} style={styles.profilePicture}>
+            <Image source={profile.profilePicture ? { uri: profile.profilePicture } : require("./assets/officer.png")} style={styles.profilePicture} />
+            <View style={styles.editIcon}>
+              <Ionicons name="camera-outline" size={20} color="white" />
+            </View>
+          </TouchableOpacity>
+
           <Text style={styles.userName}>{profile.name}</Text>
           <Text style={styles.email}>{profile.email}</Text>
         </View>  
@@ -70,13 +113,18 @@ const Officer = () => {
         <View style={styles.iconContainer}>
 
           <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="chat-outline" size={24} color="black"/>
+            <MaterialCommunityIcons name="chat-outline" size={24} color="black"/>
             <Text style={styles.iconText}>Live Chat</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.iconButton}>
             <Ionicons name="settings-outline" size={24} color="black"/>
             <Text style={styles.iconText}>Settings</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.iconButton}>
+            <MaterialCommunityIcons name="chat-processing-outline" size={24} color="black" />
+            <Text style={styles.iconText}>Chat With Officer</Text>
           </TouchableOpacity>
 
         </View>
@@ -147,6 +195,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
+  profilePictureContainer: {
+    width: 100,
+    height: 100,
+    position: "relative",
+  },  
   profilePicture: {
     width: 100,
     height: 100,
