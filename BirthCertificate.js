@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TextInput, ScrollView, SafeAreaView, Switch, Bu
 import { printToFileAsync } from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 import { Picker } from '@react-native-picker/picker';
+import Background from "./GradientBackground";
 
 export default function App() {
   // Form state
@@ -27,6 +28,8 @@ export default function App() {
     applicationDate: "",
     signature: ""
   });
+  // Error state
+  const [errors, setErrors] = useState({});
 
   // Update form data
   const updateFormData = (field, value) => {
@@ -34,7 +37,51 @@ export default function App() {
       ...prevState,
       [field]: value
     }));
+
+    if (errors[field]) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        [field]: ""
+      }));
+    }
   };
+
+  // Validate form
+  const validateForm = () => {
+    const newErrors = {};
+
+  //Required fields
+  if (!formData.applicantName.trim()) newErrors.applicantName = "*Applicant name is required";
+  if (!formData.applicantAddress.trim()) newErrors.applicantAddress = "*Applicant address is required";
+  if (!formData.fullName.trim()) newErrors.fullName = "*Full name is required";
+  if (!formData.sex.trim()) newErrors.sex = "*Sex is required";
+  if (!formData.birthDate.trim()) newErrors.birthDate = "*Birth date is required";
+  if (!formData.birthPlace.trim()) newErrors.birthPlace = "*Birth place is required";
+  if (!formData.registrarDivision.trim()) newErrors.registrarDivision = "*Registrar division is required";
+  
+  //Add validations to date
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (formData.birthDate && !dateRegex.test(formData.birthDate)) {
+    newErrors.birthDate = "*Invalid date format (YYYY-MM-DD)";
+  }
+  if (formData.registrationDate && !dateRegex.test(formData.registrationDate)) {
+    newErrors.registrationDate = "*Invalid date format (YYYY-MM-DD)";
+  }
+  if (formData.searchFrom && !dateRegex.test(formData.searchFrom)) {
+    newErrors.searchFrom = "*Invalid date format (YYYY-MM-DD)";
+  }
+  if (formData.searchTo && !dateRegex.test(formData.searchTo)) {
+    newErrors.searchTo = "*Invalid date format (YYYY-MM-DD)";
+  }
+
+  // Validate number of copies
+  if (isNaN(formData.copies) || parseInt(formData.copies) < 1) {
+    newErrors.copies = "*Number of copies must be at least 1";
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0; // Return true if no errors
+};
 
   // Calculate fee
   const calculateFee = () => {
@@ -229,16 +276,7 @@ export default function App() {
             </td>
           </tr>
         </table>
-        // <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
-        //   <div>
-        //     <label for="applicationDate">දිනය/திகதி/Date:</label>
-        //     <input type="date" id="applicationDate" name="applicationDate" value="${formData.applicationDate}" disabled style="width: 150px;">
-        //   </div>
-        //   <div>
-        //     <label for="signature">Signature:</label>
-        //     <input type="text" id="signature" name="signature" value="${formData.signature}" disabled style="width: 250px;">
-        //   </div>
-        // </div>
+        
       </form>
       <div style="margin-top: 80px; font-size: 0.7em; color: #666; text-align: center;">
         <p>H.04/2024 - 500,000 (2022/01) © කොළඹ රජයේ මුද්‍රණ දෙපාර්තමේන්තුව</p>
@@ -271,17 +309,57 @@ export default function App() {
               <table>
                 <tr>
                    <td style="border: 1px solid black; padding: 8px;">1.ලැබුනු මුදල්වල වටිනාකම <br> பெறப்பட்ட கட்டணத்தின் தொகை <br> Amount of fees recieved </td>
-                   <td style="border: 1px solid black; padding: 8px;">.......................</td>
+                   <td style="border: 1px solid black; padding: 8px; width:100px;"></td>
                    <td style="border: 1px solid black; padding: 8px;">6. පිටපත් කළේ <br>நகலெடுக்கப்பட்டது <br> Copied by</td>
-                   <td style="border: 1px solid black; padding: 8px;">.......................</td>
+                   <td style="border: 1px solid black; padding: 8px; width:100px;"></td>
                 </tr>
 
                 <tr>
                    <td style="border: 1px solid black; padding: 8px;">2.සොයන ලද කොට්ඨාසය <br> தேடப்பட்ட பிரிவு <br> Division searched </td>
-                   <td style="border: 1px solid black; padding: 8px;">........................</td>
+                   <td style="border: 1px solid black; padding: 8px;"></td>
                    <td style="border: 1px solid black; padding: 5px; ">7. සහතිකය නිකුත් කළ පෝරමයේ මුද්‍රිත අනු අංකය හෝ ඡායා පිටපත් යන්ත්‍ර ක්‍රියාකරුගේ අත්සන <br> சான்றிதழ் படிவத்தின் வரிசை எண் அல்லது நகலெடுக்கும் இயந்திர இயக்குபரின் கையெழுத்து <br> Serial No.oof certificate form or copying machine operator's signature </td>
-                   <td style="border: 1px solid black; padding: 8px;">........................</td>
+                   <td style="border: 1px solid black; padding: 8px;"></td>
                 </tr>
+
+                <tr>
+                   <td style="border: 1px solid black; padding: 8px; colspan =2;">3.සොයන ලද කාලය <br>தேடப்பட்ட நேரம் <br> Period searched</td>
+                   <td style="border: 1px solid black; padding: 8px;"></td>
+                   <td style="border: 1px solid black; padding: 8px; "><br><br> </td>
+                   <td style="border: 1px solid black; padding: 8px;"></td>
+                </tr> 
+
+                <tr>
+                   <td style="border: 1px solid black; padding: 8px;">4.සටහනේ අංකය සහ දිනය <br> குறிப்பின் எண் மற்றும் தேதி <br> No. and Date of entry </td>
+                   <td style="border: 1px solid black; padding: 8px;"></td>
+                    <td style="border: 1px solid black; padding: 8px; "><br><br> </td>
+                   <td style="border: 1px solid black; padding: 8px;"></td>
+                </tr>
+
+                <tr>
+                   <td style="border: 1px solid black; padding: 8px;">5.සොයන ලද්දේ <br> தேடப்படுகிறது <br> Search by </td>
+                   <td style="border: 1px solid black; padding: 8px;"></td>
+                   <td style="border: 1px solid black; padding: 5px; ">8.පරීක්ෂා කරන ලද්දේ <br> பரிசோதிக்கப்பட்டது <br>Compared by </td>
+                   <td style="border: 1px solid black; padding: 8px;"></td>
+                </tr>
+              </table> 
+              <p> වෙනත් සටහන් : </p>
+              <p>மற்ற குறிப்புகள் : </p>
+              <p>Other Notes : </p>
+              <p><b>සැලකිය යුතුයි :/ குறிப்பு :/ Note : </b></p>
+
+              <p style=" font-size: 0.8em; color: #666;">1.ගාස්තු ගෙවිය හැක්කේ මුදලින් පමණි. අයදුම්පත් තැපෑලෙන් එවන විට අදාල මුදල රෙජිස්ට්‍රාර් ජනරාල්ගේ ලංකා බැංකුවේ (පිටකොටුව ශාඛාවේ) අංක 7041650 දරන ගිණුමට බැර වන සේ ඕනෑම <bබ් ලංකා බැංකු ශාඛාවකට ගෙවා, <b>එම මුදල් තැන්පත් කිරීමේ රිසිට් පත අමුණා එවිය යුතුය. සෑම අයදුම්කරුවකු විසින්ම ලිපිනය සහිත කවරයක් අයදුම්පත සමග ඉදිරිපත් කළ යුතු අතර, ලියපදිංචි/ සාමාන්‍ය තැපෑලට සරිලන මුද්දර කවරයට අලවා එවිය යුතුය. <br>
+                  கட்டணங்களை பணத்தினால் மட்டுமே செலுத்த முடியும். விண்ணப்பங்களை தபாலில் அனுப்பும் போது, சம்பந்தப்பட்ட தொகையை பதிவாளர் நாயகனின் லங்கா வங்கியின் (பிட்டக்கோட்டுவ கிளை) 7041650 என்ற எண்ணிலுள்ள கணக்கில் செலுத்த வேண்டும். ஏதேனும் லங்கா வங்கி கிளையில் செலுத்தி, அத்தொகை செலுத்திய ரசீதை இணைத்து அனுப்ப வேண்டும். ஒவ்வொரு விண்ணப்பதாரரும் முகவரி கொண்ட உறையை விண்ணப்பத்துடன் சமர்ப்பிக்க வேண்டும், மேலும் பதிவுத்தபால்/ சாதாரண தபாலுக்கு பொருந்தக்கூடிய முத்திரையுடன் கூடிய உறையில் அனுப்ப வேண்டும். <br>
+                  Fees should be paid only in cash. If applications are sent by post, should attach bank reciept which deposit fees to Account No. 7041650 of Registrar Generel's Account (in Pettah Branch). through ay <b> any branch of Bank of Ceylon.</b> All applications should be accompanied by a self addressed envelope and required duty to registerd/normal post should be affixed to the cover  <br> <br>
+                  2. සහතිකය, එය ලියාපදිංචි කර ඇති භාෂාවෙන් නිකුත් කරනු ලැබේ. එහි පරිවර්තනයක් ලබාගැනීමට අවශ්‍ය නම්, සහතිකය ලැබීමෙන් පසුව පරිවර්තනය කිරීමට අදාළ වන ඉල්ලුම් පත්‍රයක් සම්පූර්ණ කර රෙජිස්ට්‍රාර් ජනරාල් දෙපාර්තමේන්තුවේ ප්‍රධාන කාර්‍යාලයට හෝ දිවුරුම් දුන් භාෂා පරිවර්තකයකු සේවය කරන දිස්ත්‍රික් රෙජිස්ට්‍රාර් කාර්‍යාලයට හෝ ඉඩම් රෙජිස්ට්‍රාර් කාර්‍යාලයට හෝ ඉඩම් රෙජිස්ට්‍රාර් කාර්‍යාලයට හෝ ඉදිරිපත් කළ යුතුය. <br>
+                     சான்றிதழ், அது பதிவு செய்யப்பட்ட மொழியின் மூலம் அங்கீகரிக்கப்படுகிறது. அதிகாரம் பெற வேண்டிய எந்த விவரங்களையும் பெற வேண்டியதாக சான்றிதழைப் பெற்ற பிறகு அதிகாரம் செய்யவும் அல்லது அதிகாரம் செய்யவும் வேண்டிய பின்னணிகளை அதிகாரம் அல்லது அதிகாரம் செய்யும் பின்னணிகளுக்கு அனுமதி செய்யும் வேண்டும். <br>
+                     The certificate will be issued in the language it has been registered. If a translation is desired a separate application in the relevant form must be made to the head Office of the Registrar General's Department or any District Registrar of Land Office, where there is a sworm translator. <br><br>
+                  3. එක අයදුම්පතක් මත අවශ්‍ය ගාස්තු ගෙවීමෙන් සහතික පිටපත් ඕනෑම ගණනක් ලබාගත හැක.   <br>
+                      ஒரு விண்ணப்பதாரருக்கு தேவையான கட்டணங்களை செலுத்துவதற்கு ஒரு சான்றிதழ் ஒன்றை மட்டும் பெறலாம். <br>
+                      Only one certificate can be obtained for the payment of required fees. <br><br>
+                  4.  සහතිකයක් ලබා ගැනීම සදහා මෙහි සදහන් ගාස්තු හැර වෙනත් කිසිදු මුදලක් ගෙවීම අවශ්‍ය නොවේ. <br>
+                      சான்றிதழைப் பெற வேண்டிய கட்டணங்களை செலுத்த முடியும். <br>
+                      No any other additional payment is required to obtain the certificate for the payment of required fees. <br><br> 
+              </p>
               </table>  
           
     </body>
@@ -290,26 +368,40 @@ export default function App() {
 
   // Generate PDF
   const generatePdf = async () => {
+    if (!validateForm()) {
+      Alert.alert("Validation Error", "Please fill all required fields correctly.");
+      return;
+    }
+
     try {
       const htmlContent = generateHtml();
-      console.log("Generated HTML:", htmlContent); // Log the generated HTML
+      console.log("Generated HTML:", htmlContent);
 
       const file = await printToFileAsync({
         html: htmlContent,
         base64: false
       });
 
-      console.log("Generated PDF URI:", file.uri); // Log the file URI
-
+      console.log("Generated PDF URI:", file.uri);
       await shareAsync(file.uri);
     } catch (error) {
       console.error('Error generating PDF:', error);
+      Alert.alert("Error", "Failed to generate PDF. Please try again.");
     }
+  };
+
+    // Render error message
+  const renderError = (field) => {
+    if (errors[field]) {
+      return <Text style={styles.errorText}>{errors[field]}</Text>;
+    }
+    return null;
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.scrollView}>
+      <Background />
         <View style={styles.container}>
           <Text style={styles.header}>Birth Certificate Application</Text>
              
@@ -322,6 +414,7 @@ export default function App() {
               style={styles.textInput}
               onChangeText={(value) => updateFormData('applicantName', value)}
             />
+            {renderError('applicantName')}
             
             <Text style={styles.label}>Address</Text>
             <TextInput
@@ -332,6 +425,7 @@ export default function App() {
               numberOfLines={3}
               onChangeText={(value) => updateFormData('applicantAddress', value)}
             />
+            {renderError('applicantAddress')}
           </View>
           
           <View style={styles.formSection}>
@@ -343,6 +437,7 @@ export default function App() {
               style={styles.textInput}
               onChangeText={(value) => updateFormData('fullName', value)}
             />
+            {renderError('fullName')}
             
             <Text style={styles.label}>Sex</Text>
             <View style={styles.pickerContainer}>
@@ -357,6 +452,7 @@ export default function App() {
                 <Picker.Item label="Other" value="Other" />
               </Picker>
             </View>
+            {renderError('sex')}
             
             <Text style={styles.label}>No. of Copies Required</Text>
             <TextInput
@@ -366,6 +462,7 @@ export default function App() {
               keyboardType="numeric"
               onChangeText={(value) => updateFormData('copies', value)}
             />
+            {renderError('copies')}
             
             <Text style={styles.label}>Date of Birth (YYYY-MM-DD)</Text>
             <TextInput
@@ -374,6 +471,7 @@ export default function App() {
               style={styles.textInput}
               onChangeText={(value) => updateFormData('birthDate', value)}
             />
+            {renderError('birthDate')}
             
             <Text style={styles.label}>Place of Birth</Text>
             <TextInput
@@ -384,6 +482,7 @@ export default function App() {
               numberOfLines={3}
               onChangeText={(value) => updateFormData('birthPlace', value)}
             />
+            {renderError('birthPlace')}
           </View>
           
           <View style={styles.formSection}>
@@ -395,6 +494,7 @@ export default function App() {
               style={styles.textInput}
               onChangeText={(value) => updateFormData('registrarDivision', value)}
             />
+            {renderError('registrarDivision')}
             
             <Text style={styles.label}>Revenue District</Text>
             <TextInput
@@ -419,6 +519,7 @@ export default function App() {
               style={styles.textInput}
               onChangeText={(value) => updateFormData('registrationDate', value)}
             />
+            {renderError('registrationDate')}
             
             <Text style={styles.label}>Search Period - From (YYYY-MM-DD)</Text>
             <TextInput
@@ -427,6 +528,7 @@ export default function App() {
               style={styles.textInput}
               onChangeText={(value) => updateFormData('searchFrom', value)}
             />
+            {renderError('searchFrom')}
             
             <Text style={styles.label}>Search Period - To (YYYY-MM-DD)</Text>
             <TextInput
@@ -435,6 +537,7 @@ export default function App() {
               style={styles.textInput}
               onChangeText={(value) => updateFormData('searchTo', value)}
             />
+            {renderError('searchTo')}
           </View>
           
           <View style={styles.formSection}>
@@ -484,24 +587,6 @@ export default function App() {
             <Text style={styles.amount}>{calculateFee()}</Text>
           </View>
           
-          {/* <View style={styles.formSection}>
-            <Text style={styles.sectionTitle}>6. Signature</Text>
-            <Text style={styles.label}>Application Date (YYYY-MM-DD)</Text>
-            <TextInput
-              value={formData.applicationDate}
-              placeholder="YYYY-MM-DD"
-              style={styles.textInput}
-              onChangeText={(value) => updateFormData('applicationDate', value)}
-            />
-            
-            <Text style={styles.label}>Signature (Type your name)</Text>
-            <TextInput
-              value={formData.signature}
-              placeholder="Type your name as signature"
-              style={styles.textInput}
-              onChangeText={(value) => updateFormData('signature', value)}
-            />
-          </View>    */}
          
           <View style={styles.buttonContainer}>
             <Button title="Generate PDF" onPress={generatePdf} />
@@ -609,5 +694,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 20,
     marginBottom: 40,
+    borderRadius: 30,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 10,
   },
 });

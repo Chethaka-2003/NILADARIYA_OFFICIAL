@@ -1,15 +1,36 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions, SafeAreaView } from 'react-native';
+import React, { useEffect,useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions, SafeAreaView ,Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Background from "./GradientBackground";
 
 const { width, height } = Dimensions.get('window');
 
 const DivisionalCouncil = ({ navigation }) => {
+  const { district } = route.params || {};
   // State to track which service is expanded
   const [expandedService, setExpandedService] = useState(null);
   // State to track if Civil Registration service buttons are visible
   const [showCivilRegistrationServices, setShowCivilRegistrationServices] = useState(false);
+
+  // Check if district is selected
+  useEffect(() => {
+    if (!district) {
+      Alert.alert('District Required', 'Please select a district to access this service.', [
+        { text: 'OK', onPress: () => navigation.goBack() },
+      ]);
+    }
+  }, [district, navigation]);
+
+  if (!district) {
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <Background />
+        <View style={styles.container}>
+          <Text style={styles.errorText}>Please select a district to access this service.</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   // Service details data
   const serviceDetails = {
@@ -68,21 +89,21 @@ const DivisionalCouncil = ({ navigation }) => {
 
   const toggleService = (serviceName) => {
     if (expandedService === serviceName) {
-      setExpandedService(null); // Collapse if already expanded
+      setExpandedService(null);
       if (serviceName === "Civil Registration") {
-        setShowCivilRegistrationServices(false); // Hide service buttons when collapsing
+        setShowCivilRegistrationServices(false); // Hide service buttons 
       }
     } else {
-      setExpandedService(serviceName); // Expand the clicked service
+      setExpandedService(serviceName); 
       if (serviceName !== "Civil Registration") {
-        setShowCivilRegistrationServices(false); // Hide service buttons when expanding different service
+        setShowCivilRegistrationServices(false); 
       }
     }
   };
 
   const handleRequestService = (serviceName) => {
     if (serviceName === "Civil Registration") {
-      setShowCivilRegistrationServices(true); // Show service buttons for Civil Registration
+      setShowCivilRegistrationServices(true); 
     } else {
       alert(`Service request for ${serviceName} will be processed soon.`);
     }
@@ -99,6 +120,7 @@ const DivisionalCouncil = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Background />
+      <ScrollView contentContainerStyle={styles.scrollView}>
       <View style={styles.logo}>
         <Image source={require("./assets/Logo.png")} style={styles.logoImage} />
       </View>
@@ -107,7 +129,7 @@ const DivisionalCouncil = ({ navigation }) => {
         <Text style={styles.councilTitle}>Divisional Council Services</Text>
       </View>
       
-      <ScrollView contentContainerStyle={styles.scrollView}>
+      
         <View style={styles.councilContainer}>
           <Text style={styles.sectionTitle}>Available Services</Text>
           
@@ -167,12 +189,7 @@ const DivisionalCouncil = ({ navigation }) => {
             </TouchableOpacity>
           ))}
           
-          <Text style={styles.contactInfo}>
-            Contact Information:{"\n"}
-            Phone: 011-2345678{"\n"}
-            Email: info@divisionalcouncil.gov.lk{"\n"}
-            Hours: Monday-Friday, 8:30 AM - 4:30 PM
-          </Text>
+      
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -224,7 +241,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   serviceCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    backgroundColor: 'rgba(153, 185, 229, 0.7)',
     borderRadius: 10,
     padding: 20,
     marginBottom: 15,
@@ -322,16 +339,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: width * 0.035,
   },
-  contactInfo: {
-    marginTop: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    padding: 15,
-    borderRadius: 10,
-    fontSize: width * 0.035,
-    lineHeight: 22,
-    width: width * 0.85,
-    textAlign: 'center',
-  },
+  
 });
 
 export default DivisionalCouncil;

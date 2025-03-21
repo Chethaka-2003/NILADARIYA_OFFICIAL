@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Background from "./GradientBackground";
 
 
-
 const districts = [
   'Ampara', 'Anuradhapura', 'Badulla', 'Batticaloa', 'Colombo', 'Galle', 'Gampaha', 'Hambantota',
   'Jaffna', 'Kalutara', 'Kandy', 'Kegalle', 'Kilinochchi', 'Kurunegala', 'Mannar', 'Matale',
@@ -153,10 +152,17 @@ const certificateServices = {
 const { width, height } = Dimensions.get('window');
 
 export default function MenuOptions({ navigation }) {
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
   
-
-
-  const [selectedDistrict, setSelectedDistrict] = useState(districts[0]);
+  const handleNavigate = (screenName) => {
+    console.log("Selected District in handleNavigate:", selectedDistrict);
+    if (!selectedDistrict) {
+      Alert.alert('District Required', 'Please select a district before proceeding.');
+      return;
+    }
+    navigation.navigate(screenName, { district: selectedDistrict });
+  };
+ 
   const [isModalVisible, setModalVisible] = useState(false);
   const [scale, setScale] = useState(new Animated.Value(1));
   const [selectedLanguage, setSelectedLanguage] = useState(null); // To track selected language
@@ -166,6 +172,11 @@ export default function MenuOptions({ navigation }) {
   const tooltipOpacity = new Animated.Value(0);
   const [selectedService, setSelectedService] = useState(null);
   const [selectedCertificateService, setSelectedCertificateService] = useState(null);
+
+  useEffect(() => {
+    console.log("Selected District Updated:", selectedDistrict);
+  }, [selectedDistrict]);
+ 
 
   useEffect(() => {
     // Fade in the tooltip
@@ -325,11 +336,15 @@ export default function MenuOptions({ navigation }) {
         
         <View style={styles.pickerContainer}>
          <View style={styles.pickerWrapper}>  
-          <Picker
+         <Picker
             selectedValue={selectedDistrict}
             style={styles.picker}
-            onValueChange={(itemValue) => setSelectedDistrict(itemValue)}
+            onValueChange={(itemValue) => {
+              console.log("District Selected:", itemValue); 
+              setSelectedDistrict(itemValue);
+            }}
           >
+            <Picker.Item label="Select a District" value={null} />
             {districts.map((district, index) => (
               <Picker.Item key={index} label={district} value={district} />
             ))}
@@ -361,41 +376,41 @@ export default function MenuOptions({ navigation }) {
         <ScrollView contentContainerStyle={styles.scrollView}>
         
         <View style={styles.buttonsContainer }textAlign='center'>
-        {/* <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("DivisionalCouncil")}>
+          <TouchableOpacity style={styles.button} onPress={() => handleNavigate("DivisionalCouncil")}>
             <View style={styles.transparentBackground}>
               <Text style={styles.buttonText}>DIVISIONAL COUNCIL</Text>
             </View>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
 
-          {/* <TouchableOpacity style={styles.button} onPress={() => router.push("MunicipalCouncil")}>
+           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("MunicipalCouncil")}>
             <View style={styles.transparentBackground}>
               <Text style={styles.buttonText}>MUNICIPAL COUNCIL</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => router.push("MunicipalCouncil")}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ElectricityBoard")}>
             <View style={styles.transparentBackground}>
               <Text style={styles.buttonText}>CEYLON ELECTRICITY BOARD</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => router.push("MunicipalCouncil")}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("WaterSupplyBoard")}>
             <View style={styles.transparentBackground}>
               <Text style={styles.buttonText}>NATIONAL WATER SUPPLY & DRAINAGE BOARD</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => router.push("MunicipalCouncil")}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("LawCourt")}>
             <View style={styles.transparentBackground}>
                <Text style={styles.buttonText}>LAW COURT</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => router.push("Municipal Council")}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Police")}>
              <View style={styles.transparentBackground}>
                <Text style={styles.buttonText}>SRI LANKA POLICE</Text>
              </View>
-          </TouchableOpacity> */}
+          </TouchableOpacity> 
         </View>
   
         <Modal visible={isModalVisible} transparent={true} animationType="slide">
