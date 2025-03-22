@@ -9,3 +9,8 @@ router.put("/profile", protect, updateProfile);
 router.get("/appointment/count", protect, getAppointmentCount);
 
 module.exports = router;
+
+
+
+
+
