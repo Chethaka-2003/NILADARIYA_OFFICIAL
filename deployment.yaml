@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gke-test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gke-test
+  template:
+    metadata:
+      labels:
+        app: gke-test
+    spec:
+      containers:
+      - name: gke-test
+        image: LOCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE:TAG
+        ports:
+        - containerPort: 8080
