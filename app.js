@@ -233,6 +233,7 @@ const mongoose = require('mongoose');
 const app = express();
 const port = process.env.PORT || 4000;
 
+
 app.use(express.json());
 app.use(cors());
 
@@ -243,12 +244,16 @@ mongoose.connect(mongoUrl)
   .catch((e) => console.log(e));
 
 // Import Routes
+const feedbackRoutes = require('./routes/Feedback');
 const authRoutes = require('./routes/auth');
 const verificationRoutes = require('./routes/verification');
 
 // Use Routes
 app.use('/auth', authRoutes);
 app.use('/verification', verificationRoutes);
+app.use('/feedback', feedbackRoutes);
+
+
 
 app.listen(4000, () => console.log("Server started on port 4000"));
 

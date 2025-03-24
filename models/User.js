@@ -1,12 +1,21 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+
 
 const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   mobile: { type: String, unique: true },
-  password: String
+  password: String, // Password stored in plain text
+  userType: { type: String, enum: ['public', 'government'], default: 'public' },
 });
 
-const User = mongoose.model('UserInfo', userSchema);
+// Hash password before saving to DB
+userSchema.pre('save', async function(next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+  next();
+});
 
-module.exports = User; // Export the model
+module.exports = mongoose.model('userinfos', userSchema);
