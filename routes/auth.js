@@ -199,7 +199,100 @@ router.post("/change-password", async (req, res) => {
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Password Change Confirmation',
-      text: 'Your password has been successfully changed.'
+      html:`<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        img {
+            width: 180px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: rgb(100, 203, 237);
+            padding: 15px;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .titleholder {
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .message {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .code {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            background-color: rgb(100, 203, 237);
+            width: 100px;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .footer {
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">NILADARIYA</div>
+        <div class="content">
+            <div class="titleholder">
+                <div class="title">ඔබ ඔබගේ මුරපදය සාර්ථකව වෙනස් කර ඇත.</div>
+                <div class="title" style="font-size: medium;">You have successfully changed your password.</div>
+                <div class="title" style="font-size: medium;">உங்கள் கடவுச்சொல்லை வெற்றிகரமாக மாற்றிவிட்டீர்கள்.</div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+
+</html>`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -241,7 +334,128 @@ router.post('/register', async (req, res) => {
   } catch (err) {
     res.status(500).json({ status: 'error', message: err.message });
   }
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Account Created Successfully',
+    html:`<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        img {
+            width: 180px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: rgb(100, 203, 237);
+            padding: 15px;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .titleholder {
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .message {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .code {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            background-color: rgb(100, 203, 237);
+            width: 100px;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .footer {
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">NILADARIYA</div>
+        <div class="content">
+            <div class="titleholder">
+                <div class="title">ඔබ සාර්ථකව ගිණුමක් නිර්මාණය කර ඇත.</div>
+                <div class="title" style="font-size: medium;">You have successfully created an account.</div>
+                <div class="title" style="font-size: medium;">நீங்கள் வெற்றிகரமாக ஒரு கணக்கை உருவாக்கிவிட்டீர்கள்.</div>
+            </div>
+            <div class="titleholder">
+                <div class="message">නිලධාරි පැතිකඩ</div>
+                <div class="message" style="font-size: small;">Officer Profiles</div>
+                <div class="message" style="font-size: small;">அதிகாரி சுயவிவரம்</div>
+            </div>
+	    <div class="titleholder">
+                <div class="message">AI චැට්බොට්</div>
+                <div class="message" style="font-size: small;">AI Chatbot</div>
+                <div class="message" style="font-size: small;">AI சாட்பாட்</div>
+            </div>
+	    <div class="titleholder">
+                <div class="message">මාර්ගගත උපදේශනය</div>
+                <div class="message" style="font-size: small;">Online Consulting</div>
+                <div class="message" style="font-size: small;">ஆன்லைன் ஆலோசனை</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>`
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.send({ status: "error", data: error.message });
+    }
+    res.send({ status: "OK", data: "Verification email sent" });
+  });
 });
+
 
 
 router.post('/login', async (req, res) => {
