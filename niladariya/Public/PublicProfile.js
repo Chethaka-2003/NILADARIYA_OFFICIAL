@@ -1,29 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, Modal, TextInput, Dimensions, Alert } from "react-native";
-import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import Background from './GradientBackground';
+import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from '@react-navigation/native';
 import {Ionicons} from '@expo/vector-icons';
 import { Camera } from 'expo-camera';
 //import e from "cors"; 
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
-const Officer = () => {
+const ProfilePage = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState (false);
   const [profile, setProfile] = useState ({
     name: "",
     email: "",
-    position: "",
-    service: "",
-    mobile: "",
-    telephone: "",
-    address:"",
+    contact: " ",
     profilePicture: null,
   });
-
+  
   const[errors, setErrors] = useState({});
 
   const API_BASE_URL = "http://YOUR_NODE_SERVER_IP:3000/OFFICER_API";
@@ -225,17 +221,15 @@ const Officer = () => {
 
         {/* Header Section */}
         <View style={styles.header}>
-          <View style={styles.profilePictureContainer}>
-            <TouchableOpacity onPress={pickOrCaptureImage} style={styles.profilePicture}>
-              <Image source={profile.profilePicture ? { uri: profile.profilePicture } : require("./assets/officer.png")} style={[styles.profilePicture]} />
-              <View style={styles.editIcon}>
-                <Ionicons name="camera-outline" size={20} color="white" />
-              </View>
-            </TouchableOpacity>
+          <TouchableOpacity onPress={pickOrCaptureImage} style={styles.profilePicture}>
+            <Image source={profile.profilePicture ? { uri: profile.profilePicture } : require("./assets/officer.png")} style={[styles.profilePicture]} />
+            <View style={styles.editIcon}>
+              <Ionicons name="camera-outline" size={20} color="white" />
+            </View>
+          </TouchableOpacity>
 
-            <Text style={styles.userName}>{profile.name}</Text>
-            <Text style={styles.email}>{profile.email}</Text>
-          </View>
+          <Text style={styles.userName}>{profile.name}</Text>
+          <Text style={styles.email}>{profile.email}</Text>
         </View>  
 
         {/*Officer Details*/}
@@ -283,13 +277,7 @@ const Officer = () => {
         <Modal visible={modalVisible} transparent={true} animationType="fade">
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              {/* Modal Header with Close Icon */}
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Edit Profile</Text>
-                <TouchableOpacity onPress={() => setModalVisible(false)}>
-                  <Ionicons name="close-circle" size={28} color="#195b8c" />
-                </TouchableOpacity>
-              </View>
+              <Text style={styles.modalTitle}>Edit Profile</Text>
 
               {/* <TextInput style={[styles.input, errors.name && styles.inputError]} placeholder="Enter Name" value={profile.name} onChangeText={(text) => handleProfileUpdate("name", text)} /> {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
               <TextInput style={[styles.input, errors.email && styles.inputError]} placeholder="Enter Email" value={profile.email} onChangeText={(text) => handleProfileUpdate("email", text)} /> {errors.email && <Text style={styles.errorText}>{errors.email}</Text>} */}
@@ -319,7 +307,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginBottom: 100,
+    marginBottom: 20,
   },
   profilePictureContainer: {
     width: 120,
@@ -327,10 +315,9 @@ const styles = StyleSheet.create({
     position: "relative",
   },  
   profilePicture: {
-    width: width * 0.3, // Adjust size relative to screen width
-    height: width * 0.3,
-    borderRadius: (width * 0.3) / 2, // Make it circular
-    backgroundColor: '#black',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
   },
   editIcon: {
     position: "absolute",
@@ -423,11 +410,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
   },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
-  },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -462,4 +444,4 @@ const styles = StyleSheet.create({
   },  
 });
 
-export default Officer;
+export default ProfilePage;
