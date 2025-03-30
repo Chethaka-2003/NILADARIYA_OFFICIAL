@@ -1,9 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView , SafeAreaView} from 'react-native';
+import Background from './GradientBackground';
 
 const LockInstructions = () => {
+    
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <SafeAreaView flex={1}>
+        <Background />
       <Text style={styles.title}>User Instructions for Lock Screen</Text>
       
       <Text style={styles.sectionTitle}>Introduction</Text>
@@ -44,7 +47,8 @@ const LockInstructions = () => {
         2. If you have forgotten your passcode, you may need to reset the application to its default settings.
         3. Contact support for further assistance.
       </Text>
-    </ScrollView>
+    
+    </SafeAreaView>
   );
 };
 

@@ -57,7 +57,7 @@ const Lock = () => {
         ]}
       />
     ));
-  };
+  }
 
   return (
     <SafeAreaView flex={1}>

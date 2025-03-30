@@ -23,6 +23,7 @@ import DeathCertificateForm from './OtherPages/DeathCertificateForm';
 import AboutApp from './SettingsPages/AboutApp';
 import OfficerPage from './Profiles/Officer(User)';
 import Lock from './Required/Lock';
+import Lockins from './lockins';
 
 
 
@@ -117,8 +118,8 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Lock" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Lock" component={Lock} />
+      <Stack.Navigator initialRouteName="Lockins" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Lockins" component={Lockins} />
 
       </Stack.Navigator>
     </NavigationContainer>
