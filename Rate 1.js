@@ -38,7 +38,6 @@ const App = () => {
     }
 
     try {
-      // Replace '12345' with the actual user ID
       const response = await axios.post('http://192.168.1.136:4000/Feedback/submit', {
         rating: rating,
         feedbackText: feedback,
