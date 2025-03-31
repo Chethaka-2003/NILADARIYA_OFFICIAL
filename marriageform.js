@@ -24,8 +24,10 @@ export default function App() {
     marriagedistrict: "",
     exactdate: "",   
     searchFrom: "",
+    searchFrom: "",
     searchTo: "",
     feeType: "120",
+    applicationDate: "",
     applicationDate: "",
     signature: ""
   });
@@ -41,7 +43,7 @@ export default function App() {
   // Calculate fee
   const calculateFee = () => {
     const fee = parseInt(formData.feeType) * parseInt(formData.copies || 1);
-    return Rs. ${fee}/-;
+    return 'Rs. ${fee}/-';
   };
 
   // Generate HTML with form data
@@ -74,6 +76,11 @@ export default function App() {
       <div class="header">
         <div class="logo">
           <img src="/api/placeholder/80/80" alt="Government Emblem" />
+        </div>
+        <div class="title">
+          <h3>විවා හ (සා මා න්‍ය හෝ   උඩරට)  සහතිකයක් ගැ නීමේ සහ නො හො ත් ලේකම් පො ත්  සො යා බැ ලීමේ ඉල්ලුම් පත්‍රය. </h3>
+          <p class="multilingual">பிறப்பு சான்றிதழுக்கும் அல்லது பதிவேடுகளைத் தேடுவதற்குமான விண்ணப்பம்</p>
+          <p class="multilingual">APPLICATION FOR CERTIFICATE OF MARRIAGE (GENERAL OR KANADYAN) AND/ OR SEARCH FOR REGISTERS</p>
         </div>
         <div class="title">
           <h3>විවා හ (සා මා න්‍ය හෝ   උඩරට)  සහතිකයක් ගැ නීමේ සහ නො හො ත් ලේකම් පො ත්  සො යා බැ ලීමේ ඉල්ලුම් පත්‍රය. </h3>
