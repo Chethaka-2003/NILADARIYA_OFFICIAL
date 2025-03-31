@@ -2,9 +2,13 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
+
 import SettingsPg from "./SettingsPg";
-import Profile from '../Profiles/Officer(User)';
 import HomePg from './UpdatedMenuOptions';
+import ProfilePage from '../Profiles/ProfilePage';
+
+
+
 
 
 const Tab = createBottomTabNavigator();
@@ -60,8 +64,7 @@ export default function NavigationBar() {
     >
       {/* add the screens to the navigation bar */}
       <Tab.Screen name="Home" component={HomePg} />
-      <Tab.Screen name="Profile" component={Profile} />
-      
+      <Tab.Screen name="Profile" component={ProfilePage} />
       <Tab.Screen name="Settings" component={SettingsPg} />
     </Tab.Navigator>
 

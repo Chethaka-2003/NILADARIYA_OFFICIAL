@@ -20,7 +20,7 @@ const Footer = ({ children }) => (
 );
 
 
-export default function SettingsPg({ navigation }) {
+export default function SettingsPgOfficer({ navigation }) {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [form, setForm] = useState({
@@ -43,6 +43,13 @@ export default function SettingsPg({ navigation }) {
       <Background />
       <ScrollView>
 
+      <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => navigation.goBack()}
+        >
+          <FeatherIcon name="arrow-left" size={30} color="black" />
+        </TouchableOpacity>
+
         <View style={styles.container}>
           <Text style={styles.headerText}>APP Settings</Text>
           <FeatherIcon name="settings" style={styles.mainIcon} />
@@ -56,18 +63,7 @@ export default function SettingsPg({ navigation }) {
           <PasswordChange visible={modalVisible} onClose={() => setModalVisible(false)} />
           <RateUsModal visible={modalVisible} onClose={() => setModalVisible(false)} />
 
-          <TouchableOpacity
-            style={styles.row}
-            onPress={() => navigation.navigate('UpdatePasscode')}>
-            <FeatherIcon name="lock" style={styles.icon} />
-            <Text style={styles.rowLabel}>Set Passcode</Text>
-            <View style={styles.rowSpacer} />
-            <FeatherIcon color="black" name="chevron-right" size={30} />
-          </TouchableOpacity>
-
           <AboutApp />
-
-
 
 
 
@@ -78,8 +74,6 @@ export default function SettingsPg({ navigation }) {
             <LogOut visible={modalVisible} onClose={() => setModalVisible(false)} />
 
           </View>
-
-
 
           <Footer>
             <Text style={{ textAlign: 'center', marginTop: height * 0.1, color: 'black', fontWeight: 'bold' }}>© 2025 SparkM6 Solutions Pvt Ltd.{'\n'} All rights reserved</Text>
@@ -99,7 +93,6 @@ const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginTop: height * 0.09,
   },
 
   headerText: {
@@ -169,6 +162,13 @@ const styles = StyleSheet.create({
   managePrivacyText: {
     fontSize: 16,
     color: "#000",
+  },
+
+  backButton: {
+    marginTop: height * 0.07,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
   },
 
 });

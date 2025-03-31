@@ -4,7 +4,7 @@ import LottieView from 'lottie-react-native';
 import DONE from '../assets/done.json';
 import { useNavigation } from '@react-navigation/native';
 
-const CustomLottieAlert = ({ visible, title, message, onClose, animationSource }) => {
+export const CustomLottieAlert = ({ visible, title, message, onClose, animationSource }) => {
   const navigation = useNavigation();
 
   const handleOkPress = () => {

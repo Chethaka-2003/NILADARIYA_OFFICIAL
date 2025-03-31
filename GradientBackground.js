@@ -16,11 +16,7 @@ const GradientBackground = () => (
 
 // const styles = StyleSheet.create({
 //   background: {
-//     position: 'absolute', // Position the background absolutely
-//     top: 0,
-//     left: 0,
-//     right: 0,
-//     bottom: 0,
+//     flex: 1,
 //   },
 // });
 
