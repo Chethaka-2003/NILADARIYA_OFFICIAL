@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, View, TouchableOpacity, Image, Text, ScrollView, Switch, navigation, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, SafeAreaView, View, TouchableOpacity, Text, ScrollView, Switch, navigation, Dimensions } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Background from './Background';
-import RateUsModal from './Rate';
-import PasswordChange from './Security';
-import Language from './Language';
-import LogOut from './LogOut';
-import axios from "axios";
-import Background from "./GradientBackground";
+import * as Notifications from 'expo-notifications';
 
+
+
+import Background from './GradientBackground';
+import RateUsModal from '../SettingsPages/Rate';
+import PasswordChange from '../SettingsPages/Security';
+import Language from '../SettingsPages/Language';
+import LogOut from '../SettingsPages/LogOut';
+import AboutApp from '../SettingsPages/AboutApp';
+
+
+const Footer = ({ children }) => (
+  <View style={styles.footer}>
+    {children}
+  </View>
+);
 
 
 export default function SettingsPg({ navigation }) {
@@ -18,97 +27,66 @@ export default function SettingsPg({ navigation }) {
     notifications: true,
   });
 
-  // Fetch the user's notification preference when component mounts
   useEffect(() => {
-    const fetchNotificationSetting = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5001/api/user/${userId}` // Replace USER_ID dynamically
-        );
-        setIsNotificationsEnabled(response.data.notificationsEnabled);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        setError("Failed to load settings");
-      }
-    };
+    // Set up a listener for incoming notifications when this screen is focused
+    const subscription = Notifications.addNotificationReceivedListener(notification => {
+      console.log("Notification received:", notification);
+      // Handle the notification as needed, for example, navigate to another screen
+    });
 
-    fetchNotificationSetting();
-  }, [userId]);
-
-  // Function to toggle notifications
-  const toggleNotifications = async () => {
-    try {
-      const updatedSetting = !isNotificationsEnabled;
-      setIsNotificationsEnabled(updatedSetting); // Optimistic UI update
-      setError(null); // Clear error message
-
-      const response = await axios.put("http://localhost:4000/api/notifications", {
-        userId: userId, // Dynamically pass the userId
-        notificationsEnabled: updatedSetting,
-      });
-
-      setSuccess("Notification preference updated successfully");
-      setError(null); // Clear any previous error
-    } catch (error) {
-      console.error("Error updating notifications:", error);
-      setSuccess(null); // Clear any previous success message
-      setError("Failed to update notification preference. Please try again later.");
-      setIsNotificationsEnabled(!isNotificationsEnabled); // Revert UI if API call fails
-    }
-  };
+    // Clean up the subscription when the component unmounts
+    return () => subscription.remove();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Background />
-
-      <View style={styles.container}>
-        <Text style={styles.headerText}>APP Settings</Text>
-        <FeatherIcon name="settings" style={styles.mainIcon} />
-      </View>
-
       <ScrollView>
+
+        <View style={styles.container}>
+          <Text style={styles.headerText}>APP Settings</Text>
+          <FeatherIcon name="settings" style={styles.mainIcon} />
+        </View>
+
+
         <View style={styles.section}>
 
 
           <Language visible={modalVisible} onClose={() => setModalVisible(false)} />
           <PasswordChange visible={modalVisible} onClose={() => setModalVisible(false)} />
+          <RateUsModal visible={modalVisible} onClose={() => setModalVisible(false)} />
 
-          {/* Notification changer */}
-
-          <View style={styles.row}>
-            <View style={styles.box}>
-              <FeatherIcon name="bell" style={styles.icon} />
-            </View>
-
-
-            <Text style={styles.rowLabel}>Notifications</Text>
+          <TouchableOpacity
+            style={styles.row}
+            onPress={() => navigation.navigate('UpdatePasscode')}>
+            <FeatherIcon name="lock" style={styles.icon} />
+            <Text style={styles.rowLabel}>Set Passcode</Text>
             <View style={styles.rowSpacer} />
+            <FeatherIcon color="black" name="chevron-right" size={30} />
+          </TouchableOpacity>
 
-            <Switch onValueChange={notifications => setForm({ ...form, notifications })} value={form.notifications} />
+          <AboutApp />
+
+
+
+
+
+
+          {/* White Container */}
+          <View style={styles.whiteContainer}>
+
+            <LogOut visible={modalVisible} onClose={() => setModalVisible(false)} />
+
           </View>
 
 
-          {/* About App */}
-          <TouchableOpacity onPress={() => navigation.navigate('AboutUs')} style={styles.row}>
-            <View style={styles.box}>
-              <FeatherIcon name="info" style={styles.icon} />
-            </View>
 
-            <Text style={styles.rowLabel}>About App</Text>
-            <View style={styles.rowSpacer} />
+          <Footer>
+            <Text style={{ textAlign: 'center', marginTop: height * 0.1, color: 'black', fontWeight: 'bold' }}>© 2025 SparkM6 Solutions Pvt Ltd.{'\n'} All rights reserved</Text>
+          </Footer>
 
-            <FeatherIcon color='black' name='chevron-right' size={30} />
-          </TouchableOpacity>
+        </View>
 
-          <RateUsModal visible={modalVisible} onClose={() => setModalVisible(false)} />
-        
-
-        {/* White Container */}
-        <View style={styles.whiteContainer}>
-          
-        <LogOut visible={modalVisible} onClose={() => setModalVisible(false)} />
-        </View>
-      </View>
 
       </ScrollView>
 
@@ -121,7 +99,7 @@ const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginTop: height * 0.05,
+    marginTop: height * 0.09,
   },
 
   headerText: {
@@ -138,7 +116,7 @@ const styles = StyleSheet.create({
 
   section: {
     paddingHorizontal: width * 0.1,
-    paddingTop: height * 0.1,
+    paddingTop: height * 0.05,
   },
 
   icon: {
@@ -178,8 +156,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 15,
     width: "100%",
-    
-    
+
+
   },
   managePrivacyButton: {
     backgroundColor: "#d9d9d9",
@@ -192,5 +170,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#000",
   },
-  
+
 });
