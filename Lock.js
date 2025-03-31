@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  View, Text, StyleSheet, Image, TouchableOpacity, 
-  Animated, Vibration, SafeAreaView 
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, Vibration, SafeAreaView, Dimensions, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Background from './GradientBackground';
+import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
+
+const { width, height } = Dimensions.get('window');
 
 const Lock = () => {
   const [passcode, setPasscode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [fadeAnim] = useState(new Animated.Value(0));
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -40,6 +43,7 @@ const Lock = () => {
       console.log('Passcode:', passcode);
       setPasscode('');
       setErrorMessage('');
+      navigation.navigate('NavigationBar');
     } else {
       setErrorMessage('Incorrect passcode');
       Vibration.vibrate();
@@ -53,14 +57,15 @@ const Lock = () => {
         key={i}
         style={[ 
           styles.passcodeDot, 
-          { backgroundColor: i < passcode.length ? '#FFD700' : 'transparent' } 
+          { backgroundColor: i < passcode.length ? '#195b8c' : 'transparent' } 
         ]}
       />
     ));
-  }
+  };
 
   return (
     <SafeAreaView flex={1}>
+      <ScrollView>
       <Background/>
       <View style={styles.container}>
       {/* <Background/> */}
@@ -81,96 +86,96 @@ const Lock = () => {
             ))}
           </View>
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Unlock</Text>
+            <Text style={styles.buttonText1}>Unlock</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
+      </ScrollView>
       </SafeAreaView>
     
   );
 };
 
 const styles = StyleSheet.create({
-  // backgroundContainer: {
-  //   flex: 1,  // Make sure the gradient fills the entire screen
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    padding: 20,
+    padding: width * 0.05, // Adjust padding based on screen width
   },
   logo: {
-    width: 150,
-    height: 150,
-    marginBottom: 10,
+    width: width * 0.4, // Adjust logo size based on screen width
+    height: width * 0.4,
+    marginBottom: height * 0.02, // Adjust margin based on screen height
   },
   card: {
-    // backgroundColor: 'transparent',
-    padding: 25,
+    padding: width * 0.06, // Adjust padding based on screen width
     borderRadius: 15,
     elevation: 6,
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: width * 0.06, // Adjust font size based on screen width
     fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 20,
+    color: 'black',
+    marginBottom: height * 0.02, // Adjust margin based on screen height
   },
   passcodeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '80%',
-    marginBottom: 20,
+    marginBottom: height * 0.02, // Adjust margin based on screen height
   },
   passcodeDot: {
-    width: 15,
-    height: 15,
-    borderRadius: 7.5,
-    borderWidth: 1,
-    borderColor: 'white',
+    width: width * 0.04, // Adjust dot size based on screen width
+    height: width * 0.04,
+    borderRadius: (width * 0.04) / 2,
+    borderWidth: 2,
+    borderColor: 'black',
   },
   errorText: {
     color: 'red',
-    marginTop: 10,
+    marginTop: height * 0.01, // Adjust margin based on screen height
   },
   numberPad: {
-    marginTop: 20,
+    marginTop: height * 0.03, // Adjust margin based on screen height
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
   numberButton: {
-    width: 80,
-    height: 80,
-    margin: 10,
+    width: width * 0.2, // Adjust button size based on screen width
+    height: width * 0.2,
+    margin: width * 0.02, // Adjust margin based on screen width
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 50,
+    borderRadius: (width * 0.2) / 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
   numberButtonText: {
-    fontSize: 20,
+    fontSize: width * 0.05, // Adjust font size based on screen width
     color: 'black',
     fontWeight: 'bold',
   },
   button: {
-    backgroundColor: '#FFD700',
+    backgroundColor: '#195b8c',
     borderRadius: 50,
-    paddingVertical: 20,
-    marginTop: 20,
-    width: 300,
+    paddingVertical: height * 0.02, // Adjust padding based on screen height
+    marginTop: height * 0.03, // Adjust margin based on screen height
+    width: width * 0.8, // Adjust width based on screen width
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 5,
   },
   buttonText: {
-    fontSize: 20,
+    fontSize: width * 0.05, // Adjust font size based on screen width
     color: '#000',
+    fontWeight: 'bold',
+  },
+  buttonText1: {
+    fontSize: width * 0.05, // Adjust font size based on screen width
+    color: 'white',
     fontWeight: 'bold',
   },
 });
