@@ -6,7 +6,11 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   mobile: { type: String, unique: true },
-  password: String, // Password stored in plain text
+  password: String, 
+  position: String,
+  department: String,
+  available: { type: Boolean, default: false },
+  profilePicture: { type: String, default: null }, // Store the image URL here
   userType: { type: String, enum: ['public', 'government'], default: 'public' },
 });
 

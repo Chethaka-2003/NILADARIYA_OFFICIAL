@@ -23,36 +23,36 @@ const transporter = nodemailer.createTransport({
 });
 
 router.post("/send-verification", async (req, res) => {
-    const { email, mobile, isPasswordReset } = req.body;
-  
-    // For Sign-Up: Check if the user already exists
-    if (!isPasswordReset) {
-      const existingUser = await User.findOne({ $or: [{ email }] });
-  
-      if (existingUser) {
-        return res.send({ status: "error", data: "Email already exists" });
-      }
-    }
-  
-    // For Password Reset: Check if the email exists in the database
-    if (isPasswordReset) {
-      const existingUser = await User.findOne({ email });
-  
-      if (!existingUser) {
-        return res.send({ status: "error", data: "Email not registered" });
-      }
-    }
-  
-    // Send the verification code if valid (for both cases)
-    const code = crypto.randomInt(100000, 999999).toString();
-    verificationCodes[email] = code;
+  const { email, mobile, isPasswordReset } = req.body;
 
-  
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Email Verification Code',
-      html:`<!DOCTYPE html>
+  // For Sign-Up: Check if the user already exists
+  if (!isPasswordReset) {
+    const existingUser = await User.findOne({ $or: [{ email }] });
+
+    if (existingUser) {
+      return res.send({ status: "error", data: "Email already exists" });
+    }
+  }
+
+  // For Password Reset: Check if the email exists in the database
+  if (isPasswordReset) {
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      return res.send({ status: "error", data: "Email not registered" });
+    }
+  }
+
+  // Send the verification code if valid (for both cases)
+  const code = crypto.randomInt(100000, 999999).toString();
+  verificationCodes[email] = code;
+
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Email Verification Code',
+    html: `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -153,16 +153,16 @@ router.post("/send-verification", async (req, res) => {
     </div>
 </body>
 
-</html>` 
-    };
-  
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        return res.send({ status: "error", data: error.message });
-      }
-      res.send({ status: "OK", data: "Verification email sent" });
-    });
+</html>`
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.send({ status: "error", data: error.message });
+    }
+    res.send({ status: "OK", data: "Verification email sent" });
   });
+});
 
 
 router.post("/verify-code", async (req, res) => {
@@ -199,7 +199,7 @@ router.post("/change-password", async (req, res) => {
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Password Change Confirmation',
-      html:`<!DOCTYPE html>
+      html: `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -324,7 +324,7 @@ router.post('/register', async (req, res) => {
     name,
     email,
     mobile,
-    password, 
+    password,
     userType: 'public', // Default type is 'public' until clarified
   });
 
@@ -339,7 +339,7 @@ router.post('/register', async (req, res) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: 'Account Created Successfully',
-    html:`<!DOCTYPE html>
+    html: `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -460,7 +460,7 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  
+
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(405).json({ status: 'error', message: 'Invalid email or password' });
@@ -472,7 +472,7 @@ router.post('/login', async (req, res) => {
   }
 
   // Generate JWT Token
-  const token = jwt.sign({ userId: user._id, userType: user.userType }, JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ userId: user._id, userType: user.userType }, JWT_SECRET, { expiresIn: '1d' });
 
   res.json({ status: 'OK', message: 'Login successful', token, userType: user.userType });
 });
@@ -481,19 +481,19 @@ router.post('/login', async (req, res) => {
 router.get('/verify-token', (req, res) => {
   let token = req.headers.authorization;
   if (!token) {
-      return res.status(401).json({ status: 'error', message: 'No token provided' });
+    return res.status(401).json({ status: 'error', message: 'No token provided' });
   }
 
   if (token.startsWith('Bearer ')) {
-      token = token.split(' ')[1];
+    token = token.split(' ')[1];
   }
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
-      if (err) {
-          return res.status(401).json({ status: 'error', message: 'Invalid token' });
-      }
+    if (err) {
+      return res.status(401).json({ status: 'error', message: 'Invalid token' });
+    }
 
-      res.json({ status: 'OK', message: 'Token valid', userType: decoded.userType });
+    res.json({ status: 'OK', message: 'Token valid', userType: decoded.userType });
   });
 });
 
@@ -502,7 +502,7 @@ const authenticateJWT = (req, res, next) => {
   const token = req.headers.authorization && req.headers.authorization.split(' ')[1]; // Extract token from "Bearer <token>"
   console.log('Received token:', token);
 
-  
+
   if (!token) {
     return res.status(401).json({ status: 'error', message: 'No token provided' });
   }
@@ -527,20 +527,24 @@ router.get('/getprofile', authenticateJWT, async (req, res) => {
     if (user.userType === 'government') {
       let officerProfile;
       try {
-        const OfficerProfile = require('../models/OfficerProfile');
+        const OfficerProfile = require('../models/User');
         officerProfile = await OfficerProfile.findOne({ userId: user._id });
       } catch (err) {
         console.error("Error retrieving officer profile:", err);
         return res.status(500).json({ status: 'error', message: 'Failed to load officer details' });
       }
-      
+
       if (!officerProfile) {
         return res.json({
           status: 'OK',
           profile: {
             name: user.name,
             email: user.email,
-            mobile: user.mobile
+            mobile: user.mobile,
+            position: user.position,
+            department: user.department,
+            profilePicture: user.profilePicture,
+            available: user.available
           }
         });
       }
@@ -551,7 +555,8 @@ router.get('/getprofile', authenticateJWT, async (req, res) => {
         profile: {
           name: user.name,
           email: user.email,
-          mobile: user.mobile
+          mobile: user.mobile,
+          profilePicture: user.profilePicture,
         }
       });
     }

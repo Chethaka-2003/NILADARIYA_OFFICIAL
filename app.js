@@ -18,12 +18,20 @@ mongoose.connect(mongoUrl)
 // Import Routes
 const feedbackRoutes = require('./routes/Feedback');
 const authRoutes = require('./routes/auth');
-const verificationRoutes = require('./routes/verification');
+const verificationRoutes = require('./routes/Profile');
+const cloudinaryRoutes = require('./routes/cloudinary');
+const profileRoutes = require('./routes/Profile');
+
+
 
 // Use Routes
 app.use('/auth', authRoutes);
 app.use('/verification', verificationRoutes);
 app.use('/feedback', feedbackRoutes);
+app.use('/cloudinary', cloudinaryRoutes);
+app.use('/profile', profileRoutes);
+
+
 
 
 
