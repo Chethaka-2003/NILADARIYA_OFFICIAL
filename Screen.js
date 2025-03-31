@@ -1,21 +1,25 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, SafeAreaView, Image, Dimensions, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image, Dimensions,} from 'react-native';
+import LoginScreen from './LoginScreen';
+import SignupScreen from './SignupScreen';
+import Background from '../Required/GradientBackground';
 
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
 
+
 export default function Screen({ navigation }) {
   return (
-    <ImageBackground
-      source={require('./assets/ABC.jpg')}
-      style={styles.background}
-    >
-      <SafeAreaView style={styles.container}>
+    
+      <SafeAreaView style={{ flex: 1 }}>
+        <Background />
+        <View style={styles.container}>
+        
         {/* Logo Section */}
         <View style={styles.logoContainer}>
           <Image 
-            source={require('./assets/ABE.png')} 
+            source={require('../assets/LOGO.png')} 
             style={styles.logo}
           />
         </View>
@@ -29,39 +33,35 @@ export default function Screen({ navigation }) {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, styles.publicButton]} // Apply specific style
-            onPress={() => navigation.navigate('UserProfile')} // Navigate to UserProfile
+            onPress={() => navigation.navigate(SignupScreen)} // Navigate to UserProfile
           >
             <Text style={[styles.buttonText, styles.publicButtonText]}>PUBLIC</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.governmentButton]} // Apply specific style
-            onPress={() => navigation.navigate('UserOfficer')} // Navigate to UserOfficer
+            onPress={() => navigation.navigate(LoginScreen)} // Navigate to UserOfficer
           >
             <Text style={[styles.buttonText, styles.governmentButtonText]}>GOVERNMENT</Text>
           </TouchableOpacity>
         </View>
+        </View>
 
-        <StatusBar style="light" />
+        <StatusBar style="auto" />
       </SafeAreaView>
-    </ImageBackground>
+    
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: width * 0.05,
+    top: height * 0.1,
   },
+  
   logoContainer: {
     alignItems: 'center',
-    marginBottom: height * 0.16,
+    marginBottom: height * 0.10,
   },
   logo: {
     width: width * 0.6,
@@ -70,13 +70,14 @@ const styles = StyleSheet.create({
   },
   headingText: {
     color: '#333333',
-    fontSize: width * 0.10,
+    fontSize: width * 0.09,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: height * 0.04,
-    lineHeight: width * 0.14,
+    marginBottom: height * 0.03,
+    lineHeight: width * 0.12,
   },
   buttonContainer: {
+    top: height * 0.1,
     width: '100%',
     alignItems: 'center',
     marginBottom: height * 0.02,
