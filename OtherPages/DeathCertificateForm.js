@@ -3,10 +3,9 @@ import { StyleSheet, Text, View, Button, TextInput, ScrollView, SafeAreaView, Sw
 import { useState } from 'react';
 import { printToFileAsync } from 'expo-print';
 import { shareAsync } from 'expo-sharing';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 
-export default function App() {
+export default function DeathCertificateForm() {
   // Form state
   const [formData, setFormData] = useState({
     applicantName: "",

@@ -6,7 +6,7 @@ import CustomAlert from '../Alerts/CustomAlert';
 
 const { width, height } = Dimensions.get('window'); // Get screen dimensions
 
-const ForgetPassword = ({ visible, onClose }) => {
+export const ForgetPassword = ({ visible, onClose }) => {
 
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
@@ -39,7 +39,7 @@ const ForgetPassword = ({ visible, onClose }) => {
       return;
     }
 
-    axios.post('http://192.168.1.136:4000/verification/send-verification', { email, isPasswordReset: true })
+    axios.post('https://niladariya-official-backend.onrender.com/auth/send-verification', { email, isPasswordReset: true })
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Verification Code Sent');
@@ -64,7 +64,7 @@ const ForgetPassword = ({ visible, onClose }) => {
       return;
     }
 
-    axios.post('http://192.168.1.136:4000/verification/verify-code', { email, code: verificationCode })
+    axios.post('https://niladariya-official-backend.onrender.com/auth/verify-code', { email, code: verificationCode })
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Success');
@@ -109,7 +109,7 @@ const ForgetPassword = ({ visible, onClose }) => {
       return;
     }
 
-    axios.post('http://192.168.1.136:4000/verification/change-password', { email, newPassword, code: verificationCode })
+    axios.post('https://niladariya-official-backend.onrender.com/auth/change-password', { email, newPassword, code: verificationCode })
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Success');

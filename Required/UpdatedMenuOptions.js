@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, ImageBackground, Modal, Dimensions, Animated, PanResponder, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, ImageBackground, Modal, Dimensions, Animated, PanResponder,SafeAreaView,Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Background from './GradientBackground';
-import DeathCertificateForm from '../OtherPages/DeathCertificateForm';
-
+import Background from "./GradientBackground";
+import UnderConstruction from "../OtherPages/UnderConstruction";
+import DivisionalCouncil from "../OtherPages/DivisionalCouncil";
 
 const districts = [
   'Ampara', 'Anuradhapura', 'Badulla', 'Batticaloa', 'Colombo', 'Galle', 'Gampaha', 'Hambantota',
@@ -94,7 +94,7 @@ const permitServices = {
     "Disaster loans and real esrare loans",
     "Agrahara insurance",
     "Land leasing and transfer of lands, issuance of government land deeds"
-
+    
   ],
   Sinhala: [
     "ව්‍යාපාර නාමයක් ලියාපදිංචි කිරීම (පුද්ගලික/හවුල්)",
@@ -153,8 +153,17 @@ const certificateServices = {
 const { width, height } = Dimensions.get('window');
 
 export default function MenuOptions({ navigation }) {
-
-  const [selectedDistrict, setSelectedDistrict] = useState(districts[0]);
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  
+  const handleNavigate = (screenName) => {
+    console.log("Selected District in handleNavigate:", selectedDistrict);
+    if (!selectedDistrict) {
+      Alert.alert('District Required', 'Please select a district before proceeding.');
+      return;
+    }
+    navigation.navigate(screenName, { district: selectedDistrict });
+  };
+ 
   const [isModalVisible, setModalVisible] = useState(false);
   const [scale, setScale] = useState(new Animated.Value(1));
   const [selectedLanguage, setSelectedLanguage] = useState(null); // To track selected language
@@ -166,6 +175,11 @@ export default function MenuOptions({ navigation }) {
   const [selectedCertificateService, setSelectedCertificateService] = useState(null);
 
   useEffect(() => {
+    console.log("Selected District Updated:", selectedDistrict);
+  }, [selectedDistrict]);
+ 
+
+  useEffect(() => {
     // Fade in the tooltip
     Animated.sequence([
       Animated.timing(tooltipOpacity, {
@@ -174,7 +188,7 @@ export default function MenuOptions({ navigation }) {
         useNativeDriver: true,
       }),
       // Wait for 5 seconds
-      Animated.delay(5000),
+      Animated.delay(9000),
       // Fade out the tooltip
       Animated.timing(tooltipOpacity, {
         toValue: 0,
@@ -184,7 +198,7 @@ export default function MenuOptions({ navigation }) {
     ]).start(() => setShowTooltip(false));
   }, []);
 
-
+ 
 
   const handleChatbotPress = () => {
     setModalVisible(true);
@@ -216,10 +230,10 @@ export default function MenuOptions({ navigation }) {
     setQuestionHistory((prev) => [...prev, { language, question: nextQuestion[language] }]);
     setSelectedService(null);
   };
-
+  
   const handleServiceSelect = (serviceIndex) => {
     if (!selectedLanguage) return;
-
+   
     // For civil registrations (index 0), show sub-services
     if (serviceIndex === 0) {
       const serviceQuestions = {
@@ -228,8 +242,8 @@ export default function MenuOptions({ navigation }) {
         Tamil: "நீங்கள் தேவைப்படும் குறிப்பிட்ட சிவில் பதிவு சேவையைத் தேர்ந்தெடுக்கவும்:"
       };
       setQuestion(serviceQuestions[selectedLanguage]);
-      setQuestionHistory((prev) => [...prev, {
-        language: selectedLanguage,
+      setQuestionHistory((prev) => [...prev, { 
+        language: selectedLanguage, 
         question: serviceQuestions[selectedLanguage],
         serviceType: "civil"
       }]);
@@ -242,8 +256,8 @@ export default function MenuOptions({ navigation }) {
         Tamil: "நீங்கள் தேவைப்படும் குறிப்பிட்ட அனுமதியைத் தேர்ந்தெடுக்கவும்:"
       };
       setQuestion(serviceQuestions[selectedLanguage]);
-      setQuestionHistory((prev) => [...prev, {
-        language: selectedLanguage,
+      setQuestionHistory((prev) => [...prev, { 
+        language: selectedLanguage, 
         question: serviceQuestions[selectedLanguage],
         serviceType: "permit"
       }]);
@@ -257,8 +271,8 @@ export default function MenuOptions({ navigation }) {
         Tamil: "நீங்கள் தேவைப்படும் குறிப்பிட்ட சான்றிதழ் சேவையைத் தேர்ந்தெடுக்கவும்:"
       };
       setQuestion(serviceQuestions[selectedLanguage]);
-      setQuestionHistory((prev) => [...prev, {
-        language: selectedLanguage,
+      setQuestionHistory((prev) => [...prev, { 
+        language: selectedLanguage, 
         question: serviceQuestions[selectedLanguage],
         serviceType: "certificates"
       }]);
@@ -271,26 +285,26 @@ export default function MenuOptions({ navigation }) {
     }
   };
 
-
+  
   const handleBack = () => {
-    if (questionHistory.length > 0) {
-      setQuestionHistory((prev) => {
-        const newHistory = [...prev];
-        newHistory.pop(); // Remove the last question
-        const previousQuestion = newHistory[newHistory.length - 1]?.question ?? null;
-        setQuestion(previousQuestion); // Update question
+    if (questionHistory.length > 0) { 
+    setQuestionHistory((prev) => {
+      const newHistory = [...prev];
+      newHistory.pop(); // Remove the last question
+      const previousQuestion = newHistory[newHistory.length - 1]?.question ?? null;
+      setQuestion(previousQuestion); // Update question
+    
+    // Update selected service based on history
+    if (newHistory.length > 0) {
+      const lastItem = newHistory[newHistory.length - 1];
+      setSelectedService(lastItem.serviceType || null);
+    } else {
+      setSelectedService(null);
+    }  
 
-        // Update selected service based on history
-        if (newHistory.length > 0) {
-          const lastItem = newHistory[newHistory.length - 1];
-          setSelectedService(lastItem.serviceType || null);
-        } else {
-          setSelectedService(null);
-        }
-
-        return newHistory;
-      });
-    }
+      return newHistory;
+    });
+  }
   };
 
   const currentQuestion = question || (questionHistory[questionHistory.length - 1]?.question ?? null);
@@ -306,7 +320,7 @@ export default function MenuOptions({ navigation }) {
     if (!selectedLanguage) return civilRegistrationServices.English;
     return civilRegistrationServices[selectedLanguage];
   };
-
+  
   // Get permit services based on selected language
   const getPermitServices = () => {
     if (!selectedLanguage) return permitServices.English;
@@ -315,31 +329,35 @@ export default function MenuOptions({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Background type="type1" />
-
-      <View style={styles.logo}>
-        <Image source={require("../assets/Logo.png")} style={styles.logoImage} />
-      </View>
-
-      <View style={styles.pickerContainer}>
-        <View style={styles.pickerWrapper}>
-          <Picker
+     <Background />
+        
+        <View style={styles.logo}>
+          <Image source={require("../assets/LOGO.png")} style={styles.logoImage} />
+        </View>
+        
+        <View style={styles.pickerContainer}>
+         <View style={styles.pickerWrapper}>  
+         <Picker
             selectedValue={selectedDistrict}
             style={styles.picker}
-            onValueChange={(itemValue) => setSelectedDistrict(itemValue)}
+            onValueChange={(itemValue) => {
+              console.log("District Selected:", itemValue); 
+              setSelectedDistrict(itemValue);
+            }}
           >
+            <Picker.Item label="Select a District" value={null} />
             {districts.map((district, index) => (
               <Picker.Item key={index} label={district} value={district} />
             ))}
           </Picker>
 
-          <View style={styles.chatbotContainer}>
-            <TouchableOpacity style={styles.pickerChatbot} onPress={handleChatbotPress}>
-              <Image source={require('../assets/UpdatedMenuOption/chatbotIcon.png')} style={styles.pickerChatbotImage} />
-            </TouchableOpacity>
+          <View style={styles.chatbotContainer}>   
+          <TouchableOpacity style={styles.pickerChatbot} onPress={handleChatbotPress}>
+          <Image source={require('../assets/UpdatedMenuOption/ChatBot_Icon.png')} style={styles.pickerChatbotImage} />
+          </TouchableOpacity>
 
-            {showTooltip && (
-              <Animated.View
+          {showTooltip && (
+              <Animated.View 
                 style={[
                   styles.tooltip,
                   {
@@ -352,59 +370,50 @@ export default function MenuOptions({ navigation }) {
               </Animated.View>
             )}
 
-          </View>
         </View>
-      </View>
+        </View>
+        </View>
 
-      <ScrollView contentContainerStyle={styles.scrollView}>
-
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("DeathCertificateForm")} >
-            <ImageBackground source={require('../assets/UpdatedMenuOption/flag.png')} style={styles.buttonBackground} borderRadius={30}>
-              <Text style={styles.buttonText}> DIVISIONAL COUNCIL</Text>
-            </ImageBackground>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+        
+        <View style={styles.buttonsContainer }textAlign='center'>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("DivisionalCouncil", { district: selectedDistrict })}>
+            <View style={styles.transparentBackground}>
+              <Text style={styles.buttonText}>DIVISIONAL COUNCIL</Text>
+            </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
-            <ImageBackground source={require('../assets/UpdatedMenuOption/MunicipalCoun.jpg')} style={styles.buttonBackground} borderRadius={30}>
-              <Text style={styles.buttonText}> MUNICIPAL COUNCIL</Text>
-            </ImageBackground>
+           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(UnderConstruction)}>
+            <View style={styles.transparentBackground}>
+              <Text style={styles.buttonText}>MUNICIPAL COUNCIL</Text>
+            </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
-            <ImageBackground source={require('../assets/UpdatedMenuOption/CEB-1.jpg')} style={styles.buttonBackground} borderRadius={30}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(UnderConstruction)}>
+            <View style={styles.transparentBackground}>
               <Text style={styles.buttonText}>CEYLON ELECTRICITY BOARD</Text>
-            </ImageBackground>
+            </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
-            <ImageBackground source={require('../assets/UpdatedMenuOption/Water.png')} style={styles.buttonBackground} borderRadius={30}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(UnderConstruction)}>
+            <View style={styles.transparentBackground}>
               <Text style={styles.buttonText}>NATIONAL WATER SUPPLY & DRAINAGE BOARD</Text>
-            </ImageBackground>
+            </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
-            <ImageBackground source={require('../assets/UpdatedMenuOption/law_court.jpeg')} style={styles.buttonBackground} borderRadius={30}>
-              <Text style={styles.buttonText}>LAW COURT</Text>
-            </ImageBackground>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(UnderConstruction)}>
+            <View style={styles.transparentBackground}>
+               <Text style={styles.buttonText}>LAW COURT</Text>
+            </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Municipal Council")}>
-            <ImageBackground source={require('../assets/UpdatedMenuOption/policeImg.jpg')} style={styles.buttonBackground} borderRadius={30}>
-              <Text style={styles.buttonText}>SRI LANKA POLICE</Text>
-            </ImageBackground>
-          </TouchableOpacity>
-
-          {/* New button for Death Certificate Form */}
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("DeathCertificateForm")}>
-            <ImageBackground source={require('../assets/UpdatedMenuOption/flag.png')} style={styles.buttonBackground} borderRadius={30}>
-              <Text style={styles.buttonText}>DEATH CERTIFICATE FORM</Text>
-            </ImageBackground>
-          </TouchableOpacity>
-
-
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(UnderConstruction)}>
+             <View style={styles.transparentBackground}>
+               <Text style={styles.buttonText}>SRI LANKA POLICE</Text>
+             </View>
+          </TouchableOpacity> 
         </View>
-
+  
         <Modal visible={isModalVisible} transparent={true} animationType="slide">
           <View style={styles.modalContainer}>
 
@@ -416,8 +425,8 @@ export default function MenuOptions({ navigation }) {
                 <TouchableOpacity onPress={handleZoom} style={styles.zoomIcon}>
                   <Icon name="expand-outline" size={12} color="black" />
                 </TouchableOpacity>
-              </View>
-              <Image source={require('../assets/UpdatedMenuOption/chatbotIcon.png')} style={styles.modalImage} />
+              </View>  
+              <Image source={require('../assets/UpdatedMenuOption/ChatBot_Icon.png')} style={styles.modalImage} />
               <View style={styles.textContainer}>
                 <Text style={styles.title}> HIII THERE!!!! </Text>
                 <Text style={styles.subTitle}>Connect with me.. Save your time.. </Text>
@@ -443,34 +452,34 @@ export default function MenuOptions({ navigation }) {
                 </View>
               ) : (
                 currentQuestion && (
-                  <ScrollView style={styles.scrollContainer}>
-                    <View style={styles.Questions}>
-                      <Text style={styles.selectedQuestion}>{currentQuestion}</Text>
+                 <ScrollView style={styles.scrollContainer}> 
+                  <View style={styles.Questions}>
+                    <Text style={styles.selectedQuestion}>{currentQuestion}</Text>
+                    
+                    {/* Display main services if no specific service is selected */}
+                    {!selectedService && 
+                    (currentQuestion === "Please select the service you need." || 
+                      currentQuestion === "ඔබට අවශ්‍ය සේවාව තෝරාගන්න." || 
+                      currentQuestion === "நீங்கள் தேவைப்படும் சேவையைத் தேர்ந்தெடுக்கவும்.") && (
+                      <View style={styles.servicesContainer}>
+                        {getCurrentServices().map((service, index) => (
+                            <TouchableOpacity 
+                              key={index} 
+                              style={styles.serviceButton}
+                              onPress={() => handleServiceSelect(index)}
+                            >
+                              <Text style={styles.serviceButtonText}>{service}</Text>
+                            </TouchableOpacity>
+                          ))}
+                      </View>
+                    )}
 
-                      {/* Display main services if no specific service is selected */}
-                      {!selectedService &&
-                        (currentQuestion === "Please select the service you need." ||
-                          currentQuestion === "ඔබට අවශ්‍ය සේවාව තෝරාගන්න." ||
-                          currentQuestion === "நீங்கள் தேவைப்படும் சேவையைத் தேர்ந்தெடுக்கவும்.") && (
-                          <View style={styles.servicesContainer}>
-                            {getCurrentServices().map((service, index) => (
-                              <TouchableOpacity
-                                key={index}
-                                style={styles.serviceButton}
-                                onPress={() => handleServiceSelect(index)}
-                              >
-                                <Text style={styles.serviceButtonText}>{service}</Text>
-                              </TouchableOpacity>
-                            ))}
-                          </View>
-                        )}
-
-                      {/* Display civil registration services based on the selected language  */}
-                      {selectedService === "civil" && (
+                    {/* Display civil registration services based on the selected language  */}
+                    {selectedService === "civil" && (
                         <View style={styles.servicesContainer}>
                           {getCivilRegistrationServices().map((service, index) => (
-                            <TouchableOpacity
-                              key={index}
+                            <TouchableOpacity 
+                              key={index} 
                               style={styles.serviceButton}
                             >
                               <Text style={styles.serviceButtonText}>{service}</Text>
@@ -479,26 +488,26 @@ export default function MenuOptions({ navigation }) {
                         </View>
                       )}
 
-                      {/* NEW: Display permit services based on the selected language */}
-                      {selectedService === "permit" && (
+                    {/* NEW: Display permit services based on the selected language */}
+                    {selectedService === "permit" && (
                         <View style={styles.servicesContainer}>
                           {getPermitServices().map((service, index) => (
-                            <TouchableOpacity
-                              key={index}
+                            <TouchableOpacity 
+                              key={index} 
                               style={styles.serviceButton}
                             >
                               <Text style={styles.serviceButtonText}>{service}</Text>
                             </TouchableOpacity>
                           ))}
                         </View>
-                      )}
+                    )}  
 
 
-                    </View>
-                  </ScrollView>
+                  </View>
+                 </ScrollView> 
                 )
               )}
-
+              
 
               {questionHistory.length > 0 && (
                 <TouchableOpacity onPress={handleBack} style={styles.backButton}>
@@ -509,7 +518,7 @@ export default function MenuOptions({ navigation }) {
           </View>
         </Modal>
       </ScrollView>
-
+     
     </SafeAreaView>
   );
 }
@@ -567,9 +576,10 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.01,
     marginTop: height * 0.01,
     borderRadius: 50,
+    alignItems: 'center',
   },
   button: {
-    height: height * 0.25,
+    height: height * 0.20,
     margin: 10,
     borderRadius: 10,
     padding: 10,
@@ -579,6 +589,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 10,
     borderRadius: 50,
+    width: 360,
+    justifyContent: 'center', 
   },
   buttonBackground: {
     flex: 1,
@@ -586,12 +598,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: width * 0.8,
     borderRadius: 50,
+    textAlign:'center',
   },
   buttonText: {
     fontSize: width * 0.05,
     color: '#283747',
     fontWeight: 'bold',
     textAlign: 'center',
+    textAlignVertical: 'center',
+    alignItems: 'center',
+  
+  },
+  transparentBackground: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)', // Adjust the transparency as needed
+    borderRadius: 30,
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    width: '100%',
   },
   Chatbot: {
     resizeMode: 'contain',
@@ -624,7 +649,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginTop: 1,
   },
-
+ 
   title: {
     fontSize: width * 0.06,
     textAlign: 'center',
@@ -654,17 +679,17 @@ const styles = StyleSheet.create({
   QTamil: {
     marginTop: 4,
     fontSize: 11,
-  },
+  },   
   selectedQuestion: {
-    fontSize: 11,
-    marginTop: 4,
-  },
+    fontSize: 11, 
+    marginTop: 4,  
+  }, 
   languageButtonsContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
     marginTop: 10,
     alignItems: 'center', // Add this
-    width: '100%', // Add this
+  width: '100%', // Add this
   },
   languageButton: {
     backgroundColor: 'black',
@@ -672,7 +697,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 60,
     marginHorizontal: 100,
-    width: '80%',
+    width:'80%',
     marginTop: 7,
   },
   languageButtonText: {
@@ -719,16 +744,16 @@ const styles = StyleSheet.create({
     fontSize: 9.5,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
+  }, 
   serviceButton: {
     backgroundColor: 'black',
     borderRadius: 5,
-    paddingVertical: 9,
+     paddingVertical: 9,
 
     width: width * 0.5,
     marginTop: 4,
-
-
+    
+    
   },
   chatbotContainer: {
     position: 'relative',
@@ -736,7 +761,7 @@ const styles = StyleSheet.create({
   },
   tooltip: {
     position: 'absolute',
-    backgroundColor: 'white',
+    backgroundColor: '#00004B',
     padding: 10,
     borderRadius: 8,
     width: width * 0.4,
@@ -753,7 +778,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   tooltipText: {
-    color: 'black',
+    color: 'white',
     fontSize: width * 0.035,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -772,7 +797,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 10,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: 'white',
+    borderTopColor: '#00004B',
     transform: [{ rotate: '180deg' }],
   },
 });

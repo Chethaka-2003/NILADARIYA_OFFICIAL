@@ -8,6 +8,7 @@ import Background from '../Required/GradientBackground';
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
 
+
 export default function Screen({ navigation }) {
   return (
     
@@ -18,7 +19,7 @@ export default function Screen({ navigation }) {
         {/* Logo Section */}
         <View style={styles.logoContainer}>
           <Image 
-            source={require('../assets/Logo.png')} 
+            source={require('../assets/LOGO.png')} 
             style={styles.logo}
           />
         </View>

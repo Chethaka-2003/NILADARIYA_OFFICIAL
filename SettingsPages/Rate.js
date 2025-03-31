@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, TextInput } from "react-native";
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+
+
 import CustomLottieAlert from '../Alerts/CustomLottieAlert';
 import successAnimation from '../assets/Done1.json';
+import CustomAlert from '../Alerts/CustomAlert';
+import AlertCustom from "../Alerts/AlertCustom";
+
 
 const App = () => {
   const navigation = useNavigation();
@@ -14,16 +20,47 @@ const App = () => {
 
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
-  const [lottieAlertVisible, setLottieAlertVisible] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [AlertCustomVisible, setAlertCustomVisible] = useState(false);
+  
 
-  const handleRating = (star) => {
-    setRating(star);
-  };
 
-  const handleSubmit = () => {
-    setAlertTitle('THANK YOU!!!');
-    setAlertMessage('Feedback submitted successfully');
-    setLottieAlertVisible(true);
+
+  const handleRating = (star) => { setRating(star); };
+
+  const handleSubmit = async () => {
+    // Ensure at least 1 star is selected
+    if (rating < 1) {
+      setAlertTitle('Error');
+      setAlertMessage('Please select at least one star.');
+      setAlertVisible(true);
+      return;
+    }
+
+    try {
+      // Replace '12345' with the actual user ID
+      const response = await axios.post('https://niladariya-official-backend.onrender.com/Feedback/submit', {
+        rating: rating,
+        feedbackText: feedback,
+      });
+
+      setAlertTitle('THANK YOU!!!');
+      setAlertMessage('Feedback submitted successfully');
+      setAlertCustomVisible(true);
+      // setModalVisible(false);
+
+      // Optionally, reset rating and feedback
+      setRating(0);
+      setFeedback('');
+
+      // Optionally navigate to a different screen
+      // navigation.navigate('FeedbackSubmitted');
+    } catch (error) {
+      console.error('Error submitting feedback:',  error.response ? error.response.data : error.message);
+      setAlertTitle('Error');
+      setAlertMessage('Failed to submit feedback. Please try again later.');
+      setAlertVisible(true);
+    }
   };
 
   return (
@@ -81,12 +118,18 @@ const App = () => {
             </TouchableOpacity>
           </View>
         </View>
-        <CustomLottieAlert
-          visible={lottieAlertVisible}
+        <AlertCustom
+          visible={AlertCustomVisible}
           title={alertTitle}
           message={alertMessage}
-          onClose={() => setLottieAlertVisible(false)}
+          onClose={() => setAlertCustomVisible(false)}
           animationSource={successAnimation} // Pass the Lottie animation source here
+        />
+        <CustomAlert
+          visible={alertVisible}
+          title={alertTitle}
+          message={alertMessage}
+          onClose={() => setAlertVisible(false)}
         />
       </Modal>
     </View>
@@ -131,7 +174,7 @@ const styles = StyleSheet.create({
     width: '90%',
     padding: 20,
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 30,
     alignItems: "center",
   },
   modalText: {
@@ -183,13 +226,12 @@ const styles = StyleSheet.create({
   },
   feedbackBox: {
     width: '100%',
-    backgroundColor: '#f9f9f9',
-    borderRadius: 10,
+    borderWidth: 1, 
+    borderColor: '#420475', 
+    backgroundColor: '#d3d3d3', 
+    borderRadius: 15, 
     padding: 15,
     marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -213,10 +255,11 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 5,
-    right: 5,
+    top: height * 0.01,
+    right: width * 0.02,
     borderRadius: 100,
   },
+
 });
 
 export default App;

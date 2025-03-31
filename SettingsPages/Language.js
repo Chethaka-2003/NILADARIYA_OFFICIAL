@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     width: '90%',
     padding: 20,
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 30,
     alignItems: "center",
   },
   modalText: {
@@ -182,8 +182,8 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 5,
-    right: 5,
+    top: height * 0.01,
+    right: height * 0.01,
     borderRadius: 100,
   },
   languageButton: {

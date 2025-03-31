@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Niladariya",
-    "slug": "Niladariya",
+    "name": "niladariya",
+    "slug": "niladariya",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,34 +13,23 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.chanithdulsika.Niladariya",
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      },
-      "runtimeVersion": {
-        "policy": "appVersion"
-      }
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/splash-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.chanithdulsika.Niladariya",
-      "runtimeVersion": "1.0.0"
+      "package": "com.danidu_pawan.niladariya"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "0dc33158-9c19-4d5a-a40f-0bcaa34d4de6"
+        "projectId": "c68cb978-8d0f-482e-81bc-5866c061baee"
       }
     },
-    "owner": "chanithdulsika",
-    "updates": {
-      "url": "https://u.expo.dev/0dc33158-9c19-4d5a-a40f-0bcaa34d4de6"
-    }
+    "owner": "danidu_pawan"
   }
 }

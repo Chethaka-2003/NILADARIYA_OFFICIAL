@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import NavigationBar from '../Required/NavigationBar';
+import { useNavigation, CommonActions } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt_decode from 'jwt-decode';
+
+
 import Background from '../Required/GradientBackground';
 import axios from 'axios';
 import CustomAlert from '../Alerts/CustomAlert';
@@ -12,7 +15,7 @@ import ForgetPassword from '../OtherPages/FogetPassword';
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -24,38 +27,52 @@ export default function LoginScreen() {
   const [modalVisible, setModalVisible] = useState(false);
 
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   const handleLogin = () => {
     console.log('Email:', email);
     console.log('Password:', password);
-
+  
     if (!email || !password) {
       setAlertTitle('ERROR');
       setAlertMessage('Please enter email and password');
       setAlertVisible(true);
       return;
     }
-
-    axios.post('http://192.168.1.136:4000/auth/login', { email, password })
-      .then(res => {
-        console.log('Response:', res.data);
-        if (res.data.status === 'OK') {
-          navigation.navigate(NavigationBar);
-        } else {
-          console.log('Error:', res.data.message);
-          setAlertTitle('ERROR');
-          setAlertMessage(res.data.message);
-          setAlertVisible(true);
-        }
-      })
-      .catch(error => {
-        console.log('Error:', error);
-        setAlertTitle('ERROR');
-        setAlertMessage(error.message);
-        setAlertVisible(true);
-      });
-  }
+  
+    axios.post('https://niladariya-official-backend.onrender.com/auth/login', { email: email, password })
+    
+        .then(response => {
+          const { token, userType } = response.data;
+    
+          // Log token for debugging
+          console.log('JWT Token:', token);
+    
+          AsyncStorage.setItem('jwtToken', token);
+          AsyncStorage.setItem('userType', userType);
+    
+          // Decode JWT token and check user session
+          const decoded = jwt_decode(token); // Correct use of jwt_decode
+          console.log('Decoded JWT:', decoded);
+    
+          // Handle login success and reset navigation stack
+          if (userType === 'government') {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'OfficerPage' }],
+              })
+            );
+          } else {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'NavigationBar' }],
+              })
+            );
+          }
+        })
+  };
 
 
   return (

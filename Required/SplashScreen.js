@@ -32,7 +32,7 @@ export default function SplashScreen(){
                 <View style = {styles.container}>
                     <View>
                     <Animated.Image
-                        source={require('../assets/Logo.png')}
+                        source={require('../assets/LOGO.png')}
                         style={[styles.image, { opacity: fadeAnim }]}
                     />
                         <LottieView source={require('../assets/Animation - 1735760151144.json')} autoPlay loop style = {styles.animation}/>

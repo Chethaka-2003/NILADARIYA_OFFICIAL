@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, SafeAreaView, Dimensions, Modal } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { Button } from 'react-native-web';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoginScreen from '../StartUP/LoginScreen'; 
 
 const { width, height } = Dimensions.get('window');
 
@@ -12,7 +13,29 @@ export default function LogOut() {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-
+  const handleLogout = async () => {
+    try {
+      const storedUserType = await AsyncStorage.getItem('userType');
+      // Remove token and any other user data
+      await AsyncStorage.removeItem('jwtToken');
+      await AsyncStorage.removeItem('userType');
+      // Reset the navigation stack to go back to login based on the stored user type
+      if (storedUserType === 'government') {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'LoginScreen' }],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'LoginScreen' }],
+        });
+      }
+    } catch (error) {
+      console.error('Error removing token: ', error);
+      Alert.alert('Error', 'Could not log out.');
+    }
+  };
 
   return (
     <View >
@@ -37,7 +60,7 @@ export default function LogOut() {
 
             <Text style={styles.title}>Log Out</Text>
             <Text style={styles.modalText}>Are you sure you want to log out?</Text>
-            <TouchableOpacity onPress={() => setModalVisible(true)} >
+            <TouchableOpacity onPress={handleLogout} >
               <View style={styles.logoutButton}>
                 <Text style={styles.rowLabel}>Confirm</Text>
               </View>

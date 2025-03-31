@@ -110,7 +110,7 @@ export default function SignupScreen() {
       return;
     }
 
-    axios.post('http://192.168.1.136:4000/auth/send-verification', { email })
+    axios.post('https://niladariya-official-backend.onrender.com/auth/send-verification', { email })
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Verification Code Sent');
@@ -134,13 +134,14 @@ export default function SignupScreen() {
 
     const userData = { name, email, mobile, password, code: verificationCode };
 
-    axios.post('http://192.168.1.136:4000/auth/register', userData)
+    axios.post('https://niladariya-official-backend.onrender.com/auth/register', userData)
       .then(res => {
         if (res.data.status === "OK") {
           setAlertTitle('Success');
           setAlertMessage('Account created successfully.');
           setLottieAlertVisible(true);
           setIsVerified(true);
+          
         } else {
           Alert.alert('Error', res.data.data);
         }
@@ -283,7 +284,7 @@ export default function SignupScreen() {
         onClose={() => setLottieAlertVisible(false)}
         animationSource={successAnimation} // Pass the Lottie animation source here
       />
-{/* http://192.168.1.136:4000 */}
+{/* https://niladariya-official-backend.onrender.com */}
 
     </ScrollView>
   );
